@@ -1,0 +1,13 @@
+# This repository contains the public project page and documentation.
+*.dll
+*.exe
+*.pdb
+*.bundle
+*.zip
+*.cfg
+Reports/
+ProbeLogs/
+Library/
+Temp/
+bin/
+obj/
