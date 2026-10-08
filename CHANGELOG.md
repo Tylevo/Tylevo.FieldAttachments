@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.25.4 — Simpler settings
+
+- Make Left Alt the only menu shortcut enabled by default.
+- Keep custom attachment animations always on and remove their settings toggle.
+
 ## 0.25.3 — Alt menu controls
 
 - Hold Left Alt to open the existing attachment cards with cursor control; release to close.

@@ -2,7 +2,7 @@
 
 Change optics, muzzle devices, tactical devices and foregrips without opening your inventory. Left Alt brings up attachment cards around your weapon and lets you use the mouse to choose a part.
 
-**0.25.3 test build · SPT 4.1.5 / 4.1.6 · BepInEx client plugin**
+**0.25.4 test build · SPT 4.1.5 / 4.1.6 · BepInEx client plugin**
 
 The download has not been published yet.
 
