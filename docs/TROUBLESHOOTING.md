@@ -1,18 +1,17 @@
 # Troubleshooting
 
-| Symptom | Check |
+| Problem | What to check |
 | --- | --- |
-| Mod does not load | Confirm SPT 4.1.5 or 4.1.6 with the inspected EFT 40743 client, BepInEx 5, UnityToolkit 2.0.2+ installed separately, and one Field Attachments DLL. Look for the plugin load error in `BepInEx/LogOutput.log`. |
-| Alt does not open the interface | Check F12 → Controls → Attachment menu key. LeftAlt is the default; RightAlt and None are the other choices. Hold is the default activation mode. A supported gun and local raid or active hideout range are required. An existing O-opened session keeps Alt as its separate cursor modifier. |
-| Toggle closes after another Alt tap | This is expected: a later plain Alt tap closes on release. Alt+R or clicking while holding Alt keeps Toggle open. Use Hold mode if the menu should close whenever Alt is released. |
-| O plays ordinary inspection | Check the `Controls/AttachmentPose` binding and Display / Use authored weapon poses. Hold a supported gun in a local raid or the active hideout range. Field Attachments does not use native inspection as a fallback; unsupported or disabled authored poses are refused. If the overlay is available, F10 records the pose refusal reason. |
-| LIST has fewer items than inventory | Only examined, raid-moddable parts accepted by that existing native slot appear. A missing mount, fixed part, child of a carried assembly, inaccessible storage, or an unknown fit removes a candidate. Alt+R may select a different mounting side. |
-| Click does not move an item | Check `General / Allow attachment changes` and compatible/free carried storage. A visible candidate still goes through native simulation, hands/session guards and result observation. Read F10 `install-probe.txt` and the latest journal. |
-| Replace leaves an empty gun slot | Replacement removes the outgoing root first. A failed second move leaves it in carried storage. Stop and inspect storage/report before another attempt. No automatic rollback is attempted. |
-| Cards disappear during a change | They intentionally hide while the gun lowers and return at the held pose. If they do not return after a settled success, capture F10 and a short clip. |
-| Weapon, hands or pose becomes stuck | Close attachment mode if possible; do not issue repeated inventory clicks. Save F10 and the journal. If the result is latched UNKNOWN / RESTART REQUIRED, restart the game before another attempt. |
-| Right-click closes only the list | This is expected. Escape closes the interface. In Hold mode, releasing the menu key also closes it; in Toggle mode, a later plain Alt tap closes on release. |
-| Wheel is missing from the tooltip | Wheel paging still works in LIST. It is intentionally omitted from the bottom control hint. |
-| F12 shows older trial values | Old keys remain in the config for compatibility but are hidden by the current menu. The old native pose trials are inactive in standalone attachment mode. See [configuration](CONFIGURATION.md). |
+| The mod does not load | Check the requirements and installation steps in the [README](../README.md), including UnityToolkit. Keep only one installed copy of Field Attachments. |
+| Alt does not open the menu | Check that the mod is enabled and the menu key is set in F12. Hold a supported weapon in a local raid or the hideout shooting range. |
+| The menu closes when I release Alt | Hold is the default. Choose Toggle in F12 if you want it to stay open. Gameplay actions such as sprinting can still cancel the menu. |
+| A part is missing from LIST | It must be examined, changeable in a raid, compatible with the selected mounting point and in accessible carried storage. Check for a missing mount, or use Alt+R to select another position. |
+| Clicking does not change a part | Enable Allow attachment changes in F12. Leave room in carried storage for the outgoing part and wait until the current weapon action finishes. Attachment changes are not supported in Fika. |
+| A failed replacement leaves an empty slot | Look for the old part in your carried storage. Check the weapon and storage before trying again. |
+| Cards disappear during a change | They hide while your character changes the attachment. After a successful change, they return if the menu is still open. |
+| The weapon or hands seem stuck | Close the menu and stop clicking. If it does not recover, restart the game before attempting another change. |
+| Right-click closes only the list | This is expected. Release Alt in Hold mode, press Alt again in Toggle mode, or use Escape to close the menu. |
 
-When reporting a failure, include SPT and UnityToolkit versions, relevant content mods, weapon name/template ID, attachment and mounting point, source/destination storage, range or raid, steps, expected/actual result, and a screenshot or video. Review reports and journals before sharing them; remove local paths, profile identifiers, private item IDs and unrelated log content. This documentation repository does not contain private reports or a tester package.
+If you need help, include your SPT version, relevant mods, weapon and attachment names, whether you were in a raid or the range, and what happened. A short video or screenshot helps.
+
+See the [user guide](USER_GUIDE.md) for controls and [configuration](CONFIGURATION.md) for F12 settings.
