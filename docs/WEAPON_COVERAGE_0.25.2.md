@@ -1,10 +1,10 @@
-# Weapon coverage — 0.25.2 baseline retained in 0.27.0
+# Weapon coverage — 0.25.2
 
-The audited definition inventory contains 199 weapon-class entries: 164 from SPT and 35 from installed content mods. The 0.25.2 baseline, retained by 0.27.0, registers 194 exact templates using 129 authored animation bundles. The original 162 recipient routes and 123 bundle files are preserved; 20 explicit prefab aliases, 6 exact native-rig aliases and 6 individually fitted poses extend coverage.
+The audited definition inventory contains 199 weapon-class entries: 164 from SPT and 35 from installed content mods. Version 0.25.2 registers 194 exact templates using 129 authored animation bundles. The original 162 recipient routes and 123 bundle files are preserved; 20 explicit prefab aliases, 6 exact native-rig aliases and 6 individually fitted poses extend coverage.
 
 This count describes the audited installed JSON definitions, not a universal claim about every mod or live attachment combination. Five entries remain excluded: two stationary weapons, two underbarrel metadata entries, and one internal test item whose controller lacks required states. SP-81, RShG-2 and all seven reactive flare variants are included. Their zero attachment slots mean presentation opens without attachment actions.
 
-This public page summarizes the coverage additions and exclusions. The complete source/audit package retains the full 199-entry inventory, asset pins and native compatibility metadata; those files are not published in this documentation repository. See [current release notes](PROGRESS_0.27.0.md) and the [testing summary](TESTING.md) for validation limits.
+This public page summarizes the coverage additions and exclusions. The complete source/audit package retains the full 199-entry inventory, asset pins and native compatibility metadata; those files are not published in this documentation repository. See the [animation and coverage baseline notes](PROGRESS_0.25.2.md) and the [testing summary](TESTING.md) for validation limits.
 
 ## Added ordinary weapons
 

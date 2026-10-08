@@ -1,18 +1,17 @@
 # Configuration
 
-For 0.27.0, the BepInEx file remains `BepInEx/config/com.tylevo.fieldattachments.cfg`. F12 shows friendly labels, but stored section/key names are stable so existing settings survive updates. F12 Reset restores the **current compiled default**, not the value previously saved by the player.
+For 0.25.3, the BepInEx file remains `BepInEx/config/com.tylevo.fieldattachments.cfg`. F12 shows friendly labels; existing stored keys retain their values. The Alt shortcut adds `Controls/MenuKey` and `Controls/MenuActivation`. F12 Reset restores the **current compiled default**, not the previously saved value.
 
 | F12 group / label | Stored section/key | Fresh default | Effect |
 | --- | --- | --- | --- |
 | General / Enabled | `General/Enabled` | On | Master attachment UI switch. |
 | General / Allow attachment changes | `Experiments/EnableEmptySlotInstall` | Off | Enables guarded native item moves. |
-| Controls / Attachment menu key | `Controls/MenuKey` | Middle mouse (`Mouse2`) | Opens presentation and captures the menu cursor. Choose Mouse2, a side button (Mouse3/Mouse4), or None to disable this shortcut. |
-| Controls / Menu activation (Hold / Toggle) | `Controls/MenuActivation` | Hold | Hold closes on release; Toggle closes on another press. Right-click closes either middle-mouse menu mode. |
-| Display / Compact attachment list | `Display/CompactAttachmentList` | On | Hover lists on the original tilted planes, equipped attachment at bottom. |
-| Controls / Attachment mode key | `Controls/AttachmentPose` | O | Opens/closes the standalone authored pose. |
-| Controls / Toggle attachment mode | `Controls/ToggleAttachmentPose` | On | Toggle instead of hold. |
-| Controls / Cursor modifier | `Controls/MouseModifier` | Left Alt | Captures mouse for cards. |
-| Controls / Cycle mounting position | `Controls/CycleAttachmentPosition` | Left Alt + R | Cycles the active or most recently focused category's native mounting point; never moves an item. |
+| Controls / Attachment menu key | `Controls/MenuKey` | LeftAlt | Opens the pose and cursor together. Options: LeftAlt, RightAlt or None. |
+| Controls / Menu activation (Hold / Toggle) | `Controls/MenuActivation` | Hold | Hold closes on release. Toggle opens on key-down; a later plain Alt tap closes on release. |
+| Controls / Legacy attachment mode key *(advanced)* | `Controls/AttachmentPose` | O | Opens/closes the pose separately from cursor capture. |
+| Controls / Legacy pose toggle *(advanced)* | `Controls/ToggleAttachmentPose` | On | Applies only to the legacy pose key; Off requires holding that key. |
+| Controls / Legacy cursor modifier *(advanced)* | `Controls/MouseModifier` | Left Alt | Captures the cursor in an O-opened session. |
+| Controls / Cycle mounting position | `Controls/CycleAttachmentPosition` | Left Alt + R | Cycles the open or hovered slot. |
 | Controls / Cursor speed | `Controls/MouseSensitivity` | 20 | Cursor movement rate. |
 | Controls / Attachment animation speed | `Controls/AttachmentAnimationSpeedMultiplier` | 1.12 | Native install/remove playback multiplier, bounded 1.0–1.15. |
 | Display / Show attachment thumbnails | `Display/RequestNativeIcons` | On | Requests game item icons, with name fallback. |
@@ -24,4 +23,6 @@ Older stored keys still load and are hidden in F12. The native MCX/MDR/STM pose 
 
 The name `EnableEmptySlotInstall` predates uninstall and replacement. It now gates all supported live clicks. There is no migration of this key. Report files and journals are written under the installed plugin folder; they are not part of the config.
 
-In the legacy O + Left Alt workflow, right-click closes only the expanded list. O or Escape exits the presentation. See the [user guide](USER_GUIDE.md) for the current controls.
+In Toggle mode, Alt+R or clicking while Alt is held keeps the menu open when Alt is released. The default mounting shortcut remains Left Alt + R even if the menu key is changed to RightAlt. Setting MenuKey to None disables the combined shortcut and leaves the advanced O workflow available.
+
+Right-click closes LIST only; Escape closes the interface. The bottom control hint omits wheel paging, which remains available in LIST. See the [user guide](USER_GUIDE.md).

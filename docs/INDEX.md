@@ -1,6 +1,6 @@
 # Documentation
 
-Start with the [project README](../README.md). These pages describe the experimental 0.27.0 build and its unchanged 0.25.2 animation baseline.
+Start with the [project README](../README.md). Current guides describe **0.25.3**, which adds Alt activation and a control hint to the existing 0.25.2 REMOVE/LIST interface. Older version notes are historical.
 
 | Topic | Page |
 | --- | --- |
@@ -8,7 +8,7 @@ Start with the [project README](../README.md). These pages describe the experime
 | F12 options and saved settings | [Configuration](CONFIGURATION.md) |
 | Weapon coverage and exclusions | [Coverage](WEAPON_COVERAGE_0.25.2.md) |
 | Failed actions and diagnostics | [Troubleshooting](TROUBLESHOOTING.md) |
-| Current changes and live checklist | [0.27.0 notes](PROGRESS_0.27.0.md) |
+| Current input changes | [0.25.3 notes](PROGRESS_0.25.3.md) |
 | Recorded checks and their limits | [Testing](TESTING.md) |
 | Input, presentation and transactions | [Architecture](ARCHITECTURE.md) |
 | Building the complete source package | [Development](DEVELOPMENT.md) |

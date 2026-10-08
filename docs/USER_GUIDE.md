@@ -1,6 +1,6 @@
 # User guide
 
-This repository is the public documentation page for Field Attachments 0.27.0. It does not contain an installable plugin or the complete source package. Use an installable plugin release, or build the complete source package separately.
+This guide covers Field Attachments 0.25.3: the existing REMOVE/LIST interface with Alt opening the presentation and cursor together. This public repository contains documentation only; an installable plugin release or the complete source package is separate.
 
 ## Requirements and installation
 
@@ -11,17 +11,19 @@ This repository is the public documentation page for Field Attachments 0.27.0. I
 
 ## Quick swap
 
-1. Hold **middle mouse** to bring the gun into its standalone attachment pose and use the cursor. Release to close. For click-to-open/click-to-close, choose **Toggle** under F12 → Controls → Menu activation (Hold / Toggle). An unsupported pose is refused without starting the game's inspect animation.
-2. Hover a category briefly to open its compact list. The game view stops following mouse movement during cursor capture.
-3. Use the wheel over the list to browse compatible carried items for the selected native mounting point. Hovering and scrolling never move an item.
-4. Left-click a carried item to install or replace. The equipped item remains at the bottom of the list, with a separate **Remove current** action underneath. Right-click closes the menu.
-5. Use the position arrows, or **Alt+R**, to cycle exact native mounting positions. The label and leader line follow the selected point. Cycling alone never moves an item.
+1. Hold **Left Alt** to open the standalone attachment pose and its cursor together. Release Alt to close. The game view stops following mouse movement during cursor capture. An unsupported pose is refused without starting the game's inspect animation.
+2. For a persistent menu, choose **Toggle** in F12 → Controls → Menu activation (Hold / Toggle). Alt opens on key-down. A later plain Alt tap closes on release; Alt+R or clicking while Alt is held leaves Toggle open.
+3. Click **LIST** on a weapon card. The small two-column list contains compatible carried items for that exact native mounting point. Use the wheel or page buttons if needed.
+4. Click a thumbnail to install into an empty slot or replace an installed item. Click **NONE** in the list, or **REMOVE** on the card, to uninstall. No separate arm click is needed.
+5. While holding Alt, press **R** to cycle the open list's mounting position or the hovered card's position. The slot count and leader line show the selected point, including handguard sides. Alt+R alone never moves an item.
 
-The legacy **O** presentation key and **Left Alt** cursor modifier remain available. In that workflow, right-click closes only the open list; use O or Escape to exit attachment mode.
+Right-click closes LIST only. Escape closes the interface. The bottom tooltip shows the menu key, selection, close-list and mounting-position controls. Wheel paging still works in LIST even though it is omitted from the tooltip.
+
+The advanced **O** fallback still opens the pose separately. In an O-opened session, hold the legacy cursor modifier (Left Alt by default) to use the menu; releasing Alt returns camera control without closing that O session. O again or Escape closes it.
 
 F10 writes a report and does not change inventory. Shift+O uses the same standalone pose; F4 calibration is inactive. The old F8/F6/F7 keyboard controls remain available in the config and are hidden from the normal F12 menu. Enter, keypad Enter or F6 stages a keyboard selection. F7 first returns an active pose without queuing an action; press F7 separately after hands are ready to confirm the staged selection.
 
-Aim, fire, reload, sprint, weapon switching and normal native inspection cancel the custom presentation. Closing during entry fades out the current pose; closing a held pose plays its authored return. Captured menu clicks retain their input suppression through release, so they cannot become shots or aim requests. The standalone path does not start a native inspection in the background.
+Aim, fire, reload, sprint, weapon switching and normal native inspection cancel the custom presentation. Closing during entry fades out the current pose; closing a held pose plays its authored return. Alt-captured menu clicks retain their input suppression, so they cannot become shots or aim requests. The standalone path does not start a native inspection in the background.
 
 ## What can move
 
@@ -37,6 +39,6 @@ F12 shows General, Controls, Display and Diagnostics. **General / Allow attachme
 
 Live action requires the inspected native client and a supported local controller. Fika inventory actions are blocked. Pose and card display do not authorize an item move by themselves. A click waits for custom presentation restoration before submitting a native transaction. The pose returns after successful completion and verified weapon/hands idle; interruptions and uncertain outcomes stop that automatic return.
 
-Version 0.27.0 preserves the animation and visible-hand behavior from 0.25.2 while changing the interface and menu activation. Offline checks do not establish live acceptance for every weapon or clothing combination. See [current validation](PROGRESS_0.27.0.md) and [weapon coverage](WEAPON_COVERAGE_0.25.2.md).
+Version 0.25.3 changes menu activation and the control hint while retaining the 0.25.2 interface, animation, hand presentation and inventory rules. See the [current changes](PROGRESS_0.25.3.md) and [weapon coverage](WEAPON_COVERAGE_0.25.2.md).
 
 The 1.12× attachment playback setting changes this mod's native install/remove animation only. It does not change ordinary inspect, firing or reload speed. [Configuration](CONFIGURATION.md) lists the F12 entries.

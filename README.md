@@ -2,7 +2,7 @@
 
 Swap carried optics, muzzle devices, tactical devices and foregrips through 3D cards positioned around your weapon. Open the attachment pose, choose a mounting point and pick a compatible item without opening the full inventory.
 
-**0.25.2 test build · SPT 4.1.5 / 4.1.6 · BepInEx client plugin**
+**0.25.3 test build · SPT 4.1.5 / 4.1.6 · BepInEx client plugin**
 
 The download has not been published yet.
 
@@ -10,7 +10,7 @@ The download has not been published yet.
 
 ![HK416 held in the attachment pose, with the current angled attachment cards](docs/images/hk416-attachment-menu.png)
 
-*Original HK416 gameplay capture. This shows the rifle presentation retained in 0.25.2; the footage predates the pistol correction.*
+*Original HK416 gameplay capture. The 0.25 card layout and rifle presentation are retained.*
 
 <details>
 <summary>View the HK416 inspection frame</summary>
@@ -37,7 +37,7 @@ Requirements: **SPT 4.1.5 or 4.1.6** with the inspected **EFT 40743 client**, **
 1. Close the game. Back up an existing `BepInEx/plugins/Tylevo.FieldAttachments/` folder and `BepInEx/config/com.tylevo.fieldattachments.cfg` before updating.
 2. Merge a packaged plugin release's `BepInEx` folder into your SPT game folder. Keep the plugin's `Animation` folder alongside its DLL and keep only one copy of the Field Attachments DLL installed.
 3. Preserve your existing configuration when updating. A plugin-only update keeps saved settings; older tester packages may include a preset that replaces them.
-4. Enter the hideout shooting range or a local raid with a supported weapon. Press **O**, then hold **Left Alt** to use the cards.
+4. Enter the hideout shooting range or a local raid with a supported weapon. Hold **Left Alt** to open the cards and use the cursor. Release it to close.
 
 ## Controls
 
@@ -45,24 +45,25 @@ These are the defaults. Saved bindings can differ; the main controls are configu
 
 | Action | Current control |
 | --- | --- |
-| Open or close the attachment pose | **O** |
-| Use the cursor while the pose is open | Hold **Left Alt** |
+| Open attachment mode with cursor | Hold **Left Alt** |
+| Close attachment mode | Release **Left Alt**, or press **Escape** |
 | Show carried choices for a card | Click **LIST** |
 | Browse the open list | Mouse wheel or page buttons |
 | Install or replace a part | Click its thumbnail in **LIST** |
 | Remove a part | **REMOVE** on its card, or **NONE** in **LIST** |
 | Change mounting point | **Left Alt + R** while the cursor is active |
 | Close the open list | Right-click while the cursor is active |
-| Close attachment mode | **O** again or **Escape** |
 | Save a diagnostic report while the overlay is open | **F10** |
 | Open mod settings | **F12** |
+
+In **F12 → Controls → Menu activation**, choose **Hold** or **Toggle**. Hold is the default. Toggle opens on an Alt press and closes on a later plain Alt tap; using Alt+R or clicking while Alt is held keeps it open. The bottom hint shows the menu, select, close-list and mount controls.
 
 Alt+R changes the open list's mounting point, or the hovered card's point when no list is open. It does not move an item. Mouse selection needs no separate confirmation key.
 
 <details>
 <summary>Legacy controls and saved settings</summary>
 
-The existing keyboard path is retained: **F8** opens the legacy overlay, **F9** rescans, and **Enter / keypad Enter / F6** stages a selection. **F7** is the separate opt-in empty-slot installation action. If a pose is active, F7 first returns the weapon; it needs another confirmation after the hands are ready.
+**O** still opens the legacy presentation, where holding **Left Alt** enables the cursor. **F8** opens the legacy overlay, **F9** rescans, and **Enter / keypad Enter / F6** stages a selection. **F7** is the separate opt-in empty-slot installation action. If a pose is active, F7 first returns the weapon; it needs another confirmation after the hands are ready.
 
 These bindings and older display options remain in the configuration even when hidden from the normal F12 menu. **Shift+O** uses the same standalone presentation. **F4** calibration and saved native inspection markers are inactive in attachment mode.
 
