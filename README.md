@@ -32,7 +32,7 @@ The download has not been published yet.
 
 ## Installation
 
-Requires **SPT 4.1.5 or 4.1.6 (EFT 40743)**, **BepInEx 5**, and a compatible [UnityToolkit 2.0.2 or newer](https://github.com/ArysWasTaken/UnityToolkit). WTT Content Backport is optional; you only need it for the weapons it adds.
+Requires **SPT 4.1.5 or 4.1.6 (EFT 40743)**, **BepInEx 5**, and a compatible [UnityToolkit 2.0.2 or newer](https://github.com/ArysWasTaken/UnityToolkit). The weapon packs listed below are optional.
 
 1. Close the game. Back up an existing `BepInEx/plugins/Tylevo.FieldAttachments/` folder and `BepInEx/config/com.tylevo.fieldattachments.cfg` before updating.
 2. Merge a packaged plugin release's `BepInEx` folder into your SPT game folder. Keep the plugin's `Animation` folder alongside its DLL and keep only one copy of the Field Attachments DLL installed.
@@ -81,7 +81,17 @@ Press **F12** to change the menu key, choose Hold or Toggle, and adjust cursor s
 | Game versions | SPT 4.1.5 / 4.1.6 (EFT 40743) |
 | Where it works | Local raids and the hideout shooting range |
 | Fika | Attachment changes are not supported |
-| Weapons | 194 weapon entries supported, including weapons from optional content mods |
+| Weapons | 159 SPT weapon entries plus 35 from the optional packs below, for 194 total |
 | Other weapon mods | Support must be added for each weapon; unlisted weapons won't work automatically |
+
+You don't need these packs to use Field Attachments with SPT's standard weapons. The 35 added weapon entries come from:
+
+| Optional pack | Supported entries | Examples |
+| --- | ---: | --- |
+| [WTT - Content Backport](https://forge.sp-tarkov.com/mod/2512/wtt-content-backport) | 13 | M16A1, M16A2, Howa Type 20 |
+| [Epic's All in One](https://forge.sp-tarkov.com/index.php/mod/1263/epics-all-in-one) | 16 | Mk47 Mutant 5.45/9×39 variants, MCX 5.56, M700 .277 Fury |
+| [ECOT - Eukyre's Consortium of Things](https://forge.sp-tarkov.com/mod/2195/ecot-eukyres-consortium-of-things) | 6 | HK337, FNX-45 Tactical, Glock 22, MP5/40, UMP .40 |
+
+If you add a pack, use a release that matches your SPT version and install its listed dependencies. These counts cover the weapons currently supported; new additions to a pack won't automatically be supported.
 
 Some supported weapons have no attachment slots to change. Not every weapon and clothing combination has been tested in game yet.
