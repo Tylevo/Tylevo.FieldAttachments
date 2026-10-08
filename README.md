@@ -48,7 +48,6 @@ Left Alt opens the menu and gives you mouse control in both Hold and Toggle mode
 | Open the menu and control the mouse | Hold **Left Alt**, or press it in Toggle mode |
 | Cancel attachment mode | Perform an action such as sprinting, press **Left Alt** again in Toggle mode, or release it in Hold mode |
 | Show carried choices for a card | Click **LIST** |
-| Browse the open list | Mouse wheel or page buttons |
 | Install or replace a part | Click its thumbnail in **LIST** |
 | Remove a part | **REMOVE** on its card, or **NONE** in **LIST** |
 | Change mounting point | **Left Alt + R** while the cursor is active |
