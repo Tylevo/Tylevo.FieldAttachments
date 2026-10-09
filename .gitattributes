@@ -2,8 +2,7 @@
 *.md text eol=lf
 *.png binary
 *.bundle binary
-# Preserve the exact source and fixture bytes used for the release build.
+# Preserve the exact source bytes used for the release build.
 src/** -text
-tests/** -text
 assets/Animation/*.json -text
 tools/** -text

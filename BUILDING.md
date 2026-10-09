@@ -1,6 +1,6 @@
 # Build from source
 
-This repository contains the C# source for the **1.0.0 release**, its tests, build scripts and the animation bundles used by the plugin.
+This repository contains the C# source for the **1.0.0 release**, the build scripts and the animation bundles used by the plugin.
 
 Requirements:
 
@@ -16,13 +16,7 @@ From the repository folder, replace `<SPT_GAME_FOLDER>` with the folder containi
 powershell -NoProfile -ExecutionPolicy Bypass -File .\tools\Build.ps1 -SptPath '<SPT_GAME_FOLDER>'
 ```
 
-The script checks the client references, runs the core tests, compiles the plugin and verifies the included animation bundles. It writes the install files to `dist/BepInEx/plugins/Tylevo.FieldAttachments/` and the build log to `dist/build.log`.
-
-To run the additional source checks, install Python 3 and run:
-
-```powershell
-python .\tools\Validate-Source.py
-```
+The script checks the client references, compiles the plugin and verifies the included animation bundles. It writes the install files to `dist/BepInEx/plugins/Tylevo.FieldAttachments/` and the build log to `dist/build.log`.
 
 The build does not install the mod. Close the game before copying `dist/BepInEx` into your SPT folder. Keep the `Animation` folder beside the DLL.
 

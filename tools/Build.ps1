@@ -52,9 +52,6 @@ try {
     $major = [int]$Matches[1]
     if ($major -lt 8) { throw 'This build helper requires SDK 8 or newer.' }
     [Environment]::SetEnvironmentVariable('TFA_SPT_ROOT', $SptPath, 'Process')
-    $runtime = 'net' + $major + '.0'
-    Run-DotNet -Arguments @('build', (Join-Path $Repo 'tests\FieldAttachments.Tests.csproj'), '-c', 'Release', '--verbosity', 'minimal', ('-p:RuntimeTargetFramework=' + $runtime))
-    Run-DotNet -Arguments @((Join-Path $Repo ('tests\bin\Release\' + $runtime + '\FieldAttachments.Tests.dll')))
     Run-DotNet -Arguments @('build', (Join-Path $Repo 'src\Tylevo.FieldAttachments.csproj'), '-c', 'Release', '--verbosity', 'minimal')
     $Dll = Join-Path $Repo 'src\bin\Release\Tylevo.FieldAttachments.dll'
     if (!(Test-Path -LiteralPath $Dll)) { throw 'Compiler did not produce the expected plugin DLL.' }
@@ -129,11 +126,11 @@ try {
     }
     $Manifest = [ordered]@{ pluginVersion = '1.0.0'; altMenuHoldAndToggle = $true; original025CardLayout = $true; readOnlyByDefault = $false; experimentalEmptySlotInstallPresent = $true; nativeTacticalUninstallPresent = $true; nativeLeafAttachmentCategories = @('Optic','Muzzle','Tactical','Underbarrel'); clickActionsPresent = $true; swapsEnabled = $true; nativeAtomicSwapUsed = $false; sequentialReplacement = $true; requestedTarget = ('SPT ' + $ClientCompatibility.actualSptVersion); supportedTargets = @('SPT 4.1.5', 'SPT 4.1.6'); actualSptVersion = $ClientCompatibility.actualSptVersion; clientCompatibility = $ClientCompatibility; gameVersionMustBeVerified = $true;
         createdUtc = (Get-Date).ToUniversalTime().ToString('o'); sdk = $version;
-        runtimeTestsPerformed = $false; coreTestsPassed = $true; customStmAnimationSha256 = $AnimationHash; authoredAnimationHashes = $AnimationHashes;
+        runtimeTestsPerformed = $false; coreTestsPerformed = $false; coreTestsPassed = $null; customStmAnimationSha256 = $AnimationHash; authoredAnimationHashes = $AnimationHashes;
         authoredTemplateCount = 194; additionalAliasCount = 26; original123AnimationHashesPreserved = $true;
         pluginSha256 = (Get-FileHash -LiteralPath $Dll -Algorithm SHA256).Hash; references = @($References) }
     $Manifest | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $PackageDir 'build-manifest.json') -Encoding UTF8
-    Write-Host "`nBuild and core tests succeeded. This is NOT proof of in-game compatibility."
+    Write-Host "`nPlugin build and animation asset checks succeeded."
     Write-Host ('Ready to copy: ' + (Join-Path $Out 'BepInEx'))
     if ($Install) {
         Write-Host ('Destination: ' + (Join-Path $SptPath 'BepInEx\plugins\Tylevo.FieldAttachments'))

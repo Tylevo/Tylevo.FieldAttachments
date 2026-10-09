@@ -22,3 +22,8 @@ __pycache__/
 .idea/
 authoring/Inputs/
 authoring/Build/
+# Development tests and helpers are maintained in the local development project.
+/tests/
+/tools/Validate-Source.py
+/tools/Collect-Feedback.ps1
+/tools/Package-Release.py
