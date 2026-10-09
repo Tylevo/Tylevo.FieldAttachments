@@ -1,0 +1,853 @@
+{
+  "source": "Installed SPT 4.1.5: six selected client_assets and controller bundles; pose-audit/audit-long-rifle-mcx.py category",
+  "weapons": {
+    "mp5": {
+      "controller": "weapon_hk_mp5_navy3_9x19",
+      "files": [
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\mp5\\client_assets.bundle",
+          "sha256": "df5458aafd2937834eb9bf6a8ade72a598f7463163bfc2b186837506d9841e36"
+        },
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\mp5\\weapon_hk_mp5_navy3_9x19_container.bundle",
+          "sha256": "329acc632e8dce3bf35080c5334ac81949d80452aa17e1e3a47480fea5194197"
+        }
+      ],
+      "clips": [
+        {
+          "name": "mp5k_look",
+          "id": -8016124451499410882,
+          "duration": 3.333332061767578,
+          "legacy": false,
+          "events": [],
+          "bindingTypes": [
+            4
+          ]
+        },
+        {
+          "name": "mp5_jam_look",
+          "id": 393047836849244203,
+          "duration": 1.100000023841858,
+          "legacy": false,
+          "events": [],
+          "bindingTypes": [
+            4
+          ]
+        },
+        {
+          "name": "mp5_look",
+          "id": 5520132288955654058,
+          "duration": 3.333332061767578,
+          "legacy": false,
+          "events": [],
+          "bindingTypes": [
+            4
+          ]
+        }
+      ],
+      "requiredRigPaths": 55,
+      "missingRigPaths": [],
+      "states": [
+        {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 4969027391813647576
+          },
+          "m_Name": "",
+          "EventsContainer": {},
+          "FullName": "Hands.LOOK",
+          "FullNameHash": 1355507738,
+          "EventsData": {
+            "m_FileID": 0,
+            "m_PathID": -5925779404062236391
+          },
+          "EventsListId": 11
+        }
+      ],
+      "eventProfiles": [
+        {
+          "_animationEvents": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.04071919620037079,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.9338974356651306,
+              "EventConditions": []
+            }
+          ]
+        }
+      ],
+      "selectedClip": "mp5_look"
+    },
+    "p90": {
+      "controller": "weapon_fn_p90_57x28",
+      "files": [
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\p90\\client_assets.bundle",
+          "sha256": "df83642531f90a7eb486b3045afa42c11971f31210ca58518abc4f6cb663215f"
+        },
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\p90\\weapon_fn_p90_57x28_container.bundle",
+          "sha256": "60209d42e2abf9cb6eeb95e682344103f8a6dfce4bb0b6ebecc10620666536b3"
+        }
+      ],
+      "clips": [
+        {
+          "name": "p90_look",
+          "id": -7193604053889239770,
+          "duration": 3.333333969116211,
+          "legacy": false,
+          "events": [],
+          "bindingTypes": [
+            4
+          ]
+        }
+      ],
+      "requiredRigPaths": 55,
+      "missingRigPaths": [],
+      "states": [
+        {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 4969027391813647576
+          },
+          "m_Name": "",
+          "EventsContainer": {},
+          "FullName": "Hands.LOOK",
+          "FullNameHash": 1355507738,
+          "EventsData": {
+            "m_FileID": 0,
+            "m_PathID": 937867010896254272
+          },
+          "EventsListId": 13
+        }
+      ],
+      "eventProfiles": [
+        {
+          "_animationEvents": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.06285714358091354,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.39479392766952515,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOnHard",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.44902387261390686,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.831428587436676,
+              "EventConditions": []
+            }
+          ]
+        }
+      ],
+      "selectedClip": "p90_look"
+    },
+    "m870": {
+      "controller": "weapon_remington_model_870_12g",
+      "files": [
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\m870\\client_assets.bundle",
+          "sha256": "7a1fcff0db334b0b40fae6eacbc9c72913ac2cb1c76ce7ccc7d5d33871d08008"
+        },
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\m870\\weapon_remington_model_870_12g_container.bundle",
+          "sha256": "bf4d839ad8e1e1f6948d466a9eda3c4a003efab729b268d49d9ff72f58881543"
+        }
+      ],
+      "clips": [
+        {
+          "name": "m870_look",
+          "id": 132634558349083110,
+          "duration": 3.3333330154418945,
+          "legacy": false,
+          "events": [],
+          "bindingTypes": [
+            4
+          ]
+        }
+      ],
+      "requiredRigPaths": 55,
+      "missingRigPaths": [],
+      "states": [
+        {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 4969027391813647576
+          },
+          "m_Name": "",
+          "EventsContainer": {},
+          "FullName": "Hands.LOOK",
+          "FullNameHash": 1355507738,
+          "EventsData": {
+            "m_FileID": 0,
+            "m_PathID": -4192058835384557139
+          },
+          "EventsListId": 6
+        }
+      ],
+      "eventProfiles": [
+        {
+          "_animationEvents": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.08382066339254379,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.10282257944345474,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip1",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.4093567132949829,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.47211897373199463,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.7918215394020081,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip2",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.808966875076294,
+              "EventConditions": []
+            }
+          ]
+        }
+      ],
+      "selectedClip": "m870_look"
+    },
+    "glock17": {
+      "controller": "weapon_glock_glock_17_gen3_9x19",
+      "files": [
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\glock17\\client_assets.bundle",
+          "sha256": "19d07f6035130cc70c21f1b095658836cbeade22c32df53a6608c0a3329e281f"
+        },
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\glock17\\weapon_glock_glock_17_gen3_9x19_container.bundle",
+          "sha256": "60a63dec0bb9dcb80e1860112cc69f4677b732b213169d0271e59aa703b26ffa"
+        }
+      ],
+      "clips": [
+        {
+          "name": "glock_jam_look",
+          "id": -2601868631545000211,
+          "duration": 1.1666641235351562,
+          "legacy": false,
+          "events": [],
+          "bindingTypes": [
+            4
+          ]
+        },
+        {
+          "name": "glock_look",
+          "id": 7319695992314089197,
+          "duration": 3.3333334922790527,
+          "legacy": false,
+          "events": [],
+          "bindingTypes": [
+            4
+          ]
+        }
+      ],
+      "requiredRigPaths": 55,
+      "missingRigPaths": [],
+      "states": [
+        {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 4969027391813647576
+          },
+          "m_Name": "",
+          "EventsContainer": {},
+          "FullName": "Hands.LOOK",
+          "FullNameHash": 1355507738,
+          "EventsData": {
+            "m_FileID": 0,
+            "m_PathID": -3969749235556282762
+          },
+          "EventsListId": 13
+        }
+      ],
+      "eventProfiles": [
+        {
+          "_animationEvents": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.039697542786598206,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.2759924530982971,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.4120982885360718,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 0,
+              "_time": 0.7977315783500671,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.8317580223083496,
+              "EventConditions": []
+            }
+          ]
+        }
+      ],
+      "selectedClip": "glock_look"
+    },
+    "aug": {
+      "controller": "weapon_steyr_aug_a1_556x45",
+      "files": [
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\aug\\client_assets.bundle",
+          "sha256": "704b0959d658823adfd3bd7d3033a937565d8e7bd25ef1bb4ad6a64e122599af"
+        },
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\aug\\weapon_steyr_aug_a1_556x45_container.bundle",
+          "sha256": "71a83a9216f15f35d4d82480057430cd26024f0f2f3f381b944a9d29691da252"
+        }
+      ],
+      "clips": [
+        {
+          "name": "aug_look",
+          "id": -4998626731417964818,
+          "duration": 3.3333330154418945,
+          "legacy": false,
+          "events": [],
+          "bindingTypes": [
+            4
+          ]
+        },
+        {
+          "name": "aug_jam_look",
+          "id": 5126444849853460206,
+          "duration": 1.2999992370605469,
+          "legacy": false,
+          "events": [],
+          "bindingTypes": [
+            4
+          ]
+        }
+      ],
+      "requiredRigPaths": 55,
+      "missingRigPaths": [],
+      "states": [
+        {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 4969027391813647576
+          },
+          "m_Name": "",
+          "EventsContainer": {},
+          "FullName": "Hands.LOOK",
+          "FullNameHash": 1355507738,
+          "EventsData": {
+            "m_FileID": 0,
+            "m_PathID": 627694144128689451
+          },
+          "EventsListId": 11
+        }
+      ],
+      "eventProfiles": [
+        {
+          "_animationEvents": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.041860464960336685,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunRotate",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.39821693301200867,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip1",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.787162184715271,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.8542635440826416,
+              "EventConditions": []
+            }
+          ]
+        }
+      ],
+      "selectedClip": "aug_look"
+    },
+    "rpk16": {
+      "controller": "weapon_izhmash_rpk16_545x39",
+      "files": [
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\rpk16\\client_assets.bundle",
+          "sha256": "3ef6721d1cc28652f2c6318370b389204f972130d01df1aa521efdf53a3a3656"
+        },
+        {
+          "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\rpk16\\weapon_izhmash_rpk16_545x39_container.bundle",
+          "sha256": "b2f5404be6a1c2ba484c92c94d153a79e8313af7fcb16a9f35220d146191590e"
+        }
+      ],
+      "clips": [
+        {
+          "name": "rpk16_jam_look",
+          "id": -4646143199010754342,
+          "duration": 0.8333333134651184,
+          "legacy": false,
+          "events": [],
+          "bindingTypes": [
+            4
+          ]
+        },
+        {
+          "name": "rpk16_look",
+          "id": 1796814234308027103,
+          "duration": 3.3333282470703125,
+          "legacy": false,
+          "events": [],
+          "bindingTypes": [
+            4
+          ]
+        }
+      ],
+      "requiredRigPaths": 55,
+      "missingRigPaths": [],
+      "states": [
+        {
+          "m_GameObject": {
+            "m_FileID": 0,
+            "m_PathID": 0
+          },
+          "m_Enabled": 1,
+          "m_Script": {
+            "m_FileID": 0,
+            "m_PathID": 4969027391813647576
+          },
+          "m_Name": "",
+          "EventsContainer": {},
+          "FullName": "Hands.LOOK",
+          "FullNameHash": 1355507738,
+          "EventsData": {
+            "m_FileID": 0,
+            "m_PathID": 1257296785180542103
+          },
+          "EventsListId": 12
+        }
+      ],
+      "eventProfiles": [
+        {
+          "_animationEvents": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.10169491171836853,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip3",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.1285310685634613,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip1",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.450564980506897,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOnHard",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.5155367255210876,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip2",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.7570621371269226,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.8248587846755981,
+              "EventConditions": []
+            }
+          ]
+        }
+      ],
+      "selectedClip": "rpk16_look"
+    }
+  }
+}

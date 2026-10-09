@@ -1,0 +1,513 @@
+{
+  "schema": 1,
+  "presentation": "MCX-angle/STM-withdrawn-arm-v1",
+  "unityVersion": "2022.3.43f1",
+  "families": [
+    {
+      "id": "conventional-long-gun",
+      "wristOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "id": "compact-smg",
+      "wristOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "id": "pistol",
+      "wristOffset": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    }
+  ],
+  "recipients": [
+    {
+      "template": "5df8ce05b11454561e39243b",
+      "controller": "weapon_kac_sr25_762x51",
+      "nativeClip": "sr25_look",
+      "bundle": "sr25_presentation",
+      "sha256": "1891AEDEBA70CC150A57CB751E59177C7C69CFE5645AC4F8EB9FF49156732341",
+      "family": "conventional-long-gun",
+      "verification": {
+        "source": {
+          "weapon": "sr25",
+          "folder": "sr25",
+          "template": "5df8ce05b11454561e39243b",
+          "controller": "weapon_kac_sr25_762x51",
+          "nativeClip": "sr25_look",
+          "family": "conventional-long-gun",
+          "nativeTime": 0.0,
+          "useIdleGrip": true,
+          "wristOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "clip": "Tylevo.FieldAttachments.sr25_presentation",
+        "bundleSha256": "1891AEDEBA70CC150A57CB751E59177C7C69CFE5645AC4F8EB9FF49156732341",
+        "nativeBundleSha256": "E07985203B14908C53161DB4ADF6E9900BED83DBEDB93319FD67A59C1F6A9922",
+        "heldAngleError": 0.0,
+        "heldWristError": 8.05903539458086e-08,
+        "leftArmPositionError": 1.9272040674422897e-07,
+        "leftArmAngleError": 0.0,
+        "samples": 401,
+        "bindings": 378,
+        "maxGripError": 0.00033671167329885066,
+        "maxEndpointPositionError": 1.9272040674422897e-07,
+        "maxEndpointAngleError": 0.0,
+        "maxNativeHandPositionError": 1.6357375898223836e-07,
+        "maxNativeHandAngleError": 0.0,
+        "noCameraOrScaleCurves": true,
+        "noEvents": true,
+        "finite": true,
+        "ownedClipSurvivedUnload": true,
+        "nativeEndpointsMatch": true
+      },
+      "native": {
+        "controller": "weapon_kac_sr25_762x51",
+        "files": [
+          {
+            "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\sr25\\client_assets.bundle",
+            "sha256": "e07985203b14908c53161db4adf6e9900bed83dbedb93319fd67a59c1f6a9922"
+          },
+          {
+            "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\sr25\\weapon_kac_sr25_762x51_container.bundle",
+            "sha256": "da74092033ae50ec4bb45904c712d55501fdc32a16e098d135a5489cbf83890d"
+          }
+        ],
+        "clips": [
+          {
+            "name": "sr25_look",
+            "id": -1387695641778924856,
+            "duration": 3.3333330154418945,
+            "legacy": false,
+            "events": [],
+            "bindingTypes": [
+              4
+            ]
+          }
+        ],
+        "requiredRigPaths": 55,
+        "missingRigPaths": [],
+        "states": [
+          {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": 4969027391813647576
+            },
+            "m_Name": "",
+            "EventsContainer": {},
+            "FullName": "Hands.LOOK",
+            "FullNameHash": 1355507738,
+            "EventsData": {
+              "m_FileID": 0,
+              "m_PathID": -8833227239613832615
+            },
+            "EventsListId": 13
+          }
+        ],
+        "eventProfiles": [
+          {
+            "_animationEvents": [
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "",
+                  "ParamType": 0
+                },
+                "_functionName": "StartUtilityOperation",
+                "_functionNameHash": 1134400241,
+                "Enabled": 1,
+                "_time": 0.0,
+                "EventConditions": []
+              },
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "HandOff",
+                  "ParamType": 3
+                },
+                "_functionName": "Sound",
+                "_functionNameHash": 1554795451,
+                "Enabled": 1,
+                "_time": 0.06482364237308502,
+                "EventConditions": []
+              },
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "GunFlip",
+                  "ParamType": 3
+                },
+                "_functionName": "Sound",
+                "_functionNameHash": 1554795451,
+                "Enabled": 1,
+                "_time": 0.1039084866642952,
+                "EventConditions": []
+              },
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "GunFlip1",
+                  "ParamType": 3
+                },
+                "_functionName": "Sound",
+                "_functionNameHash": 1554795451,
+                "Enabled": 1,
+                "_time": 0.4289799928665161,
+                "EventConditions": []
+              },
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "GunFlip2",
+                  "ParamType": 3
+                },
+                "_functionName": "Sound",
+                "_functionNameHash": 1554795451,
+                "Enabled": 1,
+                "_time": 0.8074356317520142,
+                "EventConditions": []
+              },
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "HandOn",
+                  "ParamType": 3
+                },
+                "_functionName": "Sound",
+                "_functionNameHash": 1554795451,
+                "Enabled": 1,
+                "_time": 0.8713060021400452,
+                "EventConditions": []
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "template": "5926bb2186f7744b1c6c6e60",
+      "controller": "weapon_hk_mp5_navy3_9x19",
+      "nativeClip": "mp5_look",
+      "bundle": "mp5_presentation",
+      "sha256": "CE131E5E6AF215F5CC10703CF186FBC5E1938A769A4C680265E003E338402140",
+      "family": "compact-smg",
+      "verification": {
+        "source": {
+          "weapon": "mp5",
+          "folder": "mp5",
+          "template": "5926bb2186f7744b1c6c6e60",
+          "controller": "weapon_hk_mp5_navy3_9x19",
+          "nativeClip": "mp5_look",
+          "family": "compact-smg",
+          "nativeTime": 0.0,
+          "useIdleGrip": true,
+          "wristOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "clip": "Tylevo.FieldAttachments.mp5_presentation",
+        "bundleSha256": "CE131E5E6AF215F5CC10703CF186FBC5E1938A769A4C680265E003E338402140",
+        "nativeBundleSha256": "DF5458AAFD2937834EB9BF6A8ADE72A598F7463163BFC2B186837506D9841E36",
+        "heldAngleError": 0.0,
+        "heldWristError": 1.0133885552932043e-07,
+        "leftArmPositionError": 1.9389869976293994e-07,
+        "leftArmAngleError": 0.0,
+        "samples": 401,
+        "bindings": 378,
+        "maxGripError": 0.0003583005163818598,
+        "maxEndpointPositionError": 1.9389869976293994e-07,
+        "maxEndpointAngleError": 0.0,
+        "maxNativeHandPositionError": 1.896608239349007e-07,
+        "maxNativeHandAngleError": 0.0,
+        "noCameraOrScaleCurves": true,
+        "noEvents": true,
+        "finite": true,
+        "ownedClipSurvivedUnload": true,
+        "nativeEndpointsMatch": true
+      },
+      "native": {
+        "controller": "weapon_hk_mp5_navy3_9x19",
+        "files": [
+          {
+            "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\mp5\\client_assets.bundle",
+            "sha256": "df5458aafd2937834eb9bf6a8ade72a598f7463163bfc2b186837506d9841e36"
+          },
+          {
+            "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\mp5\\weapon_hk_mp5_navy3_9x19_container.bundle",
+            "sha256": "329acc632e8dce3bf35080c5334ac81949d80452aa17e1e3a47480fea5194197"
+          }
+        ],
+        "clips": [
+          {
+            "name": "mp5k_look",
+            "id": -8016124451499410882,
+            "duration": 3.333332061767578,
+            "legacy": false,
+            "events": [],
+            "bindingTypes": [
+              4
+            ]
+          },
+          {
+            "name": "mp5_jam_look",
+            "id": 393047836849244203,
+            "duration": 1.100000023841858,
+            "legacy": false,
+            "events": [],
+            "bindingTypes": [
+              4
+            ]
+          },
+          {
+            "name": "mp5_look",
+            "id": 5520132288955654058,
+            "duration": 3.333332061767578,
+            "legacy": false,
+            "events": [],
+            "bindingTypes": [
+              4
+            ]
+          }
+        ],
+        "requiredRigPaths": 55,
+        "missingRigPaths": [],
+        "states": [
+          {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": 4969027391813647576
+            },
+            "m_Name": "",
+            "EventsContainer": {},
+            "FullName": "Hands.LOOK",
+            "FullNameHash": 1355507738,
+            "EventsData": {
+              "m_FileID": 0,
+              "m_PathID": -5925779404062236391
+            },
+            "EventsListId": 11
+          }
+        ],
+        "eventProfiles": [
+          {
+            "_animationEvents": [
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "",
+                  "ParamType": 0
+                },
+                "_functionName": "StartUtilityOperation",
+                "_functionNameHash": 1134400241,
+                "Enabled": 1,
+                "_time": 0.0,
+                "EventConditions": []
+              },
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "HandOff",
+                  "ParamType": 3
+                },
+                "_functionName": "Sound",
+                "_functionNameHash": 1554795451,
+                "Enabled": 1,
+                "_time": 0.04071919620037079,
+                "EventConditions": []
+              },
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "HandOn",
+                  "ParamType": 3
+                },
+                "_functionName": "Sound",
+                "_functionNameHash": 1554795451,
+                "Enabled": 1,
+                "_time": 0.9338974356651306,
+                "EventConditions": []
+              }
+            ]
+          }
+        ],
+        "selectedClip": "mp5_look"
+      }
+    },
+    {
+      "template": "5cadc190ae921500103bb3b6",
+      "controller": "weapon_beretta_m9a3_9x19",
+      "nativeClip": "m9_look",
+      "bundle": "m9a3_presentation",
+      "sha256": "988D06C4EDD3B74AD8ECD132FEDB39C91284C033F3FF37B360D30700E42B6493",
+      "family": "pistol",
+      "verification": {
+        "source": {
+          "weapon": "m9a3",
+          "folder": "m9a3",
+          "template": "5cadc190ae921500103bb3b6",
+          "controller": "weapon_beretta_m9a3_9x19",
+          "nativeClip": "m9_look",
+          "family": "pistol",
+          "nativeTime": 0.0,
+          "useIdleGrip": true,
+          "wristOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "clip": "Tylevo.FieldAttachments.m9a3_presentation",
+        "bundleSha256": "988D06C4EDD3B74AD8ECD132FEDB39C91284C033F3FF37B360D30700E42B6493",
+        "nativeBundleSha256": "FE4DDAC17F8F01CDD4E4EFD2311228DEBA63406DF7B9CA1B3D95041DC6B534A4",
+        "heldAngleError": 0.0,
+        "heldWristError": 4.5320113883917656e-08,
+        "leftArmPositionError": 2.2674922206533665e-07,
+        "leftArmAngleError": 0.0,
+        "samples": 401,
+        "bindings": 378,
+        "maxGripError": 0.0004228809557389468,
+        "maxEndpointPositionError": 2.2674922206533665e-07,
+        "maxEndpointAngleError": 0.0,
+        "maxNativeHandPositionError": 2.76375374141935e-07,
+        "maxNativeHandAngleError": 0.0,
+        "noCameraOrScaleCurves": true,
+        "noEvents": true,
+        "finite": true,
+        "ownedClipSurvivedUnload": true,
+        "nativeEndpointsMatch": true
+      },
+      "native": {
+        "controller": "weapon_beretta_m9a3_9x19",
+        "clips": [
+          {
+            "name": "m9_look",
+            "duration": 3.333333969116211,
+            "legacy": false,
+            "events": []
+          }
+        ],
+        "states": [
+          {
+            "m_GameObject": {
+              "m_FileID": 0,
+              "m_PathID": 0
+            },
+            "m_Enabled": 1,
+            "m_Script": {
+              "m_FileID": 0,
+              "m_PathID": 4969027391813647576
+            },
+            "m_Name": "",
+            "EventsContainer": {},
+            "FullName": "Hands.LOOK",
+            "FullNameHash": 1355507738,
+            "EventsData": {
+              "m_FileID": 0,
+              "m_PathID": -4823201191840171547
+            },
+            "EventsListId": 13
+          }
+        ],
+        "eventProfiles": [
+          {
+            "_animationEvents": [
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "",
+                  "ParamType": 0
+                },
+                "_functionName": "StartUtilityOperation",
+                "_functionNameHash": 1134400241,
+                "Enabled": 1,
+                "_time": 0.0,
+                "EventConditions": []
+              },
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "HandOff",
+                  "ParamType": 3
+                },
+                "_functionName": "Sound",
+                "_functionNameHash": 1554795451,
+                "Enabled": 1,
+                "_time": 0.00319488812237978,
+                "EventConditions": []
+              },
+              {
+                "Parameter": {
+                  "BoolParam": 0,
+                  "FloatParam": 0.0,
+                  "IntParam": 0,
+                  "StringParam": "HandOn",
+                  "ParamType": 3
+                },
+                "_functionName": "Sound",
+                "_functionNameHash": 1554795451,
+                "Enabled": 1,
+                "_time": 0.9192660450935364,
+                "EventConditions": []
+              }
+            ]
+          }
+        ],
+        "files": [
+          {
+            "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\m9a3\\weapon_beretta_m9a3_9x19_container.bundle",
+            "sha256": "3c7678b5326d0f002261f5c17b86f30433c507ebc0c88a531ef1e2b364f8ad15"
+          },
+          {
+            "path": "<SPT_GAME_ROOT>\\EscapeFromTarkov_Data\\StreamingAssets\\Windows\\assets\\content\\weapons\\m9a3\\client_assets.bundle",
+            "sha256": "fe4ddac17f8f01cdd4e4efd2311228deba63406df7b9ca1b3d95041dc6b534a4"
+          }
+        ]
+      }
+    }
+  ]
+}

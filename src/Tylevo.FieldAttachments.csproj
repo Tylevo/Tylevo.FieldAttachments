@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>Tylevo.FieldAttachments</AssemblyName>
+    <RootNamespace>Tylevo.FieldAttachments</RootNamespace>
+    <Version>1.0.0</Version>
+    <PathMap>$(MSBuildProjectDirectory)=/_/Tylevo.FieldAttachments/src</PathMap>
+    <Deterministic>true</Deterministic>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <SPTPath Condition="'$(SPTPath)' == ''">$(TFA_SPT_ROOT)</SPTPath>
+    <Managed>$(SPTPath)/EscapeFromTarkov_Data/Managed</Managed>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp"><HintPath>$(Managed)/Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Sirenix.Serialization"><HintPath>$(Managed)/Sirenix.Serialization.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UniTask"><HintPath>$(SPTPath)/BepInEx/plugins/UnityToolkit/UniTask.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="BepInEx"><HintPath>$(SPTPath)/BepInEx/core/BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(SPTPath)/BepInEx/core/0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(Managed)/UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(Managed)/UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AnimationModule"><HintPath>$(Managed)/UnityEngine.AnimationModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.AssetBundleModule"><HintPath>$(Managed)/UnityEngine.AssetBundleModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.InputLegacyModule"><HintPath>$(Managed)/UnityEngine.InputLegacyModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(Managed)/UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(Managed)/UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(Managed)/UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+  <Target Name="CheckLocalReferences" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="'$(SPTPath)' == ''" Text="Set TFA_SPT_ROOT or use Build.cmd. This project compiles against your own installed Unity/BepInEx libraries." />
+    <Error Condition="!Exists('$(Managed)/Assembly-CSharp.dll')" Text="SPT client Assembly-CSharp.dll not found. Select the SPT game root, not the server-only directory." />
+    <Error Condition="!Exists('$(SPTPath)/BepInEx/core/BepInEx.dll')" Text="BepInEx 5 core library not found at the chosen game root." />
+    <Error Condition="!Exists('$(SPTPath)/BepInEx/plugins/UnityToolkit/UniTask.dll')" Text="UnityToolkit 2.0.2+ with UniTask must be installed in the chosen SPT client." />
+  </Target>
+</Project>

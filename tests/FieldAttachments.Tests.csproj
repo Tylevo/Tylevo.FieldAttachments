@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework Condition="'$(RuntimeTargetFramework)' == ''">net8.0</TargetFramework>
+    <TargetFramework Condition="'$(RuntimeTargetFramework)' != ''">$(RuntimeTargetFramework)</TargetFramework>
+    <OutputType>Exe</OutputType><LangVersion>10.0</LangVersion><Nullable>enable</Nullable><ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup><Compile Include="../src/Core/*.cs" Link="Core/%(Filename)%(Extension)" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="Fixtures/studio-cross-projection.json" LogicalName="studio-cross-projection.json" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="Fixtures/long-rifle-mcx.json" LogicalName="long-rifle-mcx.json" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="Fixtures/category-mcx.json" LogicalName="category-mcx.json" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="Fixtures/mcx-backport.json" LogicalName="mcx-backport.json" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="Fixtures/m4-m870-backport.json" LogicalName="m4-m870-backport.json" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="../assets/Animation/family-presentations.json" LogicalName="family-presentations.json" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="../assets/Animation/all-presentations.json" LogicalName="all-presentations.json" /></ItemGroup>
+  <ItemGroup>
+    <Compile Include="../src/Runtime/ReadAccess.cs" Link="Runtime/ReadAccess.cs" />
+    <Compile Include="../src/Runtime/LocalSessionReader.cs" Link="Runtime/LocalSessionReader.cs" />
+    <Compile Include="../src/Runtime/NativeSprintReader.cs" Link="Runtime/NativeSprintReader.cs" />
+    <Compile Include="../src/Runtime/NativeFilter.cs" Link="Runtime/NativeFilter.cs" />
+    <Compile Include="../src/Runtime/AttachmentAssemblyReader.cs" Link="Runtime/AttachmentAssemblyReader.cs" />
+    <Compile Include="../src/Runtime/CarriedStorageReader.cs" Link="Runtime/CarriedStorageReader.cs" />
+    <Compile Include="../src/Runtime/NativeInstallProbe*.cs" Link="Runtime/NativeInstallProbe.cs" />
+  </ItemGroup>
+</Project>

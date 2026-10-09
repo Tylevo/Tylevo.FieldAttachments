@@ -1,8 +1,9 @@
-# This repository contains the public project page and documentation.
+# Build outputs and local game/user data.
 *.dll
 *.exe
 *.pdb
 *.bundle
+!assets/Animation/*.bundle
 *.zip
 *.cfg
 Reports/
@@ -11,3 +12,13 @@ Library/
 Temp/
 bin/
 obj/
+dist/
+audit-evidence/
+backups/
+STRUCTURAL_CHECKS.json
+*.log
+__pycache__/
+.vs/
+.idea/
+authoring/Inputs/
+authoring/Build/

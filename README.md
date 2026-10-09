@@ -4,7 +4,7 @@ Change optics, muzzle devices, tactical devices and foregrips without opening yo
 
 **1.0.0 · SPT 4.1.5 / 4.1.6 · BepInEx client plugin**
 
-[Installation](#installation) · [Controls](#controls) · [Compatibility](#compatibility-and-coverage)
+[Installation](#installation) · [Controls](#controls) · [Compatibility](#compatibility-and-coverage) · [Source code](src/Plugin.cs) · [Build instructions](BUILDING.md)
 
 ![HK416 held in the attachment pose, with the current angled attachment cards](docs/images/hk416-attachment-menu.png)
 

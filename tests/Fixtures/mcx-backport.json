@@ -1,0 +1,151 @@
+{
+  "bundleSha256": "c7b374d47e7c5308993f49670b0e11aabb778add2b95df7b20fc1860636ed1b2",
+  "controller": "weapon_sig_mcx_gen1_762x35",
+  "actualState": 1355507738,
+  "layer": 1,
+  "storedBehaviourHash": 316435260,
+  "clip": {
+    "reference": {
+      "m_FileID": 0,
+      "m_PathID": -1137948940810431655
+    },
+    "name": "Armature_Armature_mcx_look_0_Base Layer",
+    "legacy": false,
+    "events": [],
+    "start": 0.0,
+    "stop": 3.640000104904175
+  },
+  "eventProfiles": [
+    {
+      "_animationEvents": [
+        {
+          "Parameter": {
+            "BoolParam": 0,
+            "FloatParam": 0.0,
+            "IntParam": 0,
+            "StringParam": "",
+            "ParamType": 0
+          },
+          "_functionName": "StartUtilityOperation",
+          "_functionNameHash": 1134400241,
+          "Enabled": 1,
+          "_time": 0.0033632286358624697,
+          "EventConditions": []
+        },
+        {
+          "Parameter": {
+            "BoolParam": 0,
+            "FloatParam": 0.0,
+            "IntParam": 0,
+            "StringParam": "HandOff",
+            "ParamType": 3
+          },
+          "_functionName": "Sound",
+          "_functionNameHash": 1554795451,
+          "Enabled": 1,
+          "_time": 0.01905829645693302,
+          "EventConditions": []
+        },
+        {
+          "Parameter": {
+            "BoolParam": 0,
+            "FloatParam": 0.0,
+            "IntParam": 0,
+            "StringParam": "GunFlip1",
+            "ParamType": 3
+          },
+          "_functionName": "Sound",
+          "_functionNameHash": 1554795451,
+          "Enabled": 1,
+          "_time": 0.10426008701324463,
+          "EventConditions": []
+        },
+        {
+          "Parameter": {
+            "BoolParam": 0,
+            "FloatParam": 0.0,
+            "IntParam": 0,
+            "StringParam": "HandOn",
+            "ParamType": 3
+          },
+          "_functionName": "Sound",
+          "_functionNameHash": 1554795451,
+          "Enabled": 1,
+          "_time": 0.10762331634759903,
+          "EventConditions": []
+        },
+        {
+          "Parameter": {
+            "BoolParam": 0,
+            "FloatParam": 0.0,
+            "IntParam": 0,
+            "StringParam": "GunFlip4",
+            "ParamType": 3
+          },
+          "_functionName": "Sound",
+          "_functionNameHash": 1554795451,
+          "Enabled": 1,
+          "_time": 0.47869956493377686,
+          "EventConditions": []
+        },
+        {
+          "Parameter": {
+            "BoolParam": 0,
+            "FloatParam": 0.0,
+            "IntParam": 0,
+            "StringParam": "HandOn",
+            "ParamType": 3
+          },
+          "_functionName": "Sound",
+          "_functionNameHash": 1554795451,
+          "Enabled": 1,
+          "_time": 0.523542582988739,
+          "EventConditions": []
+        },
+        {
+          "Parameter": {
+            "BoolParam": 0,
+            "FloatParam": 0.0,
+            "IntParam": 0,
+            "StringParam": "HandOff",
+            "ParamType": 3
+          },
+          "_functionName": "Sound",
+          "_functionNameHash": 1554795451,
+          "Enabled": 1,
+          "_time": 0.7792946696281433,
+          "EventConditions": []
+        },
+        {
+          "Parameter": {
+            "BoolParam": 0,
+            "FloatParam": 0.0,
+            "IntParam": 0,
+            "StringParam": "GunFlip2",
+            "ParamType": 3
+          },
+          "_functionName": "Sound",
+          "_functionNameHash": 1554795451,
+          "Enabled": 1,
+          "_time": 0.8566552996635437,
+          "EventConditions": []
+        },
+        {
+          "Parameter": {
+            "BoolParam": 0,
+            "FloatParam": 0.0,
+            "IntParam": 0,
+            "StringParam": "HandOn",
+            "ParamType": 3
+          },
+          "_functionName": "Sound",
+          "_functionNameHash": 1554795451,
+          "Enabled": 1,
+          "_time": 0.8657565712928772,
+          "EventConditions": []
+        }
+      ]
+    }
+  ],
+  "eventsDataName": "weapon_colt_m4a1_556x45_StaticData"
+}

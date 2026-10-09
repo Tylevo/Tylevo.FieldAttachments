@@ -1,0 +1,1649 @@
+{
+  "schema": 1,
+  "presentation": "MCX-angle/STM-withdrawn-arm-v1",
+  "recipients": [
+    {
+      "template": "6963f79ab66d6c6601a8b2d7",
+      "name": "HK 337 .300 Blackout assault rifle",
+      "category": "assaultRifle",
+      "bundle": "gun_6963f79ab66d6c6601a8b2d7_presentation",
+      "sha256": "338A1CBF824DF12C4BF74899801D57EA0B05C8ED69E9CFD53E1126A7CE7F3A6F",
+      "profiles": [
+        {
+          "controller": "weapon_colt_m4a1_556x45",
+          "clip": "m4a1_look_0",
+          "duration": 3.640000104904175,
+          "baseController": "weapon_colt_m4a1_556x45",
+          "baseClip": "m4a1_look_0",
+          "nativeOverride": false,
+          "overrides": [],
+          "events": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0033632286358624697,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.01905829645693302,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip1",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.10426008701324463,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.10762331634759903,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip4",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.47869956493377686,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.523542582988739,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.7792946696281433,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip2",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.8566552996635437,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.8657565712928772,
+              "EventConditions": []
+            }
+          ],
+          "state": 1355507738,
+          "stateName": "Hands.LOOK"
+        }
+      ]
+    },
+    {
+      "template": "6868377c7bb1c07772467ee7",
+      "name": "FN FNX-45 Tactical .45 ACP pistol",
+      "category": "pistol",
+      "bundle": "gun_6868377c7bb1c07772467ee7_presentation",
+      "sha256": "CBA9CD066A1CA1A105F3D183C190A5D7DFD0959FCD589EC8DA4A6462C591DF14",
+      "profiles": [
+        {
+          "controller": "weapon_beretta_m9a3_9x19",
+          "clip": "Armature_Armature_m9_look_Base Layer",
+          "duration": 3.359999895095825,
+          "baseController": "weapon_beretta_m9a3_9x19",
+          "baseClip": "Armature_Armature_m9_look_Base Layer",
+          "nativeOverride": false,
+          "overrides": [],
+          "events": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.00319488812237978,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.9192660450935364,
+              "EventConditions": []
+            }
+          ],
+          "state": 1355507738,
+          "stateName": "Hands.LOOK"
+        }
+      ]
+    },
+    {
+      "template": "68cd937be06f1a3a720d6959",
+      "name": "HK UMP .40 S&W submachine gun",
+      "category": "smg",
+      "bundle": "gun_68cd937be06f1a3a720d6959_presentation",
+      "sha256": "19CD438EB68D6CA9BD167891D6576783E4B6AE452503C735234F06CF007F386C",
+      "profiles": [
+        {
+          "controller": "weapon_hk_ump_1143x23",
+          "clip": "ump_look",
+          "duration": 3.319999933242798,
+          "baseController": "weapon_hk_ump_1143x23",
+          "baseClip": "ump_look",
+          "nativeOverride": false,
+          "overrides": [],
+          "events": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.04515521973371506,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.05550329387187958,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip1",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.4760112762451172,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOnHard",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.49482595920562744,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.8353716135025024,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.8786453604698181,
+              "EventConditions": []
+            }
+          ],
+          "state": 1355507738,
+          "stateName": "Hands.LOOK"
+        }
+      ]
+    },
+    {
+      "template": "620109578d82e67e7911abf2",
+      "name": "ZiD SP-81 26x75 signal pistol",
+      "category": "specialWeapon",
+      "bundle": "gun_620109578d82e67e7911abf2_presentation",
+      "sha256": "9BF6DD2CD0BDC0E68AFA077A05BAFA3A6CAA5CAAC757225F5517CF308D0CA8FF",
+      "profiles": [
+        {
+          "controller": "weapon_zid_sp81_26x75",
+          "clip": "sp81_look",
+          "duration": 3.3333334922790527,
+          "baseController": "weapon_zid_sp81_26x75",
+          "baseClip": "sp81_look",
+          "nativeOverride": false,
+          "overrides": [],
+          "events": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip1",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.0797872319817543,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip2",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.5691489577293396,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.9192660450935364,
+              "EventConditions": []
+            }
+          ],
+          "state": 1355507738,
+          "stateName": "Hands.LOOK"
+        }
+      ]
+    },
+    {
+      "template": "676bf44c5539167c3603e869",
+      "name": "RShG-2 72.5mm rocket launcher",
+      "category": "specialWeapon",
+      "bundle": "gun_676bf44c5539167c3603e869_presentation",
+      "sha256": "C8209E4C5A5B3D31E8856A72E29C29778B84F698DF2A8CB7CB1718EE6A1F7CA8",
+      "profiles": [
+        {
+          "controller": "weapon_bazalt_rshg2_725",
+          "clip": "rpg26_look",
+          "duration": 5.366666316986084,
+          "baseController": "weapon_bazalt_rshg2_725",
+          "baseClip": "rpg26_look",
+          "nativeOverride": false,
+          "overrides": [],
+          "events": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip3",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.01913580484688282,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.05000000074505806,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "Finger",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.21296297013759613,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "Finger",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.4425926208496094,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip1",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.7388889193534851,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip2",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.7512345910072327,
+              "EventConditions": []
+            }
+          ],
+          "state": 1355507738,
+          "stateName": "Hands.LOOK"
+        },
+        {
+          "controller": "weapon_bazalt_rshg2_725",
+          "clip": "rpg26_look_disarmed",
+          "duration": 5.366666793823242,
+          "baseController": "weapon_bazalt_rshg2_725",
+          "baseClip": "rpg26_look_disarmed",
+          "nativeOverride": false,
+          "overrides": [],
+          "events": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip3",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.01913580484688282,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.05000000074505806,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "Finger",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.21296297013759613,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "Finger",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.4425926208496094,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip1",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.7388889193534851,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "GunFlip2",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.7512345910072327,
+              "EventConditions": []
+            }
+          ],
+          "state": 1355507738,
+          "stateName": "Hands.LOOK"
+        }
+      ]
+    },
+    {
+      "template": "624c0b3340357b5f566e8766",
+      "name": "RSP-30 reactive signal cartridge (Yellow)",
+      "category": "specialWeapon",
+      "bundle": "gun_624c0b3340357b5f566e8766_presentation",
+      "sha256": "AAC392FC48D76CDA17AAF3C8764485209E430141E2C8E921926979E4035CB14F",
+      "profiles": [
+        {
+          "controller": "weapon_rsp30",
+          "clip": "rsp30_look",
+          "duration": 2.5,
+          "baseController": "weapon_rsp30",
+          "baseClip": "rsp30_look",
+          "nativeOverride": false,
+          "overrides": [],
+          "events": [
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "",
+                "ParamType": 0
+              },
+              "_functionName": "StartUtilityOperation",
+              "_functionNameHash": 1134400241,
+              "Enabled": 1,
+              "_time": 0.0,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOff",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.07500000298023224,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "Fidget1",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.11785714328289032,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "Fidget1",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.800000011920929,
+              "EventConditions": []
+            },
+            {
+              "Parameter": {
+                "BoolParam": 0,
+                "FloatParam": 0.0,
+                "IntParam": 0,
+                "StringParam": "HandOn",
+                "ParamType": 3
+              },
+              "_functionName": "Sound",
+              "_functionNameHash": 1554795451,
+              "Enabled": 1,
+              "_time": 0.8428571224212646,
+              "EventConditions": []
+            }
+          ],
+          "state": 1355507738,
+          "stateName": "Hands.LOOK"
+        }
+      ]
+    }
+  ],
+  "exports": {
+    "gun_6963f79ab66d6c6601a8b2d7": {
+      "verification": {
+        "source": {
+          "weapon": "gun_6963f79ab66d6c6601a8b2d7",
+          "folder": "",
+          "template": "6963f79ab66d6c6601a8b2d7",
+          "controller": "weapon_colt_m4a1_556x45",
+          "nativeClip": "m4a1_look_0",
+          "family": "conventional-long-gun",
+          "clientBundle": "<ISOLATED_AUTHORING_PROJECT>/NativeReferences/6963f79ab66d6c6601a8b2d7.bundle",
+          "clipBundle": "<ISOLATED_AUTHORING_PROJECT>/NativeReferences/6963f79ab66d6c6601a8b2d7.bundle",
+          "modelPath": "assets/studio/rig.prefab",
+          "clipAssetPath": "",
+          "avatarBundle": "",
+          "avatarName": "",
+          "dependencies": [
+            "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/additional_hands/client_assets.bundle",
+            "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/hk416/client_assets.bundle",
+            "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/m4a1/client_assets.bundle"
+          ],
+          "omitLeftMarker": false,
+          "buildGenericAvatar": false,
+          "sourceDuration": 3.640000104904175,
+          "nativeTime": 0.0,
+          "useIdleGrip": true,
+          "wristOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "clip": "Tylevo.FieldAttachments.gun_6963f79ab66d6c6601a8b2d7_presentation",
+        "bundleSha256": "338A1CBF824DF12C4BF74899801D57EA0B05C8ED69E9CFD53E1126A7CE7F3A6F",
+        "nativeBundleSha256": "714E92F5106E8A7D0C18F739558C616906D2F241176B4E7F81B840BAE4E1A123",
+        "heldAngleError": 0.0,
+        "heldWristError": 1.1076084405203801e-07,
+        "leftArmPositionError": 4.0455506677972153e-07,
+        "leftArmAngleError": 0.0,
+        "samples": 401,
+        "bindings": 378,
+        "maxGripError": 0.00035098104854114354,
+        "maxEndpointPositionError": 4.0455506677972153e-07,
+        "maxEndpointAngleError": 0.0,
+        "maxNativeHandPositionError": 2.44056280962468e-07,
+        "maxNativeHandAngleError": 0.0,
+        "noCameraOrScaleCurves": true,
+        "noEvents": true,
+        "finite": true,
+        "ownedClipSurvivedUnload": true,
+        "nativeEndpointsMatch": true
+      },
+      "sourceDirectory": "EcotPresentations"
+    },
+    "gun_6868377c7bb1c07772467ee7": {
+      "verification": {
+        "source": {
+          "weapon": "gun_6868377c7bb1c07772467ee7",
+          "folder": "",
+          "template": "6868377c7bb1c07772467ee7",
+          "controller": "weapon_beretta_m9a3_9x19",
+          "nativeClip": "Armature_Armature_m9_look_Base Layer",
+          "family": "pistol",
+          "clientBundle": "<ISOLATED_AUTHORING_PROJECT>/NativeReferences/6868377c7bb1c07772467ee7.bundle",
+          "clipBundle": "<ISOLATED_AUTHORING_PROJECT>/NativeReferences/6868377c7bb1c07772467ee7.bundle",
+          "modelPath": "assets/studio/rig.prefab",
+          "clipAssetPath": "",
+          "avatarBundle": "",
+          "avatarName": "",
+          "dependencies": [
+            "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/additional_hands/client_assets.bundle"
+          ],
+          "omitLeftMarker": false,
+          "buildGenericAvatar": false,
+          "sourceDuration": 3.359999895095825,
+          "nativeTime": 0.0,
+          "useIdleGrip": true,
+          "wristOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "clip": "Tylevo.FieldAttachments.gun_6868377c7bb1c07772467ee7_presentation",
+        "bundleSha256": "CBA9CD066A1CA1A105F3D183C190A5D7DFD0959FCD589EC8DA4A6462C591DF14",
+        "nativeBundleSha256": "AB1439A74A3CA92554E46ABED2417A10F355CFF588F65E6BB64398950E357C7A",
+        "heldAngleError": 0.0,
+        "heldWristError": 5.819089565761715e-08,
+        "leftArmPositionError": 2.630248729929008e-07,
+        "leftArmAngleError": 0.0,
+        "samples": 401,
+        "bindings": 378,
+        "maxGripError": 0.0003623013326432556,
+        "maxEndpointPositionError": 2.630248729929008e-07,
+        "maxEndpointAngleError": 0.0,
+        "maxNativeHandPositionError": 2.2549548361894267e-07,
+        "maxNativeHandAngleError": 0.0,
+        "noCameraOrScaleCurves": true,
+        "noEvents": true,
+        "finite": true,
+        "ownedClipSurvivedUnload": true,
+        "nativeEndpointsMatch": true
+      },
+      "sourceDirectory": "EcotPresentations"
+    },
+    "gun_68cd937be06f1a3a720d6959": {
+      "verification": {
+        "source": {
+          "weapon": "gun_68cd937be06f1a3a720d6959",
+          "folder": "",
+          "template": "68cd937be06f1a3a720d6959",
+          "controller": "weapon_hk_ump_1143x23",
+          "nativeClip": "ump_look",
+          "family": "conventional-long-gun",
+          "clientBundle": "<ISOLATED_AUTHORING_PROJECT>/NativeReferences/68cd937be06f1a3a720d6959.bundle",
+          "clipBundle": "<ISOLATED_AUTHORING_PROJECT>/NativeReferences/68cd937be06f1a3a720d6959.bundle",
+          "modelPath": "assets/studio/rig.prefab",
+          "clipAssetPath": "",
+          "avatarBundle": "",
+          "avatarName": "",
+          "dependencies": [
+            "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/additional_hands/client_assets.bundle"
+          ],
+          "omitLeftMarker": false,
+          "buildGenericAvatar": false,
+          "sourceDuration": 3.319999933242798,
+          "nativeTime": 0.0,
+          "useIdleGrip": true,
+          "wristOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "clip": "Tylevo.FieldAttachments.gun_68cd937be06f1a3a720d6959_presentation",
+        "bundleSha256": "19CD438EB68D6CA9BD167891D6576783E4B6AE452503C735234F06CF007F386C",
+        "nativeBundleSha256": "4F3B3FEBBBC88C9ABAFBE9C54A1F294B666648F0AC5A676AB9CBCBA6E41DEC53",
+        "heldAngleError": 0.0,
+        "heldWristError": 1.002373082314989e-07,
+        "leftArmPositionError": 2.1208280998052942e-07,
+        "leftArmAngleError": 0.0,
+        "samples": 401,
+        "bindings": 378,
+        "maxGripError": 0.0003986057417932898,
+        "maxEndpointPositionError": 2.1208280998052942e-07,
+        "maxEndpointAngleError": 0.0,
+        "maxNativeHandPositionError": 3.268079922236211e-07,
+        "maxNativeHandAngleError": 0.0,
+        "noCameraOrScaleCurves": true,
+        "noEvents": true,
+        "finite": true,
+        "ownedClipSurvivedUnload": true,
+        "nativeEndpointsMatch": true
+      },
+      "sourceDirectory": "EcotPresentations"
+    },
+    "gun_620109578d82e67e7911abf2": {
+      "verification": {
+        "source": {
+          "weapon": "gun_620109578d82e67e7911abf2",
+          "folder": "sp81",
+          "template": "620109578d82e67e7911abf2",
+          "controller": "weapon_zid_sp81_26x75",
+          "nativeClip": "sp81_look",
+          "family": "pistol",
+          "clientBundle": "",
+          "clipBundle": "",
+          "modelPath": "Assets/Content/Weapons/sp81/weapon_zid_sp81_26x75_model.FBX",
+          "clipAssetPath": "",
+          "avatarBundle": "",
+          "avatarName": "",
+          "dependencies": [
+            "assets/content/weapons/additional_hands/client_assets.bundle"
+          ],
+          "omitLeftMarker": false,
+          "buildGenericAvatar": false,
+          "sourceDuration": 3.3333332538604736,
+          "nativeTime": 0.0,
+          "useIdleGrip": true,
+          "wristOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "clip": "Tylevo.FieldAttachments.gun_620109578d82e67e7911abf2_presentation",
+        "bundleSha256": "9BF6DD2CD0BDC0E68AFA077A05BAFA3A6CAA5CAAC757225F5517CF308D0CA8FF",
+        "nativeBundleSha256": "30A09CA6DBFCB8D3EB5B650A4D80A6B18949AF4EE3DD2DCEBA25ECDF81C6495E",
+        "heldAngleError": 0.0,
+        "heldWristError": 7.48774056091861e-08,
+        "leftArmPositionError": 1.9877414558777673e-07,
+        "leftArmAngleError": 0.0,
+        "samples": 401,
+        "bindings": 378,
+        "maxGripError": 0.00036202813498675823,
+        "maxEndpointPositionError": 1.9877414558777673e-07,
+        "maxEndpointAngleError": 0.0,
+        "maxNativeHandPositionError": 1.564621925354004e-07,
+        "maxNativeHandAngleError": 0.0,
+        "noCameraOrScaleCurves": true,
+        "noEvents": true,
+        "finite": true,
+        "ownedClipSurvivedUnload": true,
+        "nativeEndpointsMatch": true
+      },
+      "sourceDirectory": "Sp81Presentation"
+    },
+    "gun_676bf44c5539167c3603e869": {
+      "verification": {
+        "source": {
+          "weapon": "gun_676bf44c5539167c3603e869",
+          "folder": "rpg26",
+          "template": "676bf44c5539167c3603e869",
+          "controller": "weapon_bazalt_rshg2_725",
+          "nativeClip": "rpg26_look",
+          "family": "conventional-long-gun",
+          "clientBundle": "",
+          "clipBundle": "",
+          "modelPath": "Assets/Content/Weapons/rpg26/weapon_bazalt_rshg2_725_model.fbx",
+          "clipAssetPath": "",
+          "avatarBundle": "",
+          "avatarName": "",
+          "dependencies": [
+            "assets/content/weapons/additional_hands/client_assets.bundle"
+          ],
+          "omitLeftMarker": false,
+          "buildGenericAvatar": false,
+          "sourceDuration": 5.366666793823242,
+          "nativeTime": 0.0,
+          "useIdleGrip": true,
+          "wristOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "clip": "Tylevo.FieldAttachments.gun_676bf44c5539167c3603e869_presentation",
+        "bundleSha256": "C8209E4C5A5B3D31E8856A72E29C29778B84F698DF2A8CB7CB1718EE6A1F7CA8",
+        "nativeBundleSha256": "D6C6072980E5E69F9A3A8915CC5B989AC44A6999D5955BEA951A7F61E6FCB6B3",
+        "heldAngleError": 0.0,
+        "heldWristError": 1.0457387844553523e-07,
+        "leftArmPositionError": 2.8446760325095966e-07,
+        "leftArmAngleError": 0.0,
+        "samples": 401,
+        "bindings": 378,
+        "maxGripError": 0.0004684294981416315,
+        "maxEndpointPositionError": 2.8446760325095966e-07,
+        "maxEndpointAngleError": 0.0,
+        "maxNativeHandPositionError": 1.9043667975893186e-07,
+        "maxNativeHandAngleError": 0.0,
+        "noCameraOrScaleCurves": true,
+        "noEvents": true,
+        "finite": true,
+        "ownedClipSurvivedUnload": true,
+        "nativeEndpointsMatch": true
+      },
+      "sourceDirectory": "Rshg2Presentation"
+    },
+    "gun_624c0b3340357b5f566e8766": {
+      "verification": {
+        "source": {
+          "weapon": "gun_624c0b3340357b5f566e8766",
+          "folder": "rsp30",
+          "template": "624c0b3340357b5f566e8766",
+          "controller": "weapon_rsp30",
+          "nativeClip": "rsp30_look",
+          "family": "pistol",
+          "clientBundle": "",
+          "clipBundle": "",
+          "modelPath": "",
+          "clipAssetPath": "",
+          "avatarBundle": "",
+          "avatarName": "",
+          "dependencies": [
+            "assets/content/weapons/additional_hands/client_assets.bundle"
+          ],
+          "omitLeftMarker": false,
+          "buildGenericAvatar": false,
+          "sourceDuration": 2.5,
+          "nativeTime": 0.0,
+          "useIdleGrip": true,
+          "wristOffset": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        "clip": "Tylevo.FieldAttachments.gun_624c0b3340357b5f566e8766_presentation",
+        "bundleSha256": "AAC392FC48D76CDA17AAF3C8764485209E430141E2C8E921926979E4035CB14F",
+        "nativeBundleSha256": "DA086C2ECB099F434A38645D01C203EBC1497C2F85B4D19CAC5E1117DEFC5F68",
+        "heldAngleError": 0.0,
+        "heldWristError": 8.05903539458086e-08,
+        "leftArmPositionError": 2.392404496731615e-07,
+        "leftArmAngleError": 0.0,
+        "samples": 401,
+        "bindings": 378,
+        "maxGripError": 0.00041492551099509,
+        "maxEndpointPositionError": 2.392404496731615e-07,
+        "maxEndpointAngleError": 0.0,
+        "maxNativeHandPositionError": 1.7429422882742074e-07,
+        "maxNativeHandAngleError": 0.0,
+        "noCameraOrScaleCurves": true,
+        "noEvents": true,
+        "finite": true,
+        "ownedClipSurvivedUnload": true,
+        "nativeEndpointsMatch": true
+      },
+      "sourceDirectory": "Rsp30Presentation"
+    }
+  },
+  "aliases": [
+    {
+      "template": "52ce1b65b13e1035808c4fd2",
+      "donor": "606587252535c57a13424cfd",
+      "name": "CMMG Mk47 Mutant 5.45X39 assault rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/mk47/weapon_cmmg_mk47_762x39_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/mk47/weapon_cmmg_mk47_762x39_container.bundle",
+          "sha256": "CE31440A1FF43C1E10DA714514BEC85F26787D12CD87A32CFF7592E161724A48",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "96f5c38a676e11e13544dfba",
+      "donor": "606587252535c57a13424cfd",
+      "name": "CMMG Mk47 Mutant 9X39 assault rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/mk47/weapon_cmmg_mk47_762x39_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/mk47/weapon_cmmg_mk47_762x39_container.bundle",
+          "sha256": "CE31440A1FF43C1E10DA714514BEC85F26787D12CD87A32CFF7592E161724A48",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "93bcdfda236122e67c098847",
+      "donor": "57dc2fa62459775949412633",
+      "name": "Century Arms Draco 7.62x39 carbine",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/aks74u/weapon_izhmash_aks74u_545x39_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/aks74u/weapon_izhmash_aks74u_545x39_container.bundle",
+          "sha256": "FCDB103D878BF69614BED4BBC6010608A8B29616A65C74C2C3EC89CEE396E8C7",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "d672109946fe88b803449054",
+      "donor": "5ac66cb05acfc40198510a10",
+      "name": "Kalashnikov AK-101 .300 Blackout assault rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/ak100/weapon_izhmash_ak101_556x45_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/ak100/weapon_izhmash_ak101_556x45_container.bundle",
+          "sha256": "AB9681E8CDD1B89FB6ADBDEAF905A0762A77CEDF6DF53B8440D733819A4AA3B0",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "ffc95b9d143f52202a311820",
+      "donor": "5ac66d015acfc400180ae6e4",
+      "name": "Kalashnikov AK-102 .300 Blackout assault rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/ak100/weapon_izhmash_ak102_556x45_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/ak100/weapon_izhmash_ak102_556x45_container.bundle",
+          "sha256": "63E9966069F27736DD3D5474EE15C7D4769AB77A5FBFBF8175FBC765A6712D5F",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "3dc691f607ffed3228bf6ca2",
+      "donor": "6499849fc93611967b034949",
+      "name": "Kalashnikov AK-15 7.62x39 assault rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/ak12/weapon_izhmash_ak12_545x39_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/ak12/weapon_izhmash_ak12_545x39_container.bundle",
+          "sha256": "B5D16967770E4C8132B0792626093F03BF8C239685BE5470436F4CBDF1B807BF",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "ed05294ed53c0400ae0e8a55",
+      "donor": "57dc2fa62459775949412633",
+      "name": "Kalashnikov AKS-74U .300 Blackout Assault Rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/aks74u/weapon_izhmash_aks74u_545x39_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/aks74u/weapon_izhmash_aks74u_545x39_container.bundle",
+          "sha256": "FCDB103D878BF69614BED4BBC6010608A8B29616A65C74C2C3EC89CEE396E8C7",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "939c742f7dad852286188029",
+      "donor": "5839a40f24597726f856b511",
+      "name": "Kalashnikov AKS-74UB .300 Blackout Assault Rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/aks74u/weapon_izhmash_aks74ub_545x39_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/aks74u/weapon_izhmash_aks74ub_545x39_container.bundle",
+          "sha256": "2272776B463115BCE06A0BC32EEBE7C51316733B1BB3F967A21F0BE9485DFCED",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "627c4fe34b0a558e8a3642a1",
+      "donor": "583990e32459771419544dd2",
+      "name": "Kalashnikov AKS-74UN .300 Blackout Assault Rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/aks74u/weapon_izhmash_aks74ub_545x39_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/aks74u/weapon_izhmash_aks74ub_545x39_container.bundle",
+          "sha256": "2272776B463115BCE06A0BC32EEBE7C51316733B1BB3F967A21F0BE9485DFCED",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "68580e9cea46c81b4db2221e",
+      "donor": "583990e32459771419544dd2",
+      "name": "Kalashnikov AKS-74UN 5.56x45 assault rifle",
+      "source": "EukyreECOT",
+      "prefab": "assets/content/weapons/aks74u/weapon_izhmash_aks74ub_545x39_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/aks74u/weapon_izhmash_aks74ub_545x39_container.bundle",
+          "sha256": "2272776B463115BCE06A0BC32EEBE7C51316733B1BB3F967A21F0BE9485DFCED",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "4b81488c78c8a8ac7d37f9b9",
+      "donor": "5447a9cd4bdc2dbd208b4567",
+      "name": "Mechanic's Colt M4A1 .300 blackout assault rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/m4a1/weapon_colt_m4a1_556x45_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/SPT_Runtime/user/mods/WTT-ContentBackport/bundles/assets/content/weapons/m4a1/weapon_colt_m4a1_556x45_container.bundle",
+          "sha256": "C80FDAEC983A823A9D2740DE07BE539D941DCE3164B1801F8102DDC22D45A15F",
+          "historicalNativeHashMatch": true
+        },
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/m4a1/weapon_colt_m4a1_556x45_container.bundle",
+          "sha256": "DE24D4DB5D8178235F87C4CCCE29D936989FDC2AC9040BEEB8E3AA7AC066FDF2",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "52500592c7109667abb6cbeb",
+      "donor": "583990e32459771419544dd2",
+      "name": "Modified Century Arms Draco 7.62x39 Assault Rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/aks74u/weapon_izhmash_aks74ub_545x39_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/aks74u/weapon_izhmash_aks74ub_545x39_container.bundle",
+          "sha256": "2272776B463115BCE06A0BC32EEBE7C51316733B1BB3F967A21F0BE9485DFCED",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "72bbf927bf5b1d4a0837485b",
+      "donor": "5fbcc1d9016cce60e8341ab3",
+      "name": "SIG MCX 5.56x45 assault rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/mcx/weapon_sig_mcx_gen1_762x35_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/SPT_Runtime/user/mods/WTT-ContentBackport/bundles/assets/content/weapons/mcx/weapon_sig_mcx_gen1_762x35_container.bundle",
+          "sha256": "C7B374D47E7C5308993F49670B0E11AABB778ADD2B95DF7B20FC1860636ED1B2",
+          "historicalNativeHashMatch": true
+        },
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/mcx/weapon_sig_mcx_gen1_762x35_container.bundle",
+          "sha256": "7CCFE72AB81105B04C89957A65D43ABC119FE933721BCC0EB18B488FC8E0E8AB",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "8d59d8b10a4c2e85b871c317",
+      "donor": "65290f395ae2ae97b80fdf2d",
+      "name": "SIG MCX SPEAR 7.62x51 assault rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/spear/weapon_sig_mcx_spear_68x51_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/spear/weapon_sig_mcx_spear_68x51_container.bundle",
+          "sha256": "6C4D8FA74114438C80CC2307564F64A8F854909FDA411CA8A5D439E0C027689C",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "e895575bcd1fa1de36d301b6",
+      "donor": "5ac4cd105acfc40016339859",
+      "name": "Saiga MK Ver. 030 5.45x39 Carbine",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/ak74m/weapon_izhmash_ak74m_545x39_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/ak74m/weapon_izhmash_ak74m_545x39_container.bundle",
+          "sha256": "698730EA54E0F509B9DDB4AFEF766704F55702C0822516163829BF3CE8068C90",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "57f28a7ffb22e277b0234219",
+      "donor": "5644bd2b4bdc2d3b4c8b4572",
+      "name": "Saiga SGL31 5.45x39 Carbine",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/ak74/weapon_izhmash_ak74n_545x39_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/ak74/weapon_izhmash_ak74n_545x39_container.bundle",
+          "sha256": "CABC5D57928118433D11533DD1D79F40FF57B1E879458B8EDF80D1DCE6318105",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "6850956dcf12c18a4d8ed9ab",
+      "donor": "5a7ae0c351dfba0017554310",
+      "name": "Glock 22 .40 S&W pistol",
+      "source": "EukyreECOT",
+      "prefab": "assets/content/weapons/glock17/weapon_glock_glock_17_gen3_9x19_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/glock17/weapon_glock_glock_17_gen3_9x19_container.bundle",
+          "sha256": "60A63DEC0BB9DCB80E1860112CC69F4677B732B213169D0271E59AA703B26FFA",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "68bc954419645c0da0e9ea05",
+      "donor": "5926bb2186f7744b1c6c6e60",
+      "name": "HK MP5/40 .40 S&W submachine gun",
+      "source": "EukyreECOT",
+      "prefab": "assets/content/weapons/mp5/weapon_hk_mp5_navy3_9x19_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/mp5/weapon_hk_mp5_navy3_9x19_container.bundle",
+          "sha256": "329ACC632E8DCE3BF35080C5334AC81949D80452AA17E1E3A47480FEA5194197",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "0af5f6a5aa9712e11c733fb9",
+      "donor": "5bfea6e90db834001b7347f3",
+      "name": "Remington Model 700 .277 Sig Fury bolt-action sniper rifle",
+      "source": "EpicRangeTime-Epic's All In One",
+      "prefab": "assets/content/weapons/m700/weapon_remington_model_700_762x51_container.bundle",
+      "verification": "historical-prefab-hash",
+      "historicalNativeHashMatch": true,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/m700/weapon_remington_model_700_762x51_container.bundle",
+          "sha256": "73286294F478D690965CA7BA4A607D8DFCD2BE3EF04B12A21ADD0A87447AC01D",
+          "historicalNativeHashMatch": true
+        }
+      ]
+    },
+    {
+      "template": "657857faeff4c850222dff1b",
+      "donor": "64637076203536ad5600c990",
+      "name": "Kalashnikov PKTM 7.62x54R Modernized Tank Machine Gun",
+      "source": "SPT base",
+      "prefab": "assets/content/weapons/pkm/weapon_zid_pkm_762x54r_container.bundle",
+      "verification": "exact-current-prefab-and-factory",
+      "historicalNativeHashMatch": false,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/SPT_Runtime/user/mods/WTT-ContentBackport/bundles/assets/content/weapons/pkm/weapon_zid_pkm_762x54r_container.bundle",
+          "sha256": "7FC7BD95C48DE6305825571B718262E4558315EF4A113367A232A78A980B5C2E",
+          "historicalNativeHashMatch": false
+        },
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/pkm/weapon_zid_pkm_762x54r_container.bundle",
+          "sha256": "DF15E9CA8DC195126864F91651BD1B20DA4B7E185A6C6A7D5AAA6E1E08C79AF3",
+          "historicalNativeHashMatch": true
+        }
+      ],
+      "nativeFactory": "MachineGunTemplate/MachineGun ordinary parent ItemConstructors factory; MachineGun derives Weapon; no PKTM-specific factory branch",
+      "requiredPaths": 55,
+      "requiredRigSha256": "ACE62237B2C233A28E2BEAED227D50A058B56DABF8A05E184CFB87D0BF3695DF",
+      "providerRigs": [
+        {
+          "containerSha256": "7FC7BD95C48DE6305825571B718262E4558315EF4A113367A232A78A980B5C2E",
+          "controller": "weapon_zid_pkm_762x54r",
+          "controllerSerializedSha256": "DE2BEBDF07E0B89A0B80C8CD3AD28A9044DA891A0921917DCBAE2E77497DE911",
+          "requiredPaths": 55,
+          "requiredRigSha256": "ACE62237B2C233A28E2BEAED227D50A058B56DABF8A05E184CFB87D0BF3695DF",
+          "clips": [
+            {
+              "state": "Hands.LOOK",
+              "name": "Armature_Armature_pk_look_Base Layer",
+              "serializedSha256": "EC945E8D60E5BD60C915F2111342AAF0C8BBE63F3FBE731DCC7CDD4C97180652"
+            },
+            {
+              "state": "Hands.LOOK",
+              "name": "Armature_Armature_pk_look_foregrip_Base Layer",
+              "serializedSha256": "9AAE02E7AEA6058F0491102EE83BF3FDDB03524B86C73809E353EE88F63D255C"
+            },
+            {
+              "state": "Hands.IDLE",
+              "name": "Armature_Armature_pk_idle_armed_Base Layer",
+              "serializedSha256": "C904C46B56D0696CAE3E8E12769D4B6F0E61E07BDE62C18FF6B8713B56EFEF19"
+            },
+            {
+              "state": "Hands.IDLE",
+              "name": "Armature_Armature_pk_idle_ironsight_Base Layer",
+              "serializedSha256": "BF2BDD68FABD9AE68381AED639C3746571C6078E27E46A955188DAD37ED21CF5"
+            }
+          ]
+        },
+        {
+          "containerSha256": "DF15E9CA8DC195126864F91651BD1B20DA4B7E185A6C6A7D5AAA6E1E08C79AF3",
+          "controller": "weapon_zid_pkm_762x54r",
+          "controllerSerializedSha256": "A2F7757AB4F4DA572D11F940F301EC513856B49B3C9817FBB3FD3DD08EE4BFF9",
+          "requiredPaths": 55,
+          "requiredRigSha256": "77FB4C03C0AEFD0DD62F9D1F1DEE7D0A823B50C44EA4E7736740AF0AC3243621",
+          "clips": [
+            {
+              "state": "Hands.LOOK",
+              "name": "pk_look",
+              "serializedSha256": "14262E3AE1CF1337B63F9BB8769274493D5CAA6365C722DF26FEF79A1C508FCA"
+            },
+            {
+              "state": "Hands.LOOK",
+              "name": "pk_look_foregrip",
+              "serializedSha256": "E142193BDD0B51029EC5257CEDE42D38C6563A5718443EFC6517BD62437CE188"
+            },
+            {
+              "state": "Hands.IDLE",
+              "name": "pk_idle_armed",
+              "serializedSha256": "DDAA146957805D57078021A6E18C06D6CD64BF9B1F9A127FF8A3A80D49F8D699"
+            },
+            {
+              "state": "Hands.IDLE",
+              "name": "pk_idle_ironsight",
+              "serializedSha256": "F866DF8B70B084A7285F7EA53D61180C85AC37EF904548B2DFEF830302875035"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "template": "62178be9d0050232da3485d9",
+      "donor": "624c0b3340357b5f566e8766",
+      "name": "ROP-30 reactive flare cartridge (White)",
+      "source": "SPT base",
+      "prefab": "assets/content/weapons/rsp30/weapon_rsp30_white_container.bundle",
+      "verification": "exact-native-rig-controller-clips",
+      "historicalNativeHashMatch": false,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/rsp30/weapon_rsp30_white_container.bundle",
+          "sha256": "0A4FE8126CA9D02EF42A729740577199B0E3A128129689556829A497BCDF1B61",
+          "historicalNativeHashMatch": false
+        }
+      ],
+      "requiredPaths": 55,
+      "requiredRigSha256": "3D455D1DFB8EBE783D4BACA36A5CA7C56F641B1DD980AF366E6F25E69B447BD6",
+      "controllerSerializedSha256": "8EB191D5D332862D629E49BF6B534275F0CA19DC221669F503FBEF3584C07049",
+      "idleLookClipHashes": [
+        {
+          "state": "Hands.LOOK",
+          "name": "rsp30_look",
+          "serializedSha256": "DB7418F4087B459A6B2193737181EEA0F7356B309DCBC788E20E757794CCBE49"
+        },
+        {
+          "state": "Hands.IDLE",
+          "name": "rsp30_idle_armed",
+          "serializedSha256": "46D938BCE7956E35706F6A8F5F858DA2A34BE132044B302815C67975A97B6D72"
+        }
+      ]
+    },
+    {
+      "template": "66d98233302686954b0c6f81",
+      "donor": "624c0b3340357b5f566e8766",
+      "name": "RSP-30 reactive signal cartridge (Blue)",
+      "source": "SPT base",
+      "prefab": "assets/content/weapons/rsp30/weapon_rsp30_blue_container.bundle",
+      "verification": "exact-native-rig-controller-clips",
+      "historicalNativeHashMatch": false,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/rsp30/weapon_rsp30_blue_container.bundle",
+          "sha256": "D1FECE3BA4B52A3C07D5621535559D51DED70D8E26915867365C9D503DE5A927",
+          "historicalNativeHashMatch": false
+        }
+      ],
+      "requiredPaths": 55,
+      "requiredRigSha256": "3D455D1DFB8EBE783D4BACA36A5CA7C56F641B1DD980AF366E6F25E69B447BD6",
+      "controllerSerializedSha256": "8EB191D5D332862D629E49BF6B534275F0CA19DC221669F503FBEF3584C07049",
+      "idleLookClipHashes": [
+        {
+          "state": "Hands.LOOK",
+          "name": "rsp30_look",
+          "serializedSha256": "DB7418F4087B459A6B2193737181EEA0F7356B309DCBC788E20E757794CCBE49"
+        },
+        {
+          "state": "Hands.IDLE",
+          "name": "rsp30_idle_armed",
+          "serializedSha256": "46D938BCE7956E35706F6A8F5F858DA2A34BE132044B302815C67975A97B6D72"
+        }
+      ]
+    },
+    {
+      "template": "675ea3d6312c0a5c4e04e317",
+      "donor": "624c0b3340357b5f566e8766",
+      "name": "RSP-30 reactive signal cartridge (Firework)",
+      "source": "SPT base",
+      "prefab": "assets/content/weapons/rsp30/weapon_rsp30_newyear_container.bundle",
+      "verification": "exact-native-rig-controller-clips",
+      "historicalNativeHashMatch": false,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/rsp30/weapon_rsp30_newyear_container.bundle",
+          "sha256": "54881A2D0FFB0D7C119A3EBC64A65D259941F9CD31C51F0F0B70EC2685FAFEF4",
+          "historicalNativeHashMatch": false
+        }
+      ],
+      "requiredPaths": 55,
+      "requiredRigSha256": "3D455D1DFB8EBE783D4BACA36A5CA7C56F641B1DD980AF366E6F25E69B447BD6",
+      "controllerSerializedSha256": "8EB191D5D332862D629E49BF6B534275F0CA19DC221669F503FBEF3584C07049",
+      "idleLookClipHashes": [
+        {
+          "state": "Hands.LOOK",
+          "name": "rsp30_look",
+          "serializedSha256": "DB7418F4087B459A6B2193737181EEA0F7356B309DCBC788E20E757794CCBE49"
+        },
+        {
+          "state": "Hands.IDLE",
+          "name": "rsp30_idle_armed",
+          "serializedSha256": "46D938BCE7956E35706F6A8F5F858DA2A34BE132044B302815C67975A97B6D72"
+        }
+      ]
+    },
+    {
+      "template": "6217726288ed9f0845317459",
+      "donor": "624c0b3340357b5f566e8766",
+      "name": "RSP-30 reactive signal cartridge (Green)",
+      "source": "SPT base",
+      "prefab": "assets/content/weapons/rsp30/weapon_rsp30_green_container.bundle",
+      "verification": "exact-native-rig-controller-clips",
+      "historicalNativeHashMatch": false,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/rsp30/weapon_rsp30_green_container.bundle",
+          "sha256": "DD2F100A9ED3BB808F98C651F2E639E9623EE5A5D50BDFCDDA0AE22600567C16",
+          "historicalNativeHashMatch": false
+        }
+      ],
+      "requiredPaths": 55,
+      "requiredRigSha256": "3D455D1DFB8EBE783D4BACA36A5CA7C56F641B1DD980AF366E6F25E69B447BD6",
+      "controllerSerializedSha256": "8EB191D5D332862D629E49BF6B534275F0CA19DC221669F503FBEF3584C07049",
+      "idleLookClipHashes": [
+        {
+          "state": "Hands.LOOK",
+          "name": "rsp30_look",
+          "serializedSha256": "DB7418F4087B459A6B2193737181EEA0F7356B309DCBC788E20E757794CCBE49"
+        },
+        {
+          "state": "Hands.IDLE",
+          "name": "rsp30_idle_armed",
+          "serializedSha256": "46D938BCE7956E35706F6A8F5F858DA2A34BE132044B302815C67975A97B6D72"
+        }
+      ]
+    },
+    {
+      "template": "62178c4d4ecf221597654e3d",
+      "donor": "624c0b3340357b5f566e8766",
+      "name": "RSP-30 reactive signal cartridge (Red)",
+      "source": "SPT base",
+      "prefab": "assets/content/weapons/rsp30/weapon_rsp30_red_container.bundle",
+      "verification": "exact-native-rig-controller-clips",
+      "historicalNativeHashMatch": false,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/rsp30/weapon_rsp30_red_container.bundle",
+          "sha256": "67AE4BBC18EEA1B33DB04B2ACA0C8EDB194D9D2D641132D120494B2055A386A7",
+          "historicalNativeHashMatch": false
+        }
+      ],
+      "requiredPaths": 55,
+      "requiredRigSha256": "3D455D1DFB8EBE783D4BACA36A5CA7C56F641B1DD980AF366E6F25E69B447BD6",
+      "controllerSerializedSha256": "8EB191D5D332862D629E49BF6B534275F0CA19DC221669F503FBEF3584C07049",
+      "idleLookClipHashes": [
+        {
+          "state": "Hands.LOOK",
+          "name": "rsp30_look",
+          "serializedSha256": "DB7418F4087B459A6B2193737181EEA0F7356B309DCBC788E20E757794CCBE49"
+        },
+        {
+          "state": "Hands.IDLE",
+          "name": "rsp30_idle_armed",
+          "serializedSha256": "46D938BCE7956E35706F6A8F5F858DA2A34BE132044B302815C67975A97B6D72"
+        }
+      ]
+    },
+    {
+      "template": "66d9f1abb16d9aacf5068468",
+      "donor": "624c0b3340357b5f566e8766",
+      "name": "RSP-30 reactive signal cartridge (Special Yellow)",
+      "source": "SPT base",
+      "prefab": "assets/content/weapons/rsp30/weapon_rsp30_yellow_container.bundle",
+      "verification": "exact-native-rig-controller-clips",
+      "historicalNativeHashMatch": false,
+      "prefabFiles": [
+        {
+          "source": "<SPT_GAME_ROOT>/EscapeFromTarkov_Data/StreamingAssets/Windows/assets/content/weapons/rsp30/weapon_rsp30_yellow_container.bundle",
+          "sha256": "6C9E149104C04083A81EEE39E4FBA5716F50DE47FC87978BE53FF7C6612C7881",
+          "historicalNativeHashMatch": false
+        }
+      ],
+      "requiredPaths": 55,
+      "requiredRigSha256": "3D455D1DFB8EBE783D4BACA36A5CA7C56F641B1DD980AF366E6F25E69B447BD6",
+      "controllerSerializedSha256": "8EB191D5D332862D629E49BF6B534275F0CA19DC221669F503FBEF3584C07049",
+      "idleLookClipHashes": [
+        {
+          "state": "Hands.LOOK",
+          "name": "rsp30_look",
+          "serializedSha256": "DB7418F4087B459A6B2193737181EEA0F7356B309DCBC788E20E757794CCBE49"
+        },
+        {
+          "state": "Hands.IDLE",
+          "name": "rsp30_idle_armed",
+          "serializedSha256": "46D938BCE7956E35706F6A8F5F858DA2A34BE132044B302815C67975A97B6D72"
+        }
+      ]
+    }
+  ]
+}
