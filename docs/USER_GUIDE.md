@@ -19,9 +19,9 @@ An assembled sight and mount can appear as one item and move together. The menu 
 
 Keep enough free space in your carried storage for a removed part. If a replacement fails after removing the old part, the old part remains in storage and the weapon slot can be empty. Check both before trying again.
 
-## Enable attachment changes
+## Attachment changes
 
-Open **F12**, find Field Attachments and enable **Allow attachment changes**. It is off by default, so you can browse without moving items.
+**Allow attachment changes** is enabled on fresh installs. Turn it off in **F12** to browse without moving items. Updates preserve your saved setting, so check it if you previously disabled changes.
 
 Use a supported weapon in a local raid or the hideout shooting range. Attachment changes are not supported in Fika.
 

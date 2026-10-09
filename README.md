@@ -26,7 +26,7 @@ Change optics, muzzle devices, tactical devices and foregrips without opening yo
 - Moves an assembled **optic and mount together**, keeping the sight attached.
 - Holds your weapon at an angle so you can see its attachments. Normal weapon inspection still works separately.
 
-**Attachment changes are off on a fresh install.** Browsing still works. Enable **F12 → General → Allow attachment changes** to install, replace or remove parts.
+**Attachment changes are enabled on a fresh install.** Turn off **F12 → General → Allow attachment changes** to browse without moving parts. Updates preserve your saved setting.
 
 ## Installation
 

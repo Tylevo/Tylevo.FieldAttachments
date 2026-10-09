@@ -5,6 +5,7 @@
 - Angled attachment cards for optics, muzzle devices, tactical devices and foregrips.
 - Left Alt opens the menu and cursor, with Hold or Toggle available in F12.
 - Install, replace or remove compatible carried parts, and cycle mounting positions with Alt+R.
+- Attachment changes are enabled by default on fresh installs. Updates preserve saved settings; disabling changes leaves browsing available.
 - Custom attachment animations are always enabled. The old O shortcut is disabled by default.
 - Includes the settings cleanup and weapon support from 0.25.4.
 

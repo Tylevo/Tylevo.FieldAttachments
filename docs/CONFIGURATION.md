@@ -5,7 +5,7 @@ Press **F12** and open the Field Attachments settings.
 | Setting | What it does |
 | --- | --- |
 | Enabled | Turns the attachment menu on or off. |
-| Allow attachment changes | Allows installing, removing and replacing parts. Off by default. |
+| Allow attachment changes | On for fresh installs. Allows installing, removing and replacing parts. Turn it off to browse without moving items. |
 | Attachment menu key | Left Alt by default. Choose Right Alt instead, or None to disable the shortcut. |
 | Menu activation (Hold / Toggle) | Hold is the default: release Alt to close. Toggle keeps the menu open until you press Alt again. |
 | Cycle mounting position | Alt+R selects another mounting point for the open list or hovered card. |
