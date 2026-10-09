@@ -2,15 +2,13 @@
 
 Change optics, muzzle devices, tactical devices and foregrips without opening your inventory. Left Alt brings up attachment cards around your weapon and lets you use the mouse to choose a part.
 
-**0.25.4 test build · SPT 4.1.5 / 4.1.6 · BepInEx client plugin**
-
-The download has not been published yet.
+**1.0.0 · SPT 4.1.5 / 4.1.6 · BepInEx client plugin**
 
 [Installation](#installation) · [Controls](#controls) · [Compatibility](#compatibility-and-coverage)
 
 ![HK416 held in the attachment pose, with the current angled attachment cards](docs/images/hk416-attachment-menu.png)
 
-*Original HK416 gameplay capture. The 0.25 card layout and rifle presentation are retained.*
+*Original HK416 gameplay showing the attachment cards and weapon presentation.*
 
 <details>
 <summary>View the HK416 inspection frame</summary>
@@ -71,6 +69,8 @@ Mouse clicks stay in the menu, so selecting a part won't fire your weapon. Closi
 ## Settings
 
 Press **F12** to change the menu key, choose Hold or Toggle, and adjust cursor speed. You can also turn item thumbnails and the cards' weapon-following movement on or off.
+
+Custom attachment animations are always enabled.
 
 **Attachment animation speed** controls how quickly parts are fitted or removed. It defaults to **1.12×**, with a range of **1.0–1.15×**. It leaves normal inspection, firing and reloading speeds alone.
 
