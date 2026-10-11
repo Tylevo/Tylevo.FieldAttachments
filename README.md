@@ -76,22 +76,32 @@ Custom attachment animations are always enabled.
 
 ## Compatibility and coverage
 
+**The upcoming 1.1.0 update supports 996 weapon entries:** 159 standard SPT entries and 837 from seven optional packs. This total includes caliber and configuration variants.
+
+The current [1.0.0 download](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/tag/v1.0.0) supports 194 entries. The expanded pack coverage below requires 1.1.0.
+
 | Area | Current scope |
 | --- | --- |
 | Game versions | SPT 4.1.5 / 4.1.6 (EFT 40743) |
 | Where it works | Local raids and the hideout shooting range |
 | Fika | Attachment changes are not supported |
-| Weapons | 159 SPT weapon entries plus 35 from the optional packs below, for 194 total |
+| Weapons in 1.1.0 | 996 entries, including the optional packs below |
 | Other weapon mods | Support must be added for each weapon; unlisted weapons won't work automatically |
 
-You don't need these packs to use Field Attachments with SPT's standard weapons. The 35 added weapon entries come from:
+### Supported weapon packs in 1.1.0
 
-| Optional pack | Supported entries | Examples |
+**These packs are optional and are not included with Field Attachments.** Install whichever ones you want separately. Standard SPT weapons work without them.
+
+| Optional pack | Supported entries | Pack version checked |
 | --- | ---: | --- |
-| [WTT - Content Backport](https://forge.sp-tarkov.com/mod/2512/wtt-content-backport) | 13 | M16A1, M16A2, Howa Type 20 |
-| [Epic's All in One](https://forge.sp-tarkov.com/index.php/mod/1263/epics-all-in-one) | 16 | Mk47 Mutant 5.45/9×39 variants, MCX 5.56, M700 .277 Fury |
-| [ECOT - Eukyre's Consortium of Things](https://forge.sp-tarkov.com/mod/2195/ecot-eukyres-consortium-of-things) | 6 | HK337, FNX-45 Tactical, Glock 22, MP5/40, UMP .40 |
+| [WTT - Content Backport](https://sp-mod.com/mod/2512/wtt-content-backport) | 14 | 2.0.5 |
+| [Epic's All in One](https://sp-mod.com/mod/1263/epics-all-in-one) | 16 | 5.0.1 |
+| [ECOT - Eukyre's Consortium of Things](https://sp-mod.com/mod/2195/ecot-eukyres-consortium-of-things) | 6 | 2.0.1 |
+| [Definitive Weapon Variants](https://sp-mod.com/mod/2010/definitive-weapon-variants) | 687 | 4.3.2 + [4.3.3 hotfix](https://github.com/Szonszczyk/DefinitiveWeaponVariants-csharp/releases/tag/v4.3.3) |
+| [WTT- Armory](https://sp-mod.com/mod/2246/wtt-armory) | 80 | 3.0.0 |
+| [C11 - True North](https://sp-mod.com/mod/2423/c11-true-north) | 29 | 4.0.3 |
+| [Make Shotguns Great Again!](https://sp-mod.com/mod/1453/make-shotguns-great-again) | 5 | 1.17.0 |
 
-If you add a pack, use a release that matches your SPT version and install its listed dependencies. These counts cover the weapons currently supported; new additions to a pack won't automatically be supported.
+Pack coverage was checked with the listed downloads on **SPT 4.1.6**. Use a pack release that matches your SPT version and install its listed dependencies. New weapons from later pack updates and custom DWV variants need their own support.
 
 Some supported weapons have no attachment slots to change. Not every weapon and clothing combination has been tested in game yet.
