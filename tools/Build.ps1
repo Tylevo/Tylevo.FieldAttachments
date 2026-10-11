@@ -100,11 +100,62 @@ try {
         $AnimationHashes[$relative] = $entry.sha256
     }
     if ($AnimationHashes.Count -ne 129) { throw 'Expected all 123 original and six additional authored animations.' }
+    $PackManifest = Get-Content -LiteralPath (Join-Path $Repo 'assets/Animation/all-pack-presentations.json') -Raw | ConvertFrom-Json
+    if ($PackManifest.schema -ne 1 -or $PackManifest.unityVersion -ne '2022.3.43f1' -or
+        $PackManifest.presentation -ne 'MCX-angle/STM-withdrawn-arm-v1' -or
+        @($PackManifest.recipients).Count -ne 109) { throw 'Expected 109 verified custom pack presentations.' }
+    $PackTemplates = @{}
+    foreach ($entry in $PackManifest.recipients) {
+        if ($entry.template -notmatch '^[a-f0-9]{24}$' -or $entry.bundle -cne ('gun_' + $entry.template + '_presentation') -or
+            $entry.sha256 -notmatch '^[A-F0-9]{64}$' -or $PackTemplates.ContainsKey($entry.template)) { throw 'Invalid or duplicate pack recipient.' }
+        $PackTemplates[$entry.template] = $true
+        $relative = 'Animation/' + $entry.bundle + '.bundle'
+        if ($AnimationHashes.Contains($relative) -or (Get-FileHash -LiteralPath (Join-Path $Repo ('assets/' + $relative))).Hash -ne $entry.sha256) {
+            throw ('Duplicate or changed pack animation: ' + $relative)
+        }
+        $AnimationHashes[$relative] = $entry.sha256
+    }
+    if ($AnimationHashes.Count -ne 238) { throw 'Expected 129 preserved and 109 individually fitted animations.' }
     $AnimationBaseline = Get-Content -LiteralPath (Join-Path $Repo 'tools/animation-baseline-0.25.1.json') -Raw | ConvertFrom-Json
     $BaselinePins = @($AnimationBaseline.authoredAnimationHashes.PSObject.Properties)
     if ($AnimationBaseline.schema -ne 1 -or $AnimationBaseline.baselineVersion -ne '0.25.1' -or $BaselinePins.Count -ne 123) { throw 'Unknown original animation baseline.' }
     foreach ($pin in $BaselinePins) {
         if (!$AnimationHashes.Contains($pin.Name) -or $AnimationHashes[$pin.Name] -ne $pin.Value) { throw ('Original animation baseline changed: ' + $pin.Name) }
+    }
+    # Catalogs are shipped presentation data. No weapon pack needs to be installed to build or use the plugin.
+    $WeaponPackAliases = 0
+    $AliasRoutes = @{}
+    $ContentAliasRoutes = @{}
+    foreach ($catalog in @('WeaponPackAliases.cs', 'ContentPackAliases.cs')) {
+        $code = Get-Content -LiteralPath (Join-Path $Repo ('src/Core/' + $catalog)) -Raw
+        $match = [regex]::Match($code, 'public const int Count = (\d+);')
+        $expected = if ($catalog -eq 'WeaponPackAliases.cs') { 687 } else { 6 }
+        $routes = [regex]::Matches($code, 'case "([a-f0-9]{24})": return "([a-f0-9]{24})";')
+        if (!$match.Success -or [int]$match.Groups[1].Value -ne $expected -or $routes.Count -ne $expected) {
+            throw ('Explicit alias count differs from the release catalog: ' + $catalog)
+        }
+        foreach ($route in $routes) {
+            $alias = $route.Groups[1].Value
+            $donor = $route.Groups[2].Value
+            if ($alias -ceq $donor -or $AliasRoutes.ContainsKey($alias) -or $PackTemplates.ContainsKey($alias)) {
+                throw ('Duplicate or colliding optional pack alias: ' + $alias)
+            }
+            $AliasRoutes[$alias] = $donor
+            if ($catalog -eq 'ContentPackAliases.cs') { $ContentAliasRoutes[$alias] = $donor }
+        }
+        $WeaponPackAliases += $expected
+    }
+    $ContentManifest = Get-Content -LiteralPath (Join-Path $Repo 'assets/Animation/content-pack-aliases.json') -Raw | ConvertFrom-Json
+    if ($ContentManifest.schema -ne 1 -or @($ContentManifest.aliases).Count -ne 6) { throw 'Expected six verified content-pack aliases.' }
+    $ContentTemplates = @{}
+    foreach ($entry in $ContentManifest.aliases) {
+        if ($entry.template -notmatch '^[a-f0-9]{24}$' -or $entry.donor -notmatch '^[a-f0-9]{24}$' -or
+            $ContentTemplates.ContainsKey($entry.template) -or !$ContentAliasRoutes.ContainsKey($entry.template) -or
+            $ContentAliasRoutes[$entry.template] -cne $entry.donor -or $entry.sourceSha256 -notmatch '^[a-fA-F0-9]{64}$' -or
+            $entry.nativeContainerSha256 -notmatch '^[a-fA-F0-9]{64}$' -or $entry.bundleManifestSha256 -notmatch '^[a-fA-F0-9]{64}$') {
+            throw 'Invalid content-pack alias proof or catalog mismatch.'
+        }
+        $ContentTemplates[$entry.template] = $true
     }
     $PackageDir = Join-Path $Out 'BepInEx\plugins\Tylevo.FieldAttachments'
     New-Item -ItemType Directory -Path $PackageDir -Force | Out-Null
@@ -124,10 +175,10 @@ try {
             sha256 = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash;
             fileVersion = [Diagnostics.FileVersionInfo]::GetVersionInfo($file).FileVersion }
     }
-    $Manifest = [ordered]@{ pluginVersion = '1.0.0'; altMenuHoldAndToggle = $true; original025CardLayout = $true; readOnlyByDefault = $false; experimentalEmptySlotInstallPresent = $true; nativeTacticalUninstallPresent = $true; nativeLeafAttachmentCategories = @('Optic','Muzzle','Tactical','Underbarrel'); clickActionsPresent = $true; swapsEnabled = $true; nativeAtomicSwapUsed = $false; sequentialReplacement = $true; requestedTarget = ('SPT ' + $ClientCompatibility.actualSptVersion); supportedTargets = @('SPT 4.1.5', 'SPT 4.1.6'); actualSptVersion = $ClientCompatibility.actualSptVersion; clientCompatibility = $ClientCompatibility; gameVersionMustBeVerified = $true;
+    $Manifest = [ordered]@{ pluginVersion = '1.1.0'; altMenuHoldAndToggle = $true; original025CardLayout = $true; readOnlyByDefault = $false; experimentalEmptySlotInstallPresent = $true; nativeTacticalUninstallPresent = $true; nativeLeafAttachmentCategories = @('Optic','Muzzle','Tactical','Underbarrel'); clickActionsPresent = $true; swapsEnabled = $true; nativeAtomicSwapUsed = $false; sequentialReplacement = $true; requestedTarget = ('SPT ' + $ClientCompatibility.actualSptVersion); supportedTargets = @('SPT 4.1.5', 'SPT 4.1.6'); actualSptVersion = $ClientCompatibility.actualSptVersion; clientCompatibility = $ClientCompatibility; gameVersionMustBeVerified = $true;
         createdUtc = (Get-Date).ToUniversalTime().ToString('o'); sdk = $version;
         runtimeTestsPerformed = $false; coreTestsPerformed = $false; coreTestsPassed = $null; customStmAnimationSha256 = $AnimationHash; authoredAnimationHashes = $AnimationHashes;
-        authoredTemplateCount = 194; additionalAliasCount = 26; original123AnimationHashesPreserved = $true;
+        authoredTemplateCount = (194 + $WeaponPackAliases + $PackTemplates.Count); additionalAliasCount = (26 + $WeaponPackAliases); weaponPackAliasCount = $WeaponPackAliases; authoredPackTemplateCount = $PackTemplates.Count; releaseChannel = 'stable'; original123AnimationHashesPreserved = $true; original129AnimationHashesPreserved = $true;
         pluginSha256 = (Get-FileHash -LiteralPath $Dll -Algorithm SHA256).Hash; references = @($References) }
     $Manifest | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $PackageDir 'build-manifest.json') -Encoding UTF8
     Write-Host "`nPlugin build and animation asset checks succeeded."

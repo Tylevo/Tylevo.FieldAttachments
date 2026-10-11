@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Tylevo.FieldAttachments
 {
-    [BepInPlugin("com.tylevo.fieldattachments", "Tylevo Field Attachments", "1.0.0")]
+    [BepInPlugin("com.tylevo.fieldattachments", "Tylevo Field Attachments", "1.1.0")]
     [BepInProcess("EscapeFromTarkov.exe")]
     [BepInDependency("com.arys.unitytoolkit", "2.0.2")]
     [DefaultExecutionOrder(-10000)]
@@ -98,7 +98,7 @@ namespace Tylevo.FieldAttachments
             _pose = new InspectionPose(_read, _reader, _probe, root);
             _state.Transition += message => Trace((message.StartsWith("ARM_CLEARED", StringComparison.Ordinal) ? "INVALIDATE " : "STAGE ") + message);
             _skip = Application.isBatchMode;
-            Logger.LogInfo("Field Attachments 1.0.0 loaded. Targets SPT 4.1.5/4.1.6 with the inspected native client. Attachment changes=" + _liveInstall.Value + "; menu=" + _menuKey.Value + "/" + _menuActivationMode.Value + "; legacy attachment mode=" + _poseKey.Value + "; legacy cursor=" + _mouseModifier.Value + ".");
+            Logger.LogInfo("Field Attachments 1.1.0 loaded. Targets SPT 4.1.5/4.1.6 with the inspected native client. Attachment changes=" + _liveInstall.Value + "; menu=" + _menuKey.Value + "/" + _menuActivationMode.Value + "; legacy attachment mode=" + _poseKey.Value + "; legacy cursor=" + _mouseModifier.Value + ".");
             if (_skip) Logger.LogInfo("Batch/headless graphics session: UI disabled.");
         }
         private void Update()

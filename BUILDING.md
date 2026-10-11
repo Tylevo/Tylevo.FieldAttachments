@@ -1,6 +1,6 @@
 # Build from source
 
-This repository contains the C# source for the **1.0.0 release**, the build scripts and the animation bundles used by the plugin.
+This repository contains the C# source for the **1.1.0 release**, the build scripts and the animation bundles used by the plugin.
 
 Requirements:
 
@@ -9,6 +9,8 @@ Requirements:
 - A compatible **[UnityToolkit 2.0.2 or newer](https://github.com/ArysWasTaken/UnityToolkit)** installed in that game folder.
 
 Download or clone the complete repository, including `assets/Animation/`. Unity Editor and Blender are not needed to compile the plugin.
+
+The supported weapon packs are optional. You do not need their server mods, DLLs or assets to build or run Field Attachments with standard SPT weapons.
 
 From the repository folder, replace `<SPT_GAME_FOLDER>` with the folder containing `EscapeFromTarkov.exe` and run:
 
@@ -24,10 +26,10 @@ Game, Unity and UnityToolkit libraries are read from your installation and are n
 
 ## Matching the published DLL
 
-The published 1.0.0 DLL was built with **.NET SDK 10.0.201** against the supported SPT 4.1.6 installation. Its SHA-256 is:
+The published 1.1.0 DLL was built with **.NET SDK 10.0.201** against the supported SPT 4.1.6 installation. Its SHA-256 is:
 
 ```text
-A6C5500C8D65B1046251AA6EF03B608CE98029C961B6B58A3B3CE07AF81C939C
+F4EC26165E41B023208057D1FE7AD579EB86CBF33E609CF8DF802B063D6E317D
 ```
 
 For a byte-for-byte comparison, use the source ZIP without a `.git` folder, the same SDK and matching local reference libraries. Building inside a Git checkout can add revision metadata to the assembly. The release ZIP's `build-manifest.json` records the reference hashes.

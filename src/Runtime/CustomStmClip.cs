@@ -29,7 +29,7 @@ namespace Tylevo.FieldAttachments.Runtime
             AssetBundle? bundle = null;
             try
             {
-                string expectedHash = AuditedWeaponPresentations.For(template)?.Sha256 ?? GeneratedPresentationFamilies.For(template)?.Sha256 ?? (template == CustomStmInspection.M4Template ? M4BundleHash :
+                string expectedHash = AuthoredPackPresentations.For(template)?.Sha256 ?? AuditedWeaponPresentations.For(template)?.Sha256 ?? GeneratedPresentationFamilies.For(template)?.Sha256 ?? (template == CustomStmInspection.M4Template ? M4BundleHash :
                     template == McxInspectionSegment.Template ? McxBundleHash : template == CustomStmInspection.M700Template ? M700BundleHash :
                     template == CustomStmInspection.M870Template ? M870BundleHash : template == CustomStmInspection.Glock17Template ? Glock17BundleHash : BundleHash);
                 string path = Path.Combine(directory, "Animation", key + ".bundle");

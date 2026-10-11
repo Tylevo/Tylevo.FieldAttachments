@@ -17,6 +17,8 @@ namespace Tylevo.FieldAttachments.Core
         public static string ControllerFor(string template)
         {
             template = InstalledWeaponAliases.Canonical(template);
+            var pack = AuthoredPackPresentations.For(template);
+            if (pack != null) return pack.Controllers[0];
             return template == StmPresentation.Template ? StmPresentation.Controller :
             template == M4Template ? "weapon_colt_m4a1_556x45" : template == McxInspectionSegment.Template ? McxInspectionSegment.Controller :
             template == M700Template ? "weapon_remington_model_700_762x51" : template == M870Template ? "weapon_remington_model_870_12g" :
@@ -25,6 +27,7 @@ namespace Tylevo.FieldAttachments.Core
         public static string NativeClipFor(string template)
         {
             template = InstalledWeaponAliases.Canonical(template);
+            if (AuthoredPackPresentations.For(template) != null) return "";
             return template == StmPresentation.Template ? "stm9_look" :
             template == M4Template ? "m4a1_look" : template == McxInspectionSegment.Template ? "mcx_look" :
             template == M700Template ? "m700_look" : template == M870Template ? "m870_look" : template == Glock17Template ? "glock_look" : GeneratedPresentationFamilies.For(template)?.NativeClip ?? AuditedWeaponPresentations.For(template)?.Profiles[0].Clip ?? "";
@@ -33,6 +36,8 @@ namespace Tylevo.FieldAttachments.Core
         public static string BundleFor(string template)
         {
             template = InstalledWeaponAliases.Canonical(template);
+            var pack = AuthoredPackPresentations.For(template);
+            if (pack != null) return pack.Bundle;
             return template == M4Template ? "m4a1_presentation" :
             template == McxInspectionSegment.Template ? "mcx_presentation" : template == M700Template ? "m700_presentation" :
             template == M870Template ? "m870_presentation" : template == Glock17Template ? "glock17_presentation" :
@@ -41,16 +46,18 @@ namespace Tylevo.FieldAttachments.Core
         public static string ClipFor(string template) => BundleFor(template).Length == 0 ? "" : "Tylevo.FieldAttachments." + BundleFor(template);
         public static bool IsAuthoredClip(string? name) => name == ClipName || name == ClipFor(M4Template) ||
             name == ClipFor(McxInspectionSegment.Template) || name == ClipFor(M700Template) ||
-            name == ClipFor(M870Template) || name == ClipFor(Glock17Template) || GeneratedPresentationFamilies.IsAuthoredClip(name) || AuditedWeaponPresentations.IsAuthoredClip(name);
+            name == ClipFor(M870Template) || name == ClipFor(Glock17Template) || GeneratedPresentationFamilies.IsAuthoredClip(name) || AuditedWeaponPresentations.IsAuthoredClip(name) || AuthoredPackPresentations.IsAuthoredClip(name);
         public static bool ControllerMatches(string template,string controller)
         {
             template = InstalledWeaponAliases.Canonical(template);
+            if (AuthoredPackPresentations.For(template) != null) return AuthoredPackPresentations.ControllerMatches(template, controller);
             return AuditedWeaponPresentations.For(template)!=null ?
             AuditedWeaponPresentations.ControllerMatches(template,controller) : ControllerFor(template).Length!=0 && ControllerFor(template)==controller;
         }
         public static int EventLimit(string template,string clip)
         {
             template = InstalledWeaponAliases.Canonical(template);
+            if (AuthoredPackPresentations.For(template) != null) return 0;
             return AuditedWeaponPresentations.For(template)!=null ? AuditedWeaponPresentations.EventLimit(template,clip) :
             CustomMcxBackport.Matches(template,clip) ? CustomMcxBackport.EventCountFor(template) : GlobalMcxInspection.MaximumEvents;
         }
@@ -60,6 +67,7 @@ namespace Tylevo.FieldAttachments.Core
         public static string RecipientDenial(string template, string controller, string clip, float duration, bool legacy, bool human, int events)
         {
             template = InstalledWeaponAliases.Canonical(template);
+            if (AuthoredPackPresentations.For(template) != null) return "pack presentation is standalone only";
             if(AuditedWeaponPresentations.For(template)!=null)
                 return !legacy && !human && events==0 && AuditedWeaponPresentations.MetadataMatches(template,controller,clip,duration) ? "" : "audited recipient controller/clip/type/duration/events changed";
             string expected = ControllerFor(template);
@@ -73,6 +81,7 @@ namespace Tylevo.FieldAttachments.Core
         public static string EventDenial(string template, string nativeClip, IReadOnlyList<McxInspectionEvent> events)
         {
             template = InstalledWeaponAliases.Canonical(template);
+            if (AuthoredPackPresentations.For(template) != null) return "pack presentation has no native inspection event route";
             return AuditedWeaponPresentations.For(template)!=null ? AuditedWeaponPresentations.EventDenial(template,nativeClip,events) :
             CustomMcxBackport.Matches(template, nativeClip) ? CustomMcxBackport.EventDenial(template, events) : GlobalMcxInspection.NativeEventDenial(events);
         }
@@ -81,16 +90,20 @@ namespace Tylevo.FieldAttachments.Core
         public static string StateName(string template,string controller,int state)
         {
             template = InstalledWeaponAliases.Canonical(template);
+            if (AuthoredPackPresentations.For(template) != null) return "";
             return AuditedWeaponPresentations.For(template)!=null ?
             AuditedWeaponPresentations.StateName(template,controller,state) : ControllerMatches(template,controller) && state==PoseMarker.SharedState ? "Hands.LOOK" : "";
         }
         public static bool StateMatches(string template,string controller,int state) => StateName(template,controller,state).Length!=0;
         public const string LeftHandMarker="Weapon_root/Weapon_root_anim/weapon/weapon_L_hand_marker";
+        public static bool PreserveNativeLeftHandMarker(string template) =>
+            InstalledWeaponAliases.Canonical(template)=="5b3b713c5acfc4330140bd8d" ||
+            AuthoredPackPresentations.For(template)?.PreserveNativeLeftHandMarker == true;
         public static string MissingRigPath(string template,Func<string,bool> exists)
         {
-            template = InstalledWeaponAliases.Canonical(template);
+            bool preserveLeftHandMarker = PreserveNativeLeftHandMarker(template);
             foreach(string path in GlobalMcxInspection.RequiredRigPaths)
-                if(!(template=="5b3b713c5acfc4330140bd8d" && path==LeftHandMarker) && !exists(path))return path;
+                if(!(preserveLeftHandMarker && path==LeftHandMarker) && !exists(path))return path;
             return "";
         }
         public static bool EarlyEnough(float time) => PoseMarker.Finite(time) && time >= 0 && time <= LatestReplacement;

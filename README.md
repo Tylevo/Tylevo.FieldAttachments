@@ -2,7 +2,7 @@
 
 Change optics, muzzle devices, tactical devices and foregrips without opening your inventory. Left Alt brings up attachment cards around your weapon and lets you use the mouse to choose a part.
 
-**1.0.0 · SPT 4.1.5 / 4.1.6 · BepInEx client plugin**
+**1.1.0 · SPT 4.1.5 / 4.1.6 · BepInEx client plugin**
 
 [Installation](#installation) · [Controls](#controls) · [Compatibility](#compatibility-and-coverage) · [Source code](src/Plugin.cs) · [Build instructions](BUILDING.md)
 
@@ -76,9 +76,9 @@ Custom attachment animations are always enabled.
 
 ## Compatibility and coverage
 
-**The upcoming 1.1.0 update supports 996 weapon entries:** 159 standard SPT entries and 837 from seven optional packs. This total includes caliber and configuration variants.
+**1.1.0 supports 996 weapon entries:** 159 standard SPT entries and 837 from seven optional packs. This total includes caliber and configuration variants.
 
-The current [1.0.0 download](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/tag/v1.0.0) supports 194 entries. The expanded pack coverage below requires 1.1.0.
+The expanded coverage below requires [Field Attachments 1.1.0](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/tag/v1.1.0). Older 1.0.0 downloads support 194 entries.
 
 | Area | Current scope |
 | --- | --- |

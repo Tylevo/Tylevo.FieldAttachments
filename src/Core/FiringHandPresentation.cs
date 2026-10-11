@@ -50,6 +50,7 @@ namespace Tylevo.FieldAttachments.Core
             "62178c4d4ecf221597654e3d", // RSP-30 red
             "66d9f1abb16d9aacf5068468", // RSP-30 special yellow
         };
-        public static bool RequiresFiringHand(string template) => Templates.Contains(template);
+        public static bool RequiresFiringHand(string template) => Templates.Contains(InstalledWeaponAliases.Canonical(template)) ||
+            AuthoredPackPresentations.For(template)?.RequiresFiringHand == true;
     }
 }

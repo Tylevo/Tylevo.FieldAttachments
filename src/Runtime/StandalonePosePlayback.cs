@@ -44,7 +44,7 @@ namespace Tylevo.FieldAttachments.Runtime
                 if (path == "Camera_animated") continue;
                 // The pinned TT Gold clip has no left-hand marker curves. Leave
                 // that marker native even if another mod adds it to the rig.
-                if (template == "5b3b713c5acfc4330140bd8d" && path == CustomStmInspection.LeftHandMarker) continue;
+                if (CustomStmInspection.PreserveNativeLeftHandMarker(template) && path == CustomStmInspection.LeftHandMarker) continue;
                 Transform bone = animator.transform.Find(path);
                 if (bone == null || bone.parent == null || !Finite(bone.localPosition) || !ValidRotation(bone.localRotation) || !Finite(bone.localScale))
                     throw new InvalidOperationException("Standalone presentation rig binding unavailable: " + path);

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0 — Optional weapon pack support
+
+- Expand support to 996 weapon entries: 159 standard SPT entries and 837 from seven optional packs.
+- Add Definitive Weapon Variants, WTT Armory, C11 True North and Make Shotguns Great Again, alongside updated Backport, Epic's All in One and ECOT support.
+- Add individual attachment poses for custom models, including Wages of Sin, FN Evolys, P90 Scourge and VR80.
+- Keep all weapon packs optional. Standard SPT weapons work without them; install the packs you want separately.
+- Preserve the existing cards, controls, animation timing and guarded attachment changes.
+
 ## 1.0.0
 
 - Angled attachment cards for optics, muzzle devices, tactical devices and foregrips.

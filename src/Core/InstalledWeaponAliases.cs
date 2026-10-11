@@ -36,7 +36,7 @@ namespace Tylevo.FieldAttachments.Core
                 case "6217726288ed9f0845317459": return "624c0b3340357b5f566e8766"; // RSP-30 reactive signal cartridge (Green): exact native rig/controller/idle/LOOK source.
                 case "62178c4d4ecf221597654e3d": return "624c0b3340357b5f566e8766"; // RSP-30 reactive signal cartridge (Red): exact native rig/controller/idle/LOOK source.
                 case "66d9f1abb16d9aacf5068468": return "624c0b3340357b5f566e8766"; // RSP-30 reactive signal cartridge (Special Yellow): exact native rig/controller/idle/LOOK source.
-                default: return template;
+                default: return ContentPackAliases.Canonical(template);
             }
         }
     }
