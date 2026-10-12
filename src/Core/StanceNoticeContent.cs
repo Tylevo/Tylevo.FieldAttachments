@@ -5,6 +5,7 @@ namespace Tylevo.FieldAttachments.Core
     public sealed class StanceNoticeContent
     {
         public const string ForgePage = "https://sp-mod.com/mod/3136/spt-stance-overhaul";
+        private const string OptionalDisclaimer = "Stance Overhaul is fully optional, but recommended for smoother animations. All Field Attachments features work without it.";
         public string Heading { get; }
         public string Detail { get; }
         public string ForgeUrl { get; }
@@ -12,13 +13,13 @@ namespace Tylevo.FieldAttachments.Core
         public bool Ready { get; }
 
         private StanceNoticeContent(string heading, string detail, bool ready, bool link, string linkLabel = "View on Forge")
-        { Heading = heading; Detail = detail; Ready = ready; ForgeUrl = link ? ForgePage : ""; LinkLabel = linkLabel; }
+        { Heading = heading; Detail = detail + "\n\n" + OptionalDisclaimer; Ready = ready; ForgeUrl = link ? ForgePage : ""; LinkLabel = linkLabel; }
 
         public static StanceNoticeContent Create(StanceAvailability availability, bool fluidEnabled)
         {
             if (availability == StanceAvailability.NotDetected)
                 return new StanceNoticeContent("STANCE OVERHAUL NOT DETECTED",
-                    "Highly recommended for smoother weapon transitions. Field Attachments works without it. See Fontaine's Forge page for the mod and its requirements.", false, true);
+                    "You can find the mod and its requirements on Fontaine's Forge page.", false, true);
             if (availability == StanceAvailability.MissingCommonLibrary)
                 return new StanceNoticeContent("STANCE OVERHAUL DETECTED",
                     "Animation support is unavailable: Realism Common Library is missing or not loaded. Check the requirements on Fontaine's Forge page. Normal attachment animations still work.", false, true, "View requirements");

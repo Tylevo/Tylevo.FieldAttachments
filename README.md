@@ -101,7 +101,7 @@ Opening the attachment view is quicker in 1.1.1. **Controls → Faster menu clos
 
 ### Optional stance support
 
-**[Fontaine's Stance Overhaul](https://sp-mod.com/mod/3136/spt-stance-overhaul) is highly recommended for smoother weapon transitions, but it remains optional.** Install the requirements listed on its Forge page if you choose to use it.
+**[Fontaine's Stance Overhaul](https://sp-mod.com/mod/3136/spt-stance-overhaul) is fully optional, but highly recommended for smoother weapon transitions. All Field Attachments features work without it.** Install the requirements listed on its Forge page if you choose to use it.
 
 1.1.1 supports the checked **0.0.2** builds of Stance Overhaul and [Realism Common Library](https://sp-mod.com/mod/3135/spt-realism-common-lib).
 

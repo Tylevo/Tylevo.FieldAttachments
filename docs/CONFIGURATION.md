@@ -29,7 +29,7 @@ The optional `CycleAttachmentLayer` shortcut is unbound by default and is not sh
 
 ## Optional stance integration
 
-Field Attachments does not require Stance Overhaul or Realism Common Library. Integration currently recognizes the checked **0.0.2 builds of both mods**. Other versions or builds use the normal attachment presentation when the integration cannot be enabled. Turning off **Fluid stance transitions** also returns to the normal presentation.
+Field Attachments does not require Stance Overhaul or Realism Common Library. Stance Overhaul is recommended for smoother animations; all Field Attachments features work without it. Integration currently recognizes the checked **0.0.2 builds of both mods**. Other versions or builds use the normal attachment presentation when the integration cannot be enabled. Turning off **Fluid stance transitions** also returns to the normal presentation.
 
 The smoother menu entry and the HUD's keycap styling do not require either optional mod.
 
