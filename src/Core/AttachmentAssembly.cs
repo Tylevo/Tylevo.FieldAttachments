@@ -46,9 +46,37 @@ namespace Tylevo.FieldAttachments.Core
             }
             return populated && optic;
         }
+        public bool IsAdvanced(AttachmentGroup group,string rootType)
+            => IsAdvanced(group,rootType,true);
+        private bool IsAdvanced(AttachmentGroup group,string rootType,bool requirePopulated)
+        {
+            if(!Complete || !AttachmentLayers.IsAdvanced(group) || !AttachmentScope.Supports(group,rootType)) return false;
+            bool populated=false;
+            foreach(var part in Parts)
+            {
+                if(part.Deleted || part.Locked || (part.Item==null && part.Required)) return false;
+                if(part.Item==null) continue;
+                populated=true;
+                if(!part.Examined || part.Pin!=0 || !AdvancedChild(group,part.RuntimeType)) return false;
+            }
+            return populated || !requirePopulated;
+        }
+        private static bool AdvancedChild(AttachmentGroup group,string type)
+        {
+            // Stocks/grips may carry their own pads/panels. Receiver covers and
+            // handguards may carry intact rails, sights, lights and foregrips.
+            if(AttachmentScope.Supports(group,type)) return true;
+            return (group==AttachmentGroup.Handguard || group==AttachmentGroup.Receiver) &&
+                (type=="EFT.InventoryLogic.Mount" || AttachmentScope.Supports(AttachmentGroup.Optic,type) ||
+                 AttachmentScope.Supports(AttachmentGroup.Tactical,type) || AttachmentScope.Supports(AttachmentGroup.Underbarrel,type));
+        }
         public static bool Supports(AttachmentGroup? group, ItemObservation? item) => item!=null &&
-            (item.HasChildren ? group==AttachmentGroup.Optic && item.Assembly?.IsOptic(item.RuntimeType)==true :
+            (item.HasChildren ? (group==AttachmentGroup.Optic && item.Assembly?.IsOptic(item.RuntimeType)==true) ||
+                (group.HasValue && item.Assembly?.IsAdvanced(group.Value,item.RuntimeType)==true) :
              AttachmentScope.Supports(group,item.RuntimeType));
+        public static bool SupportsRequiredPart(AttachmentGroup group,ItemObservation? item) => item!=null &&
+            item.Assembly!=null && item.HasChildren==item.Assembly.Parts.Any(p=>p.Item!=null) &&
+            item.Assembly.IsAdvanced(group,item.RuntimeType,false);
         public static bool Same(ItemObservation before, ItemObservation after) => before.HasChildren==after.HasChildren &&
             (!before.HasChildren || before.Assembly?.Same(after.Assembly)==true);
         public static void CollapseOpticPositions(RaidSnapshot snapshot)

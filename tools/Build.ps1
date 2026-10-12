@@ -52,7 +52,7 @@ try {
     $major = [int]$Matches[1]
     if ($major -lt 8) { throw 'This build helper requires SDK 8 or newer.' }
     [Environment]::SetEnvironmentVariable('TFA_SPT_ROOT', $SptPath, 'Process')
-    Run-DotNet -Arguments @('build', (Join-Path $Repo 'src\Tylevo.FieldAttachments.csproj'), '-c', 'Release', '--verbosity', 'minimal')
+    Run-DotNet -Arguments @('build', (Join-Path $Repo 'src\Tylevo.FieldAttachments.csproj'), '-c', 'Release', '--verbosity', 'minimal', '-p:IncludeSourceRevisionInInformationalVersion=false', '-p:EnableSourceControlManagerQueries=false', '-p:EnableSourceLink=false')
     $Dll = Join-Path $Repo 'src\bin\Release\Tylevo.FieldAttachments.dll'
     if (!(Test-Path -LiteralPath $Dll)) { throw 'Compiler did not produce the expected plugin DLL.' }
     $AnimationHashes = [ordered]@{}
@@ -175,10 +175,10 @@ try {
             sha256 = (Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash;
             fileVersion = [Diagnostics.FileVersionInfo]::GetVersionInfo($file).FileVersion }
     }
-    $Manifest = [ordered]@{ pluginVersion = '1.1.0'; altMenuHoldAndToggle = $true; original025CardLayout = $true; readOnlyByDefault = $false; experimentalEmptySlotInstallPresent = $true; nativeTacticalUninstallPresent = $true; nativeLeafAttachmentCategories = @('Optic','Muzzle','Tactical','Underbarrel'); clickActionsPresent = $true; swapsEnabled = $true; nativeAtomicSwapUsed = $false; sequentialReplacement = $true; requestedTarget = ('SPT ' + $ClientCompatibility.actualSptVersion); supportedTargets = @('SPT 4.1.5', 'SPT 4.1.6'); actualSptVersion = $ClientCompatibility.actualSptVersion; clientCompatibility = $ClientCompatibility; gameVersionMustBeVerified = $true;
+    $Manifest = [ordered]@{ pluginVersion = '1.1.1'; altMenuHoldAndToggle = $true; original025CardLayout = $true; readOnlyByDefault = $false; experimentalEmptySlotInstallPresent = $true; nativeTacticalUninstallPresent = $true; nativeLeafAttachmentCategories = @('Optic','Muzzle','Tactical','Underbarrel'); advancedAttachmentCategories = @('Stock','Handguard','PistolGrip'); carriedMultitoolRequired = $true; attachmentComparisonPresent = $true; optionalStanceCompatibility = $true; gameplayHintFooter = $true; clickActionsPresent = $true; swapsEnabled = $true; nativeAtomicSwapUsed = $false; sequentialReplacement = $true; requestedTarget = ('SPT ' + $ClientCompatibility.actualSptVersion); supportedTargets = @('SPT 4.1.5', 'SPT 4.1.6'); actualSptVersion = $ClientCompatibility.actualSptVersion; clientCompatibility = $ClientCompatibility; gameVersionMustBeVerified = $true;
         createdUtc = (Get-Date).ToUniversalTime().ToString('o'); sdk = $version;
         runtimeTestsPerformed = $false; coreTestsPerformed = $false; coreTestsPassed = $null; customStmAnimationSha256 = $AnimationHash; authoredAnimationHashes = $AnimationHashes;
-        authoredTemplateCount = (194 + $WeaponPackAliases + $PackTemplates.Count); additionalAliasCount = (26 + $WeaponPackAliases); weaponPackAliasCount = $WeaponPackAliases; authoredPackTemplateCount = $PackTemplates.Count; releaseChannel = 'stable'; original123AnimationHashesPreserved = $true; original129AnimationHashesPreserved = $true;
+        authoredTemplateCount = (194 + $WeaponPackAliases + $PackTemplates.Count); additionalAliasCount = (26 + $WeaponPackAliases); weaponPackAliasCount = $WeaponPackAliases; authoredPackTemplateCount = $PackTemplates.Count; releaseChannel = 'development'; original123AnimationHashesPreserved = $true; original129AnimationHashesPreserved = $true;
         pluginSha256 = (Get-FileHash -LiteralPath $Dll -Algorithm SHA256).Hash; references = @($References) }
     $Manifest | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $PackageDir 'build-manifest.json') -Encoding UTF8
     Write-Host "`nPlugin build and animation asset checks succeeded."

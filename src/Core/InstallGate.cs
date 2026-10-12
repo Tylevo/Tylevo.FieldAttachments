@@ -16,6 +16,10 @@ namespace Tylevo.FieldAttachments.Core
         public bool SnapshotComplete;
         public bool SourceIsCarried;
         public bool SupportedLeafAttachment;
+        public bool Advanced;
+        public bool MultitoolPresent;
+        public bool NativeToolScopeReady;
+        public bool RequiredReplacementAuthorized;
         public bool SupportedContext;
         public bool? YourPlayer;
         public bool? Alive;
@@ -47,14 +51,19 @@ namespace Tylevo.FieldAttachments.Core
             if (!f.CurrentSelection) return "Selection changed or expired. Rescan and make a fresh request.";
             if (!f.SnapshotComplete) return "Inventory scan was incomplete; live install blocked.";
             if (!f.Removing && !f.SourceIsCarried) return "Install accepts accessible carried storage only.";
-            if (!f.SupportedLeafAttachment) return "Only supported attachments or intact verified optic assemblies can be moved.";
+            if (!f.SupportedLeafAttachment) return "This attachment or its attached parts cannot be changed here.";
+            if (f.Advanced && !f.MultitoolPresent) return "Requires a carried Leatherman Multitool.";
+            if (f.Advanced && !f.NativeToolScopeReady) return "Multitool changes are unavailable on this game setup.";
             if (f.InventoryOpened != false || f.Aiming != false || f.TriggerPressed != false ||
                 f.InventoryLocked != false || f.HasActiveEvents != false || !f.Idle)
                 return "Hands/inventory are busy or readiness is unknown. Close inventory, stop aiming/firing, and wait for idle.";
-            if (f.Required != false || f.Locked != false || f.Deleted != false) return "Target slot is restricted or its state is unknown.";
+            bool requiredAllowed=f.Required==false || (f.Required==true && f.Advanced && f.MultitoolPresent &&
+                f.NativeToolScopeReady && f.RequiredReplacementAuthorized);
+            if (!requiredAllowed || f.Locked != false || f.Deleted != false) return "Target slot is restricted or its state is unknown.";
             if (f.Removing && (!f.InstalledItemMatches || f.Empty != false)) return "Installed attachment identity changed or is unknown.";
             if (!f.Removing && f.Empty != true) return "Target slot is occupied; a native install requires verified removal first.";
-            if (f.Examined != true || f.RaidModdable != true || !f.NeutralPinState) return "Item is unexamined, pinned/locked, not raid-moddable, or one of those checks is unknown.";
+            bool raidAllowed=f.RaidModdable==true || (f.RaidModdable==false && f.Advanced && f.MultitoolPresent && f.NativeToolScopeReady);
+            if (f.Examined != true || !raidAllowed || !f.NeutralPinState) return "Item is unexamined, pinned/locked, not raid-moddable, or one of those checks is unknown.";
             if (f.FilterPass != true) return "Native slot filter did not accept this item (or filter binding is unavailable).";
             return "";
         }

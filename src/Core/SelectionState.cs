@@ -9,8 +9,9 @@ namespace Tylevo.FieldAttachments.Core
         public const bool StageChangesInventory = false;
         public RaidSnapshot Snapshot { get; private set; } = new RaidSnapshot();
         public AttachmentGroup Group { get; private set; }
-        private readonly int[] _slots = new int[4];
-        private readonly int[] _candidates = new int[4];
+        public int Layer => AttachmentLayers.Layer(Group);
+        private readonly int[] _slots = new int[AttachmentLayers.GroupCount];
+        private readonly int[] _candidates = new int[AttachmentLayers.GroupCount];
         public string StagedItemId { get; private set; } = "";
         public string StagedSlotPath { get; private set; } = "";
         public string StageReason { get; private set; } = "The arm key confirms the highlighted item; no inventory action.";
@@ -22,9 +23,11 @@ namespace Tylevo.FieldAttachments.Core
 
         public void ReplaceSnapshot(RaidSnapshot snapshot, bool preserveSelection = false, string reason = "snapshot replaced")
         {
-            var oldPaths = new string[4];
-            var oldItems = new string[4];
+            var oldPaths = new string[AttachmentLayers.GroupCount];
+            var oldItems = new string[AttachmentLayers.GroupCount];
             string oldStagedItem = StagedItemId, oldStagedPath = StagedSlotPath;
+            var oldMultitool = Snapshot.Multitool;
+            bool oldMultitoolComplete = Snapshot.MultitoolScanComplete;
             SlotViewModel? armedSlot = Snapshot.Slots.FirstOrDefault(x => x.Slot.Path == oldStagedPath);
             ItemObservation? armedItem = armedSlot?.Candidates.FirstOrDefault(x => x.Item.Id == oldStagedItem)?.Item;
             bool keep = preserveSelection && snapshot.WeaponId == Snapshot.WeaponId && !string.IsNullOrEmpty(snapshot.WeaponId);
@@ -32,7 +35,7 @@ namespace Tylevo.FieldAttachments.Core
                 ReferenceEquals(snapshot.Weapon, Snapshot.Weapon) && ReferenceEquals(snapshot.Controller, Snapshot.Controller);
             if (keep)
             {
-                for (int g = 0; g < 4; g++)
+                for (int g = 0; g < AttachmentLayers.GroupCount; g++)
                 {
                     SlotViewModel? old = Current((AttachmentGroup)g);
                     oldPaths[g] = old?.Slot.Path ?? "";
@@ -45,7 +48,7 @@ namespace Tylevo.FieldAttachments.Core
             StagedItemId = StagedSlotPath = "";
             if (keep)
             {
-                for (int g = 0; g < 4; g++)
+                for (int g = 0; g < AttachmentLayers.GroupCount; g++)
                 {
                     var choices = GroupSlots((AttachmentGroup)g);
                     int index = choices.FindIndex(x => x.Slot.Path == oldPaths[g]);
@@ -60,6 +63,8 @@ namespace Tylevo.FieldAttachments.Core
             string invalid = !sameContext ? "weapon/player/controller context changed or reset" :
                 snapshot.Truncated || snapshot.Warnings.Count > 0 ? "scan incomplete" :
                 freshSlot == null || freshItem == null ? "armed item or slot disappeared" :
+                AttachmentLayers.IsAdvanced(freshSlot.Slot.Group) && (!oldMultitoolComplete || !snapshot.MultitoolScanComplete ||
+                    oldMultitool == null || !oldMultitool.Same(snapshot.Multitool)) ? "carried multitool identity or access changed" :
                 !ReferenceEquals(freshSlot.Slot.NativeSlot, armedSlot?.Slot.NativeSlot) ||
                 freshSlot.Slot.Installed?.Id != armedSlot?.Slot.Installed?.Id ||
                 freshSlot.Slot.Required != armedSlot?.Slot.Required || freshSlot.Slot.Locked != armedSlot?.Slot.Locked ? "target identity or state changed" :
@@ -77,8 +82,20 @@ namespace Tylevo.FieldAttachments.Core
             }
         }
         public void NextGroup(int direction)
-        { Group = (AttachmentGroup)Wrap((int)Group + direction, 4); DisarmChangedHighlight("group changed"); }
-        public List<SlotViewModel> GroupSlots(AttachmentGroup group) { return Snapshot.Slots.Where(s => s.Slot.Group == group && !s.Slot.HiddenInQuickSwap)
+        {
+            int first = Layer == 1 ? AttachmentLayers.GroupsPerLayer : 0;
+            int count = AttachmentLayers.MenuCount(Layer);
+            Group = (AttachmentGroup)(first + Wrap((int)Group - first + Wrap(direction, count), count));
+            DisarmChangedHighlight("group changed");
+        }
+        public void CycleLayer()
+        {
+            ClearStage("attachment layer changed");
+            int nextLayer = 1 - Layer;
+            Group = AttachmentLayers.TryAt(nextLayer, (int)AttachmentLayers.Home(Group), out var target) ? target : AttachmentLayers.At(nextLayer, 0);
+            Transition?.Invoke("LAYER_CHANGED " + Layer + " | " + Identity);
+        }
+        public List<SlotViewModel> GroupSlots(AttachmentGroup group) { return Snapshot.Slots.Where(s => AttachmentLayers.IsMenuGroup(group) && s.Slot.Group == group && !s.Slot.HiddenInQuickSwap)
             .OrderBy(s => DefaultPriority(s.Slot)).ToList(); }
         // Prefer the installed functional leaf; keep mounts and empty slots accessible via PgUp/PgDn.
         // Stable OrderBy preserves the game's relative order among equally ranked slots.
@@ -111,7 +128,7 @@ namespace Tylevo.FieldAttachments.Core
         public int CandidateIndex(AttachmentGroup group) { return _candidates[(int)group]; }
         public bool Highlight(AttachmentGroup group, string slotPath, string? itemId = null)
         {
-            if ((int)group < 0 || (int)group >= 4) return false;
+            if (!AttachmentLayers.IsMenuGroup(group)) return false;
             var slots = GroupSlots(group);
             if (slots.Count(s => s.Slot.Path == slotPath) != 1) return false;
             int slot = slots.FindIndex(s => s.Slot.Path == slotPath);

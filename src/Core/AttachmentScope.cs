@@ -22,6 +22,10 @@ namespace Tylevo.FieldAttachments.Core
                         runtimeType=="EFT.InventoryLogic.Silencer";
                 case AttachmentGroup.Tactical: return runtimeType=="EFT.InventoryLogic.TacticalCombo";
                 case AttachmentGroup.Underbarrel: return runtimeType=="EFT.InventoryLogic.Foregrip";
+                case AttachmentGroup.Stock: return runtimeType=="EFT.InventoryLogic.Stock";
+                case AttachmentGroup.Handguard: return runtimeType=="EFT.InventoryLogic.Handguard";
+                case AttachmentGroup.PistolGrip: return runtimeType=="EFT.InventoryLogic.PistolGrip";
+                case AttachmentGroup.Receiver: return runtimeType=="EFT.InventoryLogic.Receiver";
                 default: return false;
             }
         }

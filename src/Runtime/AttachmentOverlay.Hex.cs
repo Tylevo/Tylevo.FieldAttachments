@@ -68,7 +68,7 @@ namespace Tylevo.FieldAttachments.Runtime
             if (!ExperimentalHexSelectors || ExperimentalCrossSelectors) return;
             for(int g=0;g<4;g++)
             {
-                var panel=_hexPanels[g]; var group=(AttachmentGroup)g; var vm=state.Current(group);
+                var panel=_hexPanels[g]; var group=_groups[g].Group; var vm=state.Current(group);
                 int count=state.GroupSlots(group).Count;
                 panel.Root.gameObject.SetActive(vm!=null);
                 panel.Title.text=_groups[g].Label+(count>1 ? " ["+(state.SlotIndex(group)+1)+"/"+count+"]" : "");
@@ -116,7 +116,7 @@ namespace Tylevo.FieldAttachments.Runtime
         private bool LayoutHex(int index,GroupPanel group,float width,float height,bool current)
         {
             var panel=_hexPanels[index];
-            var fallback=OverlayLayout.Panel(group.Group,width,height);
+            var fallback=OverlayLayout.Panel(group.Home,width,height);
             Rect(panel.Root,group.Projection==null ? fallback.x : 0,group.Projection==null ? fallback.y : 0,HexSelectorLayout.Width,HexSelectorLayout.Height);
             foreach(var mesh in panel.Meshes) mesh.SetProjection(group.Projection,panel.Root,_canvasRect,HexSelectorLayout.Width,HexSelectorLayout.Height);
             Vector2 end=default;
@@ -179,7 +179,7 @@ namespace Tylevo.FieldAttachments.Runtime
             for(int g=0;g<4;g++) for(int i=0;i<7;i++)
             {
                 var cell=_hexPanels[g].Cells[i];
-                report.AppendLine("hex "+(AttachmentGroup)g+"/"+i+" item="+cell.Item?.Id+" target="+cell.Target?.Key);
+                report.AppendLine("hex "+_groups[g].Group+" home="+_groups[g].Home+"/"+i+" item="+cell.Item?.Id+" target="+cell.Target?.Key);
             }
         }
     }

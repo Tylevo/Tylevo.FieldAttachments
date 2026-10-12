@@ -16,7 +16,9 @@ namespace Tylevo.FieldAttachments.Runtime
             for(int g=0;g<4;g++)
             {
                 var panel=_crossGroups[g]; var group=_groups[g];
-                StudioCrossLayout.TryProject(group.Group,width,height,weaponPoint.x,weaponPoint.y,following,out panel.Projection);
+                panel.Projection=null;
+                if(AttachmentLayers.IsMenuGroup(group.Group))
+                    StudioCrossLayout.TryProject(group.Home,width,height,weaponPoint.x,weaponPoint.y,following,out panel.Projection);
                 // TryProject already applies shared bounded sway to the exported perspective.
                 // A second weapon-local projection magnifies bob/depth changes and captures
                 // a different rest frame on each opening. Transitions hide this layout instead.

@@ -32,8 +32,10 @@ namespace Tylevo.FieldAttachments.Runtime
         public float PerspectiveStrength { get; set; } = .55f;
         public float ClockwiseDegrees { get; set; } = 5;
         private float _drawnPerspective = float.NaN, _drawnClockwise = float.NaN;
-        private readonly Text _weapon, _actionStatus;
+        private readonly Text _weapon, _actionStatus, _headerMode;
+        private readonly RectTransform _header, _headerAccent;
         private readonly GroupPanel[] _groups = new GroupPanel[4];
+        private int _displayLayer;
         private readonly Color _panel = new Color(0.035f, 0.043f, 0.044f, 0.86f);
         private readonly Color _muted = new Color(0.61f, 0.64f, 0.62f, 1f);
         private readonly Color _accent = new Color(0.73f, 0.70f, 0.55f, 1f);
@@ -43,6 +45,7 @@ namespace Tylevo.FieldAttachments.Runtime
         {
             _resources = resources;
             _anchors = new WeaponAnchorReader(read);
+            ComparisonProvider = new WeaponComparisonReader(read).Read;
             _font = GetFont(out _ownsFont);
             _root = new GameObject("Tylevo.FieldAttachments.Overlay", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(CanvasGroup));
             _canvasRect = (RectTransform)_root.transform;
@@ -51,20 +54,51 @@ namespace Tylevo.FieldAttachments.Runtime
             CanvasScaler scaler = _root.GetComponent<CanvasScaler>(); scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920, 1080); scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight; scaler.matchWidthOrHeight = 0.5f;
             CanvasGroup cg = _root.GetComponent<CanvasGroup>(); cg.blocksRaycasts = false; cg.interactable = false;
-            Transform header = Box(_root.transform, "Header", 24, 24, 540, 84, _panel).transform;
-            Label(header, "Title", "TYLEVO FIELD ATTACHMENTS", 16, 8, 508, 30, 24, Color.white);
-            _weapon = Label(header, "Weapon", "", 16, 38, 508, 20, 15, _muted);
-            _actionStatus = Label(header, "ActionStatus", "", 16, 61, 508, 17, 12, _accent);
+            _header = (RectTransform)Box(_root.transform, "Header", 24, 24, 500, 98, Color.clear).transform;
+            var backdrop = new GameObject("Backdrop", typeof(RectTransform), typeof(CanvasRenderer), typeof(HudBackdrop));
+            backdrop.transform.SetParent(_header, false);
+            RectTransform background = (RectTransform)backdrop.transform;
+            background.anchorMin = Vector2.zero; background.anchorMax = Vector2.one;
+            background.offsetMin = background.offsetMax = Vector2.zero;
+            HudBackdrop shade = backdrop.GetComponent<HudBackdrop>();
+            shade.color = new Color(.035f, .039f, .036f, .80f); shade.raycastTarget = false;
+            _headerAccent = (RectTransform)Box(_header, "Accent", 0, 0, 3, 98, _accent).transform;
+            Label(_header, "Title", "TYLEVO FIELD ATTACHMENTS", 18, 10, 458, 20, 13, new Color(.73f, .73f, .69f));
+            _headerMode = Label(_header, "Mode", "QUICK ATTACHMENTS", 18, 30, 458, 34, 26, new Color(.94f, .94f, .90f));
+            _headerMode.fontStyle = FontStyle.Bold;
+            _weapon = Label(_header, "Weapon", "", 18, 66, 446, 20, 15, new Color(.77f, .78f, .74f));
+            _actionStatus = Label(_header, "ActionStatus", "", 18, 92, 446, 18, 13, _accent);
+            LayoutHeader();
             _groups[0] = CreateGroup(AttachmentGroup.Optic, "OPTIC");
             _groups[1] = CreateGroup(AttachmentGroup.Muzzle, "MUZZLE");
             _groups[2] = CreateGroup(AttachmentGroup.Tactical, "TACTICAL DEVICE");
             _groups[3] = CreateGroup(AttachmentGroup.Underbarrel, "FOREGRIP");
             _crossPalette=TarkovUiPalette.Read(read);
-            BuildPointerUi(); BuildHexUi(); BuildCrossUi(read); BuildMenuControlHint();
+            BuildPointerUi(); BuildHexUi(); BuildCrossUi(read); BuildMenuControlHint(); BuildComparisonUi(); BuildLayerReveal();
         }
-        public void SetVisible(bool visible) { if (!visible) { ResetPointer(); HideMenuControlHint(); } if (_root != null) _root.SetActive(visible); }
+        public void SetVisible(bool visible) { if (!visible) { EndLayerReveal(); ResetPointer(); HideMenuControlHint(); } if (_root != null) _root.SetActive(visible); }
         public void SetActionStatus(SelectionState state, InstallSession session, bool poseFault, string clickStatus = "")
-        { _actionStatus.text = clickStatus.Length!=0 && !session.Blocked && !poseFault ? clickStatus : OverlayFeedback.Status(state.ArmedMatches, session, poseFault); }
+        {
+            _actionStatus.text = clickStatus.Length!=0 && !session.Blocked && !poseFault ? clickStatus : OverlayFeedback.Status(state.ArmedMatches, session, poseFault);
+            LayoutHeader();
+        }
+        private void LayoutHeader()
+        {
+            // Let long weapon names and native action feedback wrap without covering one another.
+            float weaponHeight = Mathf.Max(20, Mathf.Ceil(_weapon.preferredHeight));
+            Rect(_weapon.rectTransform, 18, 66, 446, weaponHeight);
+            float bottom = 66 + weaponHeight;
+            bool hasStatus = _actionStatus.text.Length != 0;
+            _actionStatus.gameObject.SetActive(hasStatus);
+            if (hasStatus)
+            {
+                float statusHeight = Mathf.Max(18, Mathf.Ceil(_actionStatus.preferredHeight));
+                Rect(_actionStatus.rectTransform, 18, bottom + 6, 446, statusHeight);
+                bottom += 6 + statusHeight;
+            }
+            Rect(_header, 24, 24, 500, bottom + 12);
+            Rect(_headerAccent, 0, 0, 3, bottom + 12);
+        }
         private static Font GetFont(out bool owns)
         {
             owns = false;
@@ -89,7 +123,7 @@ namespace Tylevo.FieldAttachments.Runtime
             GameObject box = Box(_root.transform, group.ToString(), 0, 0, OverlayLayout.PanelWidth, OverlayLayout.PanelHeight, _panel);
             Outline(box.transform, OverlayLayout.PanelWidth, OverlayLayout.PanelHeight, new Color(.52f, .57f, .56f, .45f));
             Image focus = Box(box.transform, "Focus", 0, 0, OverlayLayout.PanelWidth, 2, _accent).GetComponent<Image>();
-            var panel = new GroupPanel { Group = group, Label = label, Focus = focus, Root = (RectTransform)box.transform, Leader = leader,
+            var panel = new GroupPanel { Home = group, Group = group, Label = label, Focus = focus, Root = (RectTransform)box.transform, Leader = leader,
                 Header = Label(box.transform, "Header", label, 12, 10, 408, 24, 18, Color.white),
                 Subheader = Label(box.transform, "Slot", "", 12, 36, 408, 19, 11, _muted) };
             panel.Installed = MakeCard(box.transform, 12, true);
@@ -112,13 +146,30 @@ namespace Tylevo.FieldAttachments.Runtime
         }
         public void Render(SelectionState state, bool icons)
         {
+            bool sameWeapon = _boundSnapshot != null && ReferenceEquals(_boundSnapshot.Weapon, state.Snapshot.Weapon);
+            if (!sameWeapon) EndLayerReveal();
+            if (_displayLayer != state.Layer)
+            {
+                ResetPointer(); _displayLayer = state.Layer; _sampleFrame = -1;
+                if (sameWeapon && _root.activeInHierarchy && !CrossPresentationHidden) BeginLayerReveal();
+            }
+            for (int i = 0; i < _groups.Length; i++)
+            {
+                _groups[i].Group = AttachmentLayers.At(_displayLayer, i);
+                _groups[i].Label = AttachmentLayers.Label(_groups[i].Group);
+                if (!AttachmentLayers.IsMenuGroup(_groups[i].Group))
+                { _groups[i].Projection = null; _groups[i].Leader.Show(false); }
+            }
+            ApplySelectorVisibility();
             PointerViewChanged(state, icons);
             if (!ReferenceEquals(_boundSnapshot, state.Snapshot) || !_anchors.IsCurrent())
             {
                 if (!ReferenceEquals(_boundSnapshot?.Weapon,state.Snapshot.Weapon)) ClearCrossAttachments();
                 _anchors.Bind(state.Snapshot); _boundSnapshot = state.Snapshot;
             }
+            _headerMode.text = _displayLayer == 0 ? "QUICK ATTACHMENTS" : "MULTITOOL ATTACHMENTS";
             _weapon.text = state.Snapshot.WeaponName;
+            LayoutHeader();
             foreach (GroupPanel panel in _groups)
             {
                 bool focused = panel.Group == state.Group; panel.Focus.color = focused ? _accent : _muted * new Color(1, 1, 1, 0.35f);
@@ -133,7 +184,8 @@ namespace Tylevo.FieldAttachments.Runtime
                     foreach (Card card in panel.Candidates) SetCard(card, null, "", false, false, icons);
                     continue;
                 }
-                panel.Subheader.text = vm.Slot.ParentName;
+                string denial = AttachmentLayers.Denial(state.Snapshot, vm.Slot);
+                panel.Subheader.text = denial.Length != 0 ? denial : vm.Slot.ParentName;
                 SetCard(panel.Installed, vm.Slot.Installed, vm.Slot.Installed == null ? "EMPTY SLOT" : "INSTALLED", false, false, icons);
                 int selected = state.CandidateIndex(panel.Group), page = selected / 3;
                 for (int i = 0; i < 3; i++)
@@ -148,6 +200,12 @@ namespace Tylevo.FieldAttachments.Runtime
             }
             RenderHex(state,icons);
             RenderCross(state,icons);
+            UpdateMenuControlHint(_layoutWidth, _layoutHeight);
+        }
+        private GroupPanel? PanelForGroup(AttachmentGroup group)
+        {
+            foreach (var panel in _groups) if (panel.Group == group) return panel;
+            return null;
         }
         private void SetCard(Card c, ItemObservation? item, string tag, bool selected, bool staged, bool icons)
         {
@@ -172,6 +230,7 @@ namespace Tylevo.FieldAttachments.Runtime
 
         public void UpdateLayout()
         {
+            UpdateLayerReveal();
             if (!_root.activeInHierarchy || _sampleFrame == Time.frameCount) return;
             float width = _canvasRect.rect.width, height = _canvasRect.rect.height;
             if (width <= 0 || height <= 0) return;
@@ -180,6 +239,7 @@ namespace Tylevo.FieldAttachments.Runtime
             _drawnCameraFacing = CameraFacingCards;
             _layoutWidth = width; _layoutHeight = height;
             UpdateMenuControlHint(width, height);
+            PlaceComparisonUi(width, height);
             bool current = _anchors.IsCurrent();
             if (ExperimentalCrossSelectors) { UpdateCrossLayout(width,height,current); return; }
             bool following = FollowWeapon && current;
@@ -210,10 +270,12 @@ namespace Tylevo.FieldAttachments.Runtime
             for (int i = 0; i < _groups.Length; i++)
             {
                 GroupPanel panel = _groups[i];
+                if (!AttachmentLayers.IsMenuGroup(panel.Group))
+                { panel.Projection = null; panel.Leader.Show(false); continue; }
                 panel.Projection = placed ? _projections[i] : null;
                 if (ExperimentalHexSelectors)
                 { if (LayoutHex(i,panel,width,height,current)) projected++; continue; }
-                var position = placed ? (x: 0f, y: 0f) : OverlayLayout.Panel(panel.Group, width, height);
+                var position = placed ? (x: 0f, y: 0f) : OverlayLayout.Panel(panel.Home, width, height);
                 Rect(panel.Root, position.x, position.y, OverlayLayout.PanelWidth, OverlayLayout.PanelHeight);
                 foreach (ProjectedCardMesh mesh in panel.Meshes) mesh.SetProjection(panel.Projection, panel.Root, _canvasRect);
                 Vector2 end = default;
@@ -252,7 +314,7 @@ namespace Tylevo.FieldAttachments.Runtime
         {
             for (int i = 0; i < _groups.Length; i++)
             {
-                if (!DedicatedCardLayout.TryPlace(plane, _groups[i].Group, width, height, weaponPoint.x, weaponPoint.y, out var placed, CameraFacingCards)) return false;
+                if (!DedicatedCardLayout.TryPlace(plane, _groups[i].Home, width, height, weaponPoint.x, weaponPoint.y, out var placed, CameraFacingCards)) return false;
                 _projections[i] = placed!;
             }
             return true;
@@ -282,9 +344,10 @@ namespace Tylevo.FieldAttachments.Runtime
                 "; maxSurfaceYawDegrees=" + WeaponCardBasis.MaxSurfaceYawDegrees);
             report.AppendLine("Selector style: " + (ExperimentalCrossSelectors ? "experimental Tarkov cross" : ExperimentalHexSelectors ? "experimental hex clusters" : "cards"));
             report.AppendLine("Pointer: active=" + _pointerActive + "; dropdown=" + _popupKind + "; group=" + _popupGroup + "; page=" + _popupPage);
+            report.AppendLine("Attachment layer: " + _displayLayer + "; multitool=" + (_pointerState?.Snapshot.MultitoolStatus ?? "unavailable"));
             foreach (GroupPanel panel in _groups)
             {
-                report.AppendLine(panel.Group + " | slot=" + panel.Slot?.Path + " | panel=" + panel.Root.anchoredPosition +
+                report.AppendLine(panel.Group + " | home=" + panel.Home + " | slot=" + panel.Slot?.Path + " | panel=" + panel.Root.anchoredPosition +
                     " | leader=" + panel.Leader.Dot.enabled + " | point=" + panel.Leader.Dot.rectTransform.anchoredPosition);
                 if (panel.Projection != null)
                 {
@@ -326,6 +389,7 @@ namespace Tylevo.FieldAttachments.Runtime
         }
         public void ClearLiveReferences()
         {
+            EndLayerReveal();
             ResetPointer(); ClearHexItems(); ClearCrossItems(); _pointerState = null;
             HideMenuControlHint();
             _boundSnapshot = null; _sampleFrame = -1;
@@ -349,7 +413,7 @@ namespace Tylevo.FieldAttachments.Runtime
         {
             public RectTransform Root = null!; public Leader Leader = null!; public SlotObservation? Slot;
             public PanelProjection? Projection; public ProjectedCardMesh[] Meshes = Array.Empty<ProjectedCardMesh>();
-            public AttachmentGroup Group; public string Label = ""; public Image Focus = null!;
+            public AttachmentGroup Home, Group; public string Label = ""; public Image Focus = null!;
             public Text Header = null!, Subheader = null!; public Card Installed = null!;
             public readonly Card[] Candidates = new Card[3];
         }

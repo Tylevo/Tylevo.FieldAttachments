@@ -51,12 +51,16 @@ namespace Tylevo.FieldAttachments.Runtime
             name = _resources.Localize(name);
             if (string.IsNullOrWhiteSpace(name)) name = item.GetType().Name + " / " + Tail(templateId);
             bool hasChildren = _r.Items(_r.Get(item, "Slots")).Any(s => _r.Get(s, "ContainedItem") != null);
+            string runtimeType = item.GetType().FullName ?? item.GetType().Name;
+            bool advanced = Enumerable.Range(AttachmentLayers.GroupsPerLayer, AttachmentLayers.GroupsPerLayer)
+                .Any(g => AttachmentScope.Supports((AttachmentGroup)g, runtimeType));
             return new ItemObservation {
                 Id = ReadAccess.Text(_r.Get(item, "Id")), TemplateId = templateId, Name = name,
-                RuntimeType = item.GetType().FullName ?? item.GetType().Name, Location = location,
+                RuntimeType = runtimeType, Location = location,
                 RaidModdable = ReadAccess.IsKind(item, "EFT.InventoryLogic.Mod") ? ReadAccess.Bool(_r.Get(item, "RaidModdable")) : null, HasChildren = hasChildren,
                 Examined = installed ? true : Examined(controller, item), NativeItem = item,
-                Assembly = hasChildren && ReadAccess.IsKind(item,"EFT.InventoryLogic.Mod") ? new AttachmentAssemblyReader(_r).Capture(item,controller) : null
+                // Empty required child slots matter even when no child is installed.
+                Assembly = (hasChildren || advanced) && ReadAccess.IsKind(item,"EFT.InventoryLogic.Mod") ? new AttachmentAssemblyReader(_r).Capture(item,controller) : null
             };
         }
         private static string Tail(string text) { return text.Length > 8 ? text.Substring(text.Length - 8) : text; }
@@ -89,6 +93,10 @@ namespace Tylevo.FieldAttachments.Runtime
                 ItemObservation gun = Observe(weapon, "Held", controller, true);
                 snapshot.WeaponId = gun.Id; snapshot.WeaponName = gun.Name;
                 var storage=new CarriedStorageReader(_r).Capture(controller);
+                var multitool = new MultitoolReader(_r).Capture(controller);
+                snapshot.MultitoolScanComplete = multitool.Complete;
+                snapshot.Multitool = multitool.Complete ? multitool.Tool : null;
+                snapshot.MultitoolStatus = multitool.Reason;
                 snapshot.ScanRoots.AddRange(storage.Roots); snapshot.Warnings.AddRange(storage.Warnings);
                 snapshot.TraversedItems=storage.Entries;
                 foreach(var grid in storage.Grids)
@@ -102,9 +110,10 @@ namespace Tylevo.FieldAttachments.Runtime
                         ItemObservation observed=Observe(item,grid.Location,controller,false);
                         observed.SourceGrid=grid.NativeGrid; observed.SourceAddress=_r.Get(item,"Parent");
                         if (observed.Examined!=true) { snapshot.ExcludedUnexamined++; root.ExcludedUnexamined++; detail.Outcome="unexamined or examination unknown"; continue; }
-                        if (observed.HasChildren && !AttachmentAssembly.Supports(AttachmentGroup.Optic,observed))
+                        if (observed.HasChildren && !Enumerable.Range(0, AttachmentLayers.GroupCount)
+                            .Any(g => AttachmentAssembly.Supports((AttachmentGroup)g, observed)))
                         { snapshot.ExcludedAssemblies++; root.ExcludedAssemblies++; detail.Outcome="unsupported/incomplete assembly"; continue; }
-                        snapshot.Carried.Add(observed); root.AcceptedMods++; detail.Outcome=observed.HasChildren ? "intact optic assembly" : "accepted loose attachment";
+                        snapshot.Carried.Add(observed); root.AcceptedMods++; detail.Outcome=observed.HasChildren ? "intact attachment assembly" : "accepted loose attachment";
                     }
                 }
                 List<object> slots = _r.Items(_r.Get(weapon, "AllSlots"), 256).ToList();
@@ -135,7 +144,8 @@ namespace Tylevo.FieldAttachments.Runtime
                         foreach (object id in _r.Items(_r.Get(filter, "Filter"), 2048)) observation.ExplicitFilterIds.Add(ReadAccess.Text(id));
                     }
                     var vm = new SlotViewModel { Slot = observation };
-                    vm.Candidates.AddRange(CandidatePolicy.Build(observation, snapshot.Carried, categoryHints, showUnknown, (s, i) => _filter.Accepts(s.NativeSlot, i.NativeItem)));
+                    vm.Candidates.AddRange(CandidatePolicy.Build(observation, snapshot.Carried, categoryHints, showUnknown,
+                        (s, i) => _filter.Accepts(s.NativeSlot, i.NativeItem), snapshot.Multitool));
                     snapshot.Slots.Add(vm);
                 }
                 // A removable optic unit owns its child slots. Never offer its mounted

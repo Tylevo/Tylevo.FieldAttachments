@@ -10,9 +10,11 @@ using UnityEngine;
 
 namespace Tylevo.FieldAttachments
 {
-    [BepInPlugin("com.tylevo.fieldattachments", "Tylevo Field Attachments", "1.1.0")]
+    [BepInPlugin("com.tylevo.fieldattachments", "Tylevo Field Attachments", "1.1.1")]
     [BepInProcess("EscapeFromTarkov.exe")]
     [BepInDependency("com.arys.unitytoolkit", "2.0.2")]
+    [BepInDependency("com.fontaine.spt-stance-overhaul", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.fontaine.spt-realism-common-lib", BepInDependency.DependencyFlags.SoftDependency)]
     [DefaultExecutionOrder(-10000)]
     public sealed partial class Plugin : BaseUnityPlugin
     {
@@ -20,13 +22,16 @@ namespace Tylevo.FieldAttachments
         private ConfigEntry<KeyboardShortcut> _open = null!, _refresh = null!, _report = null!, _installKey = null!, _armKey = null!, _poseKey = null!, _markPoseKey = null!;
         private readonly PoseActivation _poseActivation = new PoseActivation();
         private ConfigEntry<bool> _poseToggle = null!;
+        private ConfigEntry<bool> _fasterMenuClose = null!;
+        private ConfigEntry<bool> _fluidStances = null!;
+        private StanceOverhaulCompatibility? _stanceCompatibility;
         private ConfigEntry<bool> _shortPoseReturn = null!, _mdrMotion = null!, _mcxLateInspection = null!, _globalMcx = null!;
         private ConfigEntry<bool> _stmPresentation = null!;
         private ConfigEntry<float> _stmTilt = null!;
         private ConfigEntry<bool> _followingCards = null!, _cameraFacingCards = null!, _hexSelectors = null!, _crossSelectors = null!, _studioCross = null!;
         private ConfigEntry<float> _cardPerspective = null!, _cardClockwise = null!;
         private ConfigEntry<KeyCode> _mouseModifier = null!;
-        private ConfigEntry<KeyboardShortcut> _cyclePosition = null!;
+        private ConfigEntry<KeyboardShortcut> _cyclePosition = null!, _cycleLayer = null!;
         private bool NativeReloadPressed => Input.GetKeyDown(KeyCode.R) && _pointer?.Capture.Active!=true;
         private ConfigEntry<float> _mouseSensitivity = null!;
         private AttachmentPointerInput? _pointer;
@@ -45,18 +50,22 @@ namespace Tylevo.FieldAttachments
         private AttachmentOverlay? _overlay;
         private CancellationTokenSource? _visualLoop;
         private bool _visible, _skip, _dismissedUntilRelease;
-        private bool _poseOwnsOverlay;
+        private bool _poseOwnsOverlay, _poseOpenPending;
         private string _notice = "";
         private float _nextPoll, _nextIconPoll, _nextStatusPoll;
 
         private void Awake()
         {
             _enabled = BindSetting("General", "Enabled", true, "Enable the attachment menu.");
+            _fluidStances = BindSetting("Compatibility", "FluidStanceTransitions", true,
+                "Match the attachment pose and blend to the supported Stance Overhaul build's current transition speeds and weapon handling. Cards wait for stance movement to settle. Normal closing blends back into its stance; attachment changes keep it neutral. Has no effect without Stance Overhaul and does not change its settings or FOV.");
             BindAltMenu();
             _mouseModifier = BindSetting("Controls", "MouseModifier", KeyCode.LeftAlt, "Hold while attachment mode is open for the TSC-style virtual cursor. Blocks camera look and shooting; release returns control. Click an attachment to install, or Uninstall to move it to a compatible free carried space. Click a different carried attachment on an occupied mount to remove the current part then install your selection. Click confirms; no arming step.");
             _attachmentSpeedMultiplier = BindSetting("Controls", "AttachmentAnimationSpeedMultiplier", AttachmentSpeedLease.DefaultMultiplier,
                 new ConfigDescription("Playback speed for this mod's native install/remove operation. 1.12 is 12% faster; 1 keeps native speed. Normal inspect, firing and reload are unchanged.", new AcceptableValueRange<float>(1f,1.15f)));
             _mouseSensitivity = BindSetting("Controls", "MouseSensitivity", 20f, new ConfigDescription("Virtual cursor speed while the modifier is held.", new AcceptableValueRange<float>(1,80)));
+            _fasterMenuClose = BindSetting("Controls", "FasterMenuClose", false,
+                "Trial: lower the weapon in 0.36 seconds when closing a fully open attachment menu. OFF restores the previous roughly 0.77-second exit. Opening, early release and instant gameplay cancellation stay unchanged. Applies to the next close; no restart needed.");
             _open = BindSetting("Controls", "OpenOverlay", new KeyboardShortcut(KeyCode.F8), "Hold to show the overlay. The separate mouse modifier captures look/clicks while held.");
             _toggle = BindSetting("Controls", "ToggleInsteadOfHold", false, "Use the open key as a toggle instead of hold.");
             _poseToggle = BindSetting("Controls", "ToggleAttachmentPose", true, "Applies only if you assign a legacy attachment key. ON toggles its presentation; OFF requires holding that key. Closing cancels a click waiting for idle, never a submitted native transaction.");
@@ -75,6 +84,8 @@ namespace Tylevo.FieldAttachments
             _liveInstall = BindSetting("Experiments", "EnableEmptySlotInstall", true, "Allow installing, replacing and removing compatible carried attachments. Enabled by default. Disable to browse without changing attachments. Removed parts need compatible free space in your gear. Attachment changes are not supported with Fika.");
             _installKey = BindSetting("Controls", "AttemptEmptySlotInstall", new KeyboardShortcut(KeyCode.F7), "LIVE ACTION when enabled: after staging with Enter, press this while the overlay is open. Empty compatible slot + loose carried optic, muzzle device, tactical device or foregrip only.");
             _cyclePosition = BindSetting("Controls", "CycleAttachmentPosition", new KeyboardShortcut(KeyCode.R,KeyCode.LeftAlt), "While the attachment cursor is active, cycle the hovered card's mounting point, or the open LIST's point. Updates its native leader. Does not reload or move inventory.");
+            _cycleLayer = BindSetting("Controls", "CycleAttachmentLayer", new KeyboardShortcut(KeyCode.None),
+                "Optional shortcut to switch Basic and Multitool layers while the attachment menu is open. Unbound by default. Never moves inventory.");
             _icons = BindSetting("Display", "RequestNativeIcons", true, "Request existing game thumbnails through a structurally matched LoadItemIcon adapter. Missing icons fall back to labels.");
             _hexSelectors = BindSetting("Experiments", "HexAttachmentSelectors", false, "Experimental compact hex attachment clusters with native icons and weapon perspective. Same Alt click actions, slot chooser and safeguards. OFF keeps the current cards; no weapon animation or inventory behavior change.");
             _crossSelectors = BindSetting("Experiments", "CrossAttachmentSelectors", true, "Experimental weapon-following cross: optic above, muzzle left, tactical right, foregrip below. Uses native Tarkov neutral interaction colors and real item icons. Takes precedence over HexAttachmentSelectors while ON; OFF restores your previous layout. Same Alt actions and native safeguards.");
@@ -98,7 +109,13 @@ namespace Tylevo.FieldAttachments
             _pose = new InspectionPose(_read, _reader, _probe, root);
             _state.Transition += message => Trace((message.StartsWith("ARM_CLEARED", StringComparison.Ordinal) ? "INVALIDATE " : "STAGE ") + message);
             _skip = Application.isBatchMode;
-            Logger.LogInfo("Field Attachments 1.1.0 loaded. Targets SPT 4.1.5/4.1.6 with the inspected native client. Attachment changes=" + _liveInstall.Value + "; menu=" + _menuKey.Value + "/" + _menuActivationMode.Value + "; legacy attachment mode=" + _poseKey.Value + "; legacy cursor=" + _mouseModifier.Value + ".");
+            if (!_skip)
+            {
+                _stanceCompatibility = new StanceOverhaulCompatibility(_read, Trace);
+                _stanceCompatibility.Initialize();
+                _pose.StanceCompatibility = _stanceCompatibility;
+            }
+            Logger.LogInfo("Field Attachments 1.1.1 loaded. Targets SPT 4.1.5/4.1.6 with the inspected native client. Attachment changes=" + _liveInstall.Value + "; menu=" + _menuKey.Value + "/" + _menuActivationMode.Value + "; legacy attachment mode=" + _poseKey.Value + "; legacy cursor=" + _mouseModifier.Value + ".");
             if (_skip) Logger.LogInfo("Batch/headless graphics session: UI disabled.");
         }
         private void Update()
@@ -106,6 +123,8 @@ namespace Tylevo.FieldAttachments
             if (_skip) return;
             try
             {
+                _pose.FasterMenuClose = _fasterMenuClose.Value;
+                _pose.StanceCompatibilityEnabled = _fluidStances.Value;
                 MaintainAltInput();
                 _pointer?.Refresh();
                 bool menuHeld = AltCaptureRequested(_pointer?.Registered == true && PointerLocalOwnership());
@@ -178,12 +197,18 @@ namespace Tylevo.FieldAttachments
                 if (!held && !posePhysical && (MenuKeyCode == KeyCode.None || !Input.GetKey(MenuKeyCode))) _dismissedUntilRelease = false;
                 if (!poseHeld && _poseOwnsOverlay)
                 { _poseOwnsOverlay = false; if (!held) Close(_poseToggle.Value ? "F5 toggled off" : "F5 released"); }
-                if ((poseDown || menuStart) && poseHeld && !_dismissedUntilRelease)
+                bool retryPoseStart = _poseOpenPending && !_pose.Active && poseHeld && _visible && _poseOwnsOverlay &&
+                    !_poseResume.Pending && !_clicks.Busy && !_replacement.Pending && !_probe.Session.Busy;
+                if ((poseDown || menuStart || retryPoseStart) && poseHeld && !_dismissedUntilRelease)
                 {
                     if (menuStart) _altPoseRequested = true;
                     if (!_visible) Open();
                     _poseOwnsOverlay = true;
-                    _pose.Start(_state.Snapshot, Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+                    // Finish an already-running return before accepting the new entry.
+                    // Close/interrupt clears this request, so it cannot reopen itself later.
+                    _poseOpenPending = _pose.PresentationReturning;
+                    if (!_poseOpenPending)
+                        _pose.Start(_state.Snapshot, Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
                     if (_pose.Interrupted)
                     { Close("standalone pose unavailable"); _dismissedUntilRelease = true; return; }
                     _notice = _pose.Status; Render();
@@ -225,8 +250,13 @@ namespace Tylevo.FieldAttachments
                 if (Down(_report.Value)) Export();
                 if (Time.unscaledTime >= _nextStatusPoll)
                 { _nextStatusPoll = Time.unscaledTime + 0.5f; UpdateActionStatus(); } // Observation only; no log or deferred action.
-                if (_overlay!=null) _overlay.LiveActionsEnabled=_liveInstall.Value;
+                if (_overlay!=null)
+                {
+                    _overlay.LiveActionsEnabled=_liveInstall.Value;
+                    _overlay.LayerCycleEnabled = !_clicks.Busy && !_replacement.Pending && !_probe.Session.Busy && !_probe.Session.Blocked;
+                }
                 UpdateCrossPresentation();
+                if (Down(_cycleLayer.Value)) { CycleAttachmentLayer(); return; }
                 bool changed = false;
                 if (_pointer != null)
                 {
@@ -241,6 +271,7 @@ namespace Tylevo.FieldAttachments
                     if(active && !_probe.Session.Busy && Down(_cyclePosition.Value) && _overlay?.CyclePointerPosition()==true)
                     { Trace("POINTER_POSITION "+_state.Identity); changed=true; }
                 }
+                if (_overlay?.LayerTransitionActive == true) return;
                 if (_clicks.Busy) { Render(); return; }
                 if (_probe.Session.Busy)
                 {
@@ -280,6 +311,14 @@ namespace Tylevo.FieldAttachments
                 Logger.LogError("Attachment prototype error: " + e);
                 Close(); _dismissedUntilRelease = true;
             }
+            finally
+            {
+                // Keep the stance out through both native moves and the authored outro.
+                // Native completion still owns inventory; this only coordinates presentation.
+                _stanceCompatibility?.Tick(_enabled.Value && _fluidStances.Value && Application.isFocused &&
+                    (_visible && _poseActivation.Open || _pose.PresentationReturning ||
+                     _clicks.Busy || _replacement.Pending || _probe.Session.Busy));
+            }
         }
         // Do not use KeyboardShortcut.IsPressed/IsDown here: BepInEx 5's
         // exact-combination checks reject the other keys used by this overlay.
@@ -306,6 +345,7 @@ namespace Tylevo.FieldAttachments
                     // Toolkit injects this phase after ScriptRunBehaviourLateUpdate, before canvas rendering.
                     await UniTask.Yield(PlayerLoopTiming.LastPreLateUpdate, cancellation);
                     cancellation.ThrowIfCancellationRequested();
+                    if (!_visible && !_pose.PresentationReturning) break;
                     if (_visible || _pose.PresentationReturning) _pose.ApplyPresentationFrame();
                     if (_visible && _overlay != null)
                     {
@@ -351,6 +391,7 @@ namespace Tylevo.FieldAttachments
             Capture();
             if (_overlay==null)
             { _overlay=new AttachmentOverlay(_resources,_read); _overlay.ActionClicked+=RequestClick;
+                _overlay.LayerCycleRequested += CycleAttachmentLayer;
                 _overlay.RefreshClicked+=()=> { if(!_clicks.Busy && !_replacement.Pending && !_probe.Session.Busy) { Capture("mouse refresh"); Render(); } }; }
             _visible = true; _overlay.SetVisible(true);
             EnsurePointer();
@@ -417,6 +458,7 @@ namespace Tylevo.FieldAttachments
         private void UpdateActionStatus()
         {
             ApplyMenuControlHint();
+            if (_overlay != null) _overlay.LayerCycleEnabled = !_clicks.Busy && !_replacement.Pending && !_probe.Session.Busy && !_probe.Session.Blocked;
             _overlay?.SetActionStatus(_state, _probe.Session, _pose.Status.StartsWith("POSE FAULT", StringComparison.Ordinal),
                 _replacement.Pending ? _replacement.Status : _clicks.Busy ? "RETURNING WEAPON - " + _clicks.Request!.Action.ToString().ToUpperInvariant() : _clickStatus);
         }
@@ -454,7 +496,7 @@ namespace Tylevo.FieldAttachments
                 Trace("REQUEST F10_REPORT blocked=" + _probe.Session.Blocked);
                 Render(); // Fresh bindings are drawn in the next visual phase.
                 string folder = _reports.Write(_state.Snapshot, _state, _il.Value, _probe.History, _liveInstall.Value, _probe.Session.Blocked,
-                    layout, _pose.Report());
+                    layout, _pose.Report() + "\nStance compatibility: " + (_stanceCompatibility?.Status ?? "inactive"));
                 Logger.LogInfo("Diagnostic report written: " + folder);
                 _notice = "Report saved, including install-probe history. F10 did not initiate an inventory operation.";
             }
@@ -465,14 +507,14 @@ namespace Tylevo.FieldAttachments
         {
             _altMenu.Cancel(); _altPoseRequested = false;
             _legacyPoseActivation.Cancel();
-            _poseOwnsOverlay = false;
+            _poseOwnsOverlay = _poseOpenPending = false;
             _poseActivation.Cancel();
             CancelPoseResume(reason);
             CancelClickRequest(reason);
             _pointer?.Capture.Cancel(); _overlay?.ResetPointer();
             if (_pointerWasActive) { _pointerWasActive = false; Trace("POINTER_RELEASE " + reason); }
             bool normalPoseClose = reason == "F5 toggled off" || reason == "F5 released" || reason == "Alt menu closed";
-            _pose?.Release(reason, normalPoseClose);
+            _pose?.Release(reason, normalPoseClose, normalPoseClose);
             // Hide/release input now; retain only the bounded visual outro observer.
             if (_pose?.PresentationReturning != true) StopVisualLoop();
             if (!_visible && _state.Snapshot.Player == null && _state.Snapshot.WeaponId.Length == 0) return;
@@ -532,7 +574,7 @@ namespace Tylevo.FieldAttachments
             _pointerPlayer=_pointerWeapon=_pointerHands=null;
             _pointerContext=null;
         }
-        private void OnDisable() { Close(); DetachPointer(); _attachmentSpeed?.End(); _pose?.Shutdown("component disabled"); }
-        private void OnDestroy() { Close(); DetachPointer(); _attachmentSpeed?.End(); _pose?.Shutdown("component destroyed"); _overlay?.Dispose(); _overlay = null; }
+        private void OnDisable() { Close(); DetachPointer(); _probe?.RevokeToolScope(); _attachmentSpeed?.End(); _pose?.Shutdown("component disabled"); _stanceCompatibility?.End(); }
+        private void OnDestroy() { Close(); DetachPointer(); _probe?.RevokeToolScope(); _attachmentSpeed?.End(); _pose?.Shutdown("component destroyed"); _stanceCompatibility?.Dispose(); _overlay?.Dispose(); _overlay = null; }
     }
 }

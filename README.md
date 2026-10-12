@@ -2,13 +2,15 @@
 
 Change optics, muzzle devices, tactical devices and foregrips without opening your inventory. Left Alt brings up attachment cards around your weapon and lets you use the mouse to choose a part.
 
-**1.1.0 · SPT 4.1.5 / 4.1.6 · BepInEx client plugin**
+**Current source: 1.1.1 (unreleased) · SPT 4.1.5 / 4.1.6 · BepInEx client plugin**
+
+The latest packaged download is [**1.1.0**](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/tag/v1.1.0). The comparison display, Multitool layer and animation/UI changes described below are on `main`; they aren't included in that download yet.
 
 [Installation](#installation) · [Controls](#controls) · [Compatibility](#compatibility-and-coverage) · [Source code](src/Plugin.cs) · [Build instructions](BUILDING.md)
 
-![HK416 held in the attachment pose, with the current angled attachment cards](docs/images/hk416-attachment-menu.png)
+![HK416 held in the attachment pose, with angled attachment cards](docs/images/hk416-attachment-menu.png)
 
-*Original HK416 gameplay showing the attachment cards and weapon presentation.*
+*Original HK416 gameplay showing the attachment cards and weapon presentation, before the comparison display and Multitool layer.*
 
 <details>
 <summary>View the HK416 inspection frame</summary>
@@ -21,12 +23,28 @@ Change optics, muzzle devices, tactical devices and foregrips without opening yo
 
 - Shows cards for **optics, muzzle devices, tactical devices and foregrips** that follow your weapon, with item thumbnails where available.
 - Installs into an empty slot, removes an installed part or replaces it with a carried alternative.
-- Shows compatible parts you've examined and are carrying in accessible pockets, rig, backpack or secure container. The game's restrictions on changing parts in raid still apply.
+- Shows compatible parts you've examined and are carrying in accessible pockets, rig, backpack or secure container.
 - Lets you cycle between mounting points, including different handguard positions. The slot count and connection line identify the selected point.
 - Moves an assembled **optic and mount together**, keeping the sight attached.
 - Holds your weapon at an angle so you can see its attachments. Normal weapon inspection still works separately.
+- Compares a carried part against your current setup before you fit it.
+- Adds a **Multitool layer** for stocks, handguards and pistol grips when you're carrying a Leatherman Multitool.
 
 **Attachment changes are enabled on a fresh install.** Turn off **F12 → General → Allow attachment changes** to browse without moving parts. Updates preserve your saved setting.
+
+### Attachment comparison
+
+Hover a part in **LIST** to see how it would change your weapon's ergonomics, vertical recoil, horizontal recoil and weight. The full comparison sits at the top right; two smaller bars beside the list show ergonomics and vertical recoil. Green marks an improvement and red marks a loss.
+
+You can also preview removing a part. Hovering only shows the comparison—nothing moves until you click. If a value can't be calculated reliably, the preview says it's unavailable.
+
+### Multitool layer
+
+Click the layer button beside the bottom controls to switch between **Basic** and **Multitool**. The Multitool layer has three cards: **Stock** on the right, **Handguard** on the left and **Pistol Grip** at the bottom. They use the same tilted view as the basic cards. A short fade and the layer label make the change easier to see.
+
+Carry a **Leatherman Multitool** in accessible storage or a pocket special slot to change these parts. You don't need to equip it, and it isn't consumed. The menu tells you when the tool is missing or a change isn't available.
+
+Required parts can only be replaced, not removed on their own. Bring a compatible replacement with its required attachments already fitted, and leave room for the outgoing part. Rails, sights and foregrips attached to the old handguard stay with it; they don't move to the new one. An already-empty required slot must be repaired outside the raid.
 
 ## Installation
 
@@ -49,6 +67,7 @@ Left Alt opens the menu and gives you mouse control in both Hold and Toggle mode
 | Install or replace a part | Click its thumbnail in **LIST** |
 | Remove a part | **REMOVE** on its card, or **NONE** in **LIST** |
 | Change mounting point | **Left Alt + R** while the cursor is active |
+| Switch Basic / Multitool layer (1.1.1) | Click the layer button beside the bottom controls |
 | Close the open list | Right-click while the cursor is active |
 | Open mod settings | **F12** |
 
@@ -56,9 +75,13 @@ In Toggle mode, you can let go of Alt and keep using the mouse. Using Alt+R or c
 
 Alt+R cycles mounting points for the open list or the card under your cursor. It won't swap a part until you choose one.
 
+In 1.1.1, the bottom hints show your current bindings in separate key labels. The optional layer shortcut is unbound by default; see [Configuration](docs/CONFIGURATION.md#switching-layers) to assign one.
+
 ## How attachment changes work
 
 Click **LIST** to see the parts you're carrying that fit the selected mount. Choose one and your character lowers the weapon to make the change. After a successful change, the weapon returns to the attachment view if you still have the menu open.
+
+Advanced parts use the same in-game fitting and removal animations as ordinary attachments. The weapon stays visible, so you may briefly see the empty mounting point between removing the old part and fitting its replacement.
 
 Leave room in your gear for anything you remove. When replacing a part, the old one goes into your inventory before the new one is fitted. If fitting the new part fails, the old one stays in your inventory and the weapon's slot may be empty.
 
@@ -68,11 +91,21 @@ Mouse clicks stay in the menu, so selecting a part won't fire your weapon. Closi
 
 ## Settings
 
-Press **F12** to change the menu key, choose Hold or Toggle, and adjust cursor speed. You can also turn item thumbnails and the cards' weapon-following movement on or off.
+Press **F12** to change the menu key, choose Hold or Toggle, and adjust cursor speed. You can also turn item thumbnails or the cards' weapon-following movement on or off.
 
 Custom attachment animations are always enabled.
 
 **Attachment animation speed** controls how quickly parts are fitted or removed. It defaults to **1.12×**, with a range of **1.0–1.15×**. It leaves normal inspection, firing and reloading speeds alone.
+
+Opening the attachment view is quicker in 1.1.1. **Controls → Faster menu close (trial)** also offers a shorter exit; it's off by default. When optional stance support is active, the stance transition sets the opening and closing pace instead.
+
+### Optional stance support
+
+1.1.1 includes support for the checked **0.0.2** builds of [Stance Overhaul](https://github.com/space-commits/spt-stance-overhaul) and [Realism Common Library](https://github.com/space-commits/spt-realism-common-lib). Neither is required to use Field Attachments.
+
+**F12 → Compatibility → Fluid stance transitions** is on by default. It matches the attachment view's timing to your stance and waits for the weapon to settle before you can select a part. Closing blends back into your stance; the stance stays inactive while you fit parts. Ordinary standing keeps a quicker transition.
+
+If the supported mods aren't installed, or you turn this setting off, Field Attachments uses its usual animation. Other builds fall back to that behavior too. This option doesn't change the other mods' settings or your FOV.
 
 ## Compatibility and coverage
 

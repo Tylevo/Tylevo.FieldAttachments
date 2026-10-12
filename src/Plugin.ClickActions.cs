@@ -53,7 +53,8 @@ namespace Tylevo.FieldAttachments
                 _clicks.Expired(Time.unscaledTime) ? "Weapon did not become ready; click cancelled." : "";
             if (denial.Length!=0) { CancelClickRequest(denial); return; }
             // Reporting is observation only, including while a click waits.
-            if (Down(_report.Value) || _pose.Active || _probe.ReadHands(_state.Snapshot).Denial.Length!=0) return;
+            if (Down(_report.Value) || _pose.Active ||
+                _probe.ReadHands(_state.Snapshot).Denial.Length!=0) return;
             _clicks.Take(); _clickHands=null; // Consume BEFORE fresh capture or invoking any native method. No retries.
             _resources.ClearSession();
             var fresh=_reader.Capture(_hints.Value,_unknown.Value);
@@ -68,7 +69,7 @@ namespace Tylevo.FieldAttachments
                 if(!_replacement.Begin(request,_probe.Session)) { RejectClick("Replacement already pending or blocked."); return; }
                 _replacementHands=_read.Get(request.Player,"HandsController");
                 _clickSubmitted=false; _clickStatus=_replacement.Status;
-                _probe.TryInstall(fresh,slot,null,_liveInstall.Value,true,true);
+                _probe.TryInstall(fresh,slot,null,_liveInstall.Value,true,true,request);
             }
             else
             {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Tylevo.FieldAttachments.Core
 {
-    public enum AttachmentGroup { Optic, Muzzle, Tactical, Underbarrel }
+    public enum AttachmentGroup { Optic, Muzzle, Tactical, Underbarrel, Stock, Handguard, PistolGrip, Receiver }
     public enum CandidateEvidence { NativeFilterPass, SameInstalledTemplate, ExplicitFilterHit, CategoryOnly, Unverified }
 
     // These are observations, NOT authorization to perform an inventory operation.
@@ -96,6 +96,9 @@ namespace Tylevo.FieldAttachments.Core
         public object? Player;
         public object? Weapon;
         public object? Controller;
+        public MultitoolAccess? Multitool;
+        public bool MultitoolScanComplete;
+        public string MultitoolStatus = "Carry a Leatherman Multitool to change these parts.";
         public readonly List<ItemObservation> Carried = new List<ItemObservation>();
         public readonly List<SlotViewModel> Slots = new List<SlotViewModel>();
         public readonly List<string> Warnings = new List<string>();

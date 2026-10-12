@@ -13,7 +13,9 @@ namespace Tylevo.FieldAttachments.Runtime
     // Opt-in, single-player experiment. One existing leaf optic, muzzle device,
     // tactical device or foregrip moves between accessible carried storage and its native slot.
     // No Swap, direct Add/Remove, inventory-field writes, custom rollback,
-    // force flags, patched restrictions, generated items, or custom networking.
+    // force flags, generated items, or custom networking. Advanced parts have an
+    // exact operation-scoped RaidModdable exception. Required parts additionally
+    // require both legs of a bound explicit replacement; standalone removal denies.
     public sealed partial class NativeInstallProbe
     {
         internal const string InspectedGameMvid = "cc2d80b0-6d5b-4cb1-a581-6d2cc901d4c7";
@@ -32,6 +34,7 @@ namespace Tylevo.FieldAttachments.Runtime
         private object? _item, _slot, _sourceAddress, _sourceGrid, _destinationAddress;
         private bool _removing;
         private bool _hasChildren;
+        private bool _fullAssemblyRequired;
         private AttachmentAssembly? _assembly;
         private object? _assemblyController;
         private string ActionName => _removing ? "uninstall" : "install";
@@ -71,7 +74,7 @@ namespace Tylevo.FieldAttachments.Runtime
         }
 
         public void TryInstall(RaidSnapshot snapshot, SlotViewModel? chosenSlot, CandidateObservation? chosenItem,
-            bool enabled, bool stagedMatches, bool removing = false)
+            bool enabled, bool stagedMatches, bool removing = false, AttachmentRequest? replacement = null)
         {
             if (!Session.TryBegin()) { Record("REQUEST_REJECTED duplicate/latched; original request retained"); return; }
             _removing = removing;
@@ -92,12 +95,20 @@ namespace Tylevo.FieldAttachments.Runtime
                 Type? game = _read.FindType("EFT.Player");
                 object? nativeChildren = _read.Get(_item, "Slots");
                 bool childrenKnown = TryHasChildren(nativeChildren, out bool hasChildren);
+                _fullAssemblyRequired=chosenSlot?.Slot.Required==true;
                 _hasChildren=hasChildren; _assemblyController=controller;
-                _assembly=childrenKnown && hasChildren && _item!=null ? new AttachmentAssemblyReader(_read).Capture(_item,controller) : null;
+                _assembly=childrenKnown && (hasChildren || _fullAssemblyRequired) && _item!=null ? new AttachmentAssemblyReader(_read).Capture(_item,controller) : null;
                 bool assemblyMatches=childrenKnown && chosen!=null && chosen.HasChildren==hasChildren &&
-                    (!hasChildren || chosen.Assembly?.Same(_assembly)==true);
+                    ((!hasChildren && !_fullAssemblyRequired) || chosen.Assembly?.Same(_assembly)==true);
+                bool advanced=chosenSlot!=null && AttachmentLayers.IsAdvanced(chosenSlot.Slot.Group);
+                bool toolPresent=advanced && snapshot.MultitoolScanComplete && snapshot.Multitool!=null &&
+                    new MultitoolReader(_read).Validate(controller,snapshot.Multitool).Length==0;
+                bool scopeReady=advanced && enabled && context.Allowed && NativeToolMoveScope.EnsureReady();
+                bool requiredAuthorized=AuthorizeRequiredReplacement(snapshot,chosenSlot,chosenItem,replacement);
                 var facts = new InstallFacts {
                     Enabled = enabled, Removing = removing,
+                    Advanced = advanced, MultitoolPresent = toolPresent, NativeToolScopeReady = scopeReady,
+                    RequiredReplacementAuthorized = requiredAuthorized,
                     InstalledItemMatches = _item != null && ReferenceEquals(_read.Get(_slot, "ContainedItem"), _item),
                     KnownBuild = game?.Module.ModuleVersionId.ToString() == InspectedGameMvid,
                     SinglePlayer = context.SupportedTypes && !context.FikaLoaded,
@@ -130,6 +141,8 @@ namespace Tylevo.FieldAttachments.Runtime
                 Record("GUARD " + string.Join(" ", typeof(InstallFacts).GetFields()
                     .Select(f => f.Name + "=" + (f.GetValue(facts)?.ToString() ?? "unknown"))));
                 string denial = InstallGate.Denial(facts);
+                if(advanced && !scopeReady && toolPresent && denial.Length!=0)
+                    denial+=" Native tool scope: "+NativeToolMoveScope.Status;
                 if (denial.Length != 0) { Finish("Not submitted: " + denial + " | " + readiness.Display, false); return; }
                 if (controller == null || _item == null || _slot == null) throw new InvalidOperationException("Live reference vanished.");
 
@@ -197,6 +210,7 @@ namespace Tylevo.FieldAttachments.Runtime
                         throw new InvalidOperationException("Target address did not resolve to the selected slot.");
                 }
                 _destinationAddress = address;
+                if(advanced) PrepareToolScope(snapshot,hands,chosenSlot!.Slot.Group,itemType);
 
                 string dir = Path.Combine(_root, "ProbeLogs"); Directory.CreateDirectory(dir);
                 _journal = Path.Combine(dir, DateTime.UtcNow.ToString("yyyyMMdd-HHmmss-fff") + "-" + Guid.NewGuid().ToString("N").Substring(0, 6) + ".txt");
@@ -211,7 +225,8 @@ namespace Tylevo.FieldAttachments.Runtime
                 // This temporarily mutates native structures internally. The engine's
                 // simulation performs its own rollback. NEVER RollBack it a second time.
                 simulationStarted = true;
-                object? simulated = move.Invoke(null, new[] { _item, address, controller, (object)true });
+                Func<object?> simulate=()=>move.Invoke(null,new[] { _item,address,controller,(object)true });
+                object? simulated = _toolBinding==null ? simulate() : NativeToolMoveScope.Simulate(_toolBinding,simulate);
                 bool intact = OriginalLayoutIntact();
                 Record("AFTER_SIMULATION originalLayoutIntact=" + intact);
                 if (!intact) { Finish("Simulation did not restore the observed layout. Live install blocked; export report and restart the test game.", true); return; }
@@ -223,6 +238,7 @@ namespace Tylevo.FieldAttachments.Runtime
                 object? destroyList = destroys.GetValue(value, null);
                 if (destroyList != null && (!(destroyList is IEnumerable sequence) || HasAny(sequence)))
                 { Finish("Install rejected: unexpected destruction list. No transaction submitted.", false); return; }
+                if(_toolBinding!=null) NativeToolMoveScope.Register(value,_toolBinding);
                 object? converted = conversions[0].Invoke(null, new[] { simulated });
                 if (converted == null) throw new InvalidOperationException("Move result conversion returned null.");
 
@@ -263,7 +279,7 @@ namespace Tylevo.FieldAttachments.Runtime
             if (!task.IsCompleted)
             {
                 if (!_timeoutReported && (DateTime.UtcNow - _submittedUtc).TotalSeconds >= 20)
-                { _timeoutReported = true; Session.TimedOut(); Record(Session.Status); }
+                { _timeoutReported = true; RevokeToolScope(); Session.TimedOut(); Record(Session.Status); }
                 return;
             }
             try
@@ -294,7 +310,7 @@ namespace Tylevo.FieldAttachments.Runtime
                 ReadAccess.Text(_read.Get(_item, "TemplateId")) == _templateId &&
                 TryInt(_read.Get(_item, "StackObjectsCount"), out int n) && n == _stack &&
                 TryHasChildren(_read.Get(_item,"Slots"),out bool children) && children==_hasChildren &&
-                (!children || _assembly?.Same(new AttachmentAssemblyReader(_read).Capture(_item,_assemblyController))==true);
+                ((!children && !_fullAssemblyRequired) || _assembly?.Same(new AttachmentAssemblyReader(_read).Capture(_item,_assemblyController))==true);
         }
         private bool OriginalLayoutIntact()
         {
@@ -386,7 +402,7 @@ namespace Tylevo.FieldAttachments.Runtime
             throw new InvalidOperationException("Exact method unavailable: " + type.FullName + "." + name);
         }
         private void Finish(string message, bool uncertain, bool succeeded = false)
-        { NativeSubmissionFinished?.Invoke(); Session.Finish(message, uncertain, succeeded); Record(Session.Phase.ToString().ToUpperInvariant() + " " + message); }
+        { FinishRequiredReplacement(uncertain,succeeded); RevokeActiveToolScope(); NativeSubmissionFinished?.Invoke(); Session.Finish(message, uncertain, succeeded); Record(Session.Phase.ToString().ToUpperInvariant() + " " + message); }
         private bool Record(string line)
         {
             if (!line.StartsWith("UI ", StringComparison.Ordinal) && _requestIdentity.Length != 0) line += " | " + _requestIdentity;
@@ -417,7 +433,7 @@ namespace Tylevo.FieldAttachments.Runtime
             return persisted;
         }
         private void ClearLiveReferences()
-        { _item = _slot = _sourceAddress = _sourceGrid = _destinationAddress = _assemblyController = null;
-          _assembly=null; _hasChildren=false; _requestContext = null; _taskResult = _resultSuccess = null; _journal = ""; }
+        { RevokeActiveToolScope(); _item = _slot = _sourceAddress = _sourceGrid = _destinationAddress = _assemblyController = null;
+          _assembly=null; _hasChildren=false; _fullAssemblyRequired=false; _requestContext = null; _taskResult = _resultSuccess = null; _journal = ""; }
     }
 }

@@ -13,7 +13,7 @@ namespace Tylevo.FieldAttachments.Runtime
         {
             if (_crossHiddenReason == hiddenReason) return;
             _crossHiddenReason = hiddenReason; _sampleFrame = -1;
-            if (CrossPresentationHidden) { ResetPointer(); HideCrossPresentation(); }
+            if (CrossPresentationHidden) { EndLayerReveal(); ResetPointer(); HideCrossPresentation(); }
         }
         private void HideCrossPresentation()
         {

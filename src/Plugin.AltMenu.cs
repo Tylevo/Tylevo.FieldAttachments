@@ -47,7 +47,7 @@ namespace Tylevo.FieldAttachments
             // An existing O session keeps its original Alt cursor-only behavior.
             if (_legacyPoseActivation.Open && !_altPoseRequested) allowed = false;
             bool close = Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.F12);
-            bool chordUsed = Held(_cyclePosition.Value) || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1);
+            bool chordUsed = Held(_cyclePosition.Value) || Held(_cycleLayer.Value) || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1);
             return _altMenu.Sample(held, down, _menuActivationMode.Value, allowed, Application.isFocused, close, chordUsed, Time.frameCount);
         }
 
@@ -75,7 +75,8 @@ namespace Tylevo.FieldAttachments
             string key = _menuKey.Value == AttachmentMenuKey.LeftAlt ? "LEFT ALT" :
                 _menuKey.Value == AttachmentMenuKey.RightAlt ? "RIGHT ALT" : "MENU DISABLED";
             _overlay.MenuControlHint = key + (_menuActivationMode.Value == MenuActivationMode.Hold ? " HOLD MENU" : " TOGGLE MENU") +
-                " | LMB SELECT | RMB CLOSE LIST | ALT+R MOUNT";
+                " | LMB SELECT | RMB CLOSE LIST | ALT+R MOUNT" +
+                (_cycleLayer.Value.MainKey == KeyCode.None ? "" : " | " + _cycleLayer.Value.ToString().ToUpperInvariant() + " LAYER");
         }
 
         private string AltCloseReason()

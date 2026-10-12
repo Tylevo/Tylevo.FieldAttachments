@@ -13,6 +13,7 @@ namespace Tylevo.FieldAttachments
         private void StopReplacement(string reason)
         {
             if(!_replacement.Stop(reason)) return;
+            _probe.StopToolReplacement();
             _replacementHands=null; _clickStatus=_replacement.Status;
             CancelPoseResume("replacement interrupted"); Trace(_clickStatus);
         }
@@ -31,7 +32,7 @@ namespace Tylevo.FieldAttachments
             string before=_replacement.Status;
             _replacement.Observe(_probe.Session,Time.unscaledTime);
             if(before!=_replacement.Status) { _clickStatus=_replacement.Status; Trace(_clickStatus); Render(); }
-            if(!_replacement.Pending) { _replacementHands=null; return; }
+            if(!_replacement.Pending) { _probe.StopToolReplacement(); _replacementHands=null; return; }
             if(_replacement.Phase!=ReplacementPhase.WaitingForIdle || Down(_report.Value) || _pose.Active ||
                 _probe.ReadHands(_state.Snapshot).Denial.Length!=0 || !_pose.VisibleIdle(_state.Snapshot)) return;
 
@@ -40,13 +41,13 @@ namespace Tylevo.FieldAttachments
             // This consumes the second-leg authorization before invoking the existing native adapter.
             denial=_replacement.PrepareInstall(fresh,_probe.Session,Time.unscaledTime,out var installation);
             _state.ReplaceSnapshot(fresh,true,"replacement fresh validation");
-            if(denial.Length!=0) { _replacementHands=null; _clickStatus=_replacement.Status; Trace(_clickStatus); Render(); return; }
+            if(denial.Length!=0) { _probe.StopToolReplacement(); _replacementHands=null; _clickStatus=_replacement.Status; Trace(_clickStatus); Render(); return; }
             var slot=fresh.Slots.Single(s=>s.Slot.Path==installation!.SlotPath && s.Slot.Group==installation.Group);
             var candidate=slot.Candidates.Single(c=>c.Item.Id==installation!.ItemId);
             _clickStatus=_replacement.Status; Trace("REPLACEMENT_INSTALL "+installation!.Identity);
-            // Keep the weapon down across removal. Resume inspection only after the final install succeeds.
+            // Let native attachment animations finish. Resume inspection only after the final install succeeds.
             TrackPoseResume(fresh);
-            _probe.TryInstall(fresh,slot,candidate,_liveInstall.Value,true);
+            _probe.TryInstall(fresh,slot,candidate,_liveInstall.Value,true,false,request);
             Render();
         }
     }

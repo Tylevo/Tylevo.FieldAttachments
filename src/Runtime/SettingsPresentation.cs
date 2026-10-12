@@ -61,6 +61,9 @@ namespace Tylevo.FieldAttachments.Runtime
                 case "Controls/AttachmentAnimationSpeedMultiplier":
                     Show(tag, "Controls", "Attachment animation speed", 60);
                     break;
+                case "Controls/FasterMenuClose":
+                    Show(tag, "Controls", "Faster menu close (trial)", 55);
+                    break;
                 case "Display/RequestNativeIcons":
                     Show(tag, "Display", "Show attachment thumbnails", 10);
                     help = "Show native item thumbnails. Names remain available when a thumbnail cannot be loaded.";
@@ -68,6 +71,9 @@ namespace Tylevo.FieldAttachments.Runtime
                 case "Display/WeaponFollowingCards":
                     Show(tag, "Display", "Follow weapon movement", 20);
                     help = "Let the attachment cards follow the weapon's movement and sway.";
+                    break;
+                case "Compatibility/FluidStanceTransitions":
+                    Show(tag, "Compatibility", "Fluid stance transitions", 10);
                     break;
                 case "Controls/ExportReport":
                     Show(tag, "Diagnostics", "Save diagnostic report", 10);

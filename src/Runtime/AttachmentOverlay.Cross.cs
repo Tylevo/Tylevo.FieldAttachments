@@ -55,8 +55,8 @@ namespace Tylevo.FieldAttachments.Runtime
         }
         private void ApplySelectorVisibility()
         {
-            foreach(var panel in _groups) panel.Root.gameObject.SetActive(!ExperimentalCrossSelectors && !ExperimentalHexSelectors);
-            foreach(var panel in _hexPanels) panel.Root.gameObject.SetActive(!ExperimentalCrossSelectors && ExperimentalHexSelectors);
+            foreach(var panel in _groups) panel.Root.gameObject.SetActive(AttachmentLayers.IsMenuGroup(panel.Group) && !ExperimentalCrossSelectors && !ExperimentalHexSelectors);
+            for(int g=0;g<_hexPanels.Length;g++) _hexPanels[g].Root.gameObject.SetActive(AttachmentLayers.IsMenuGroup(_groups[g].Group) && !ExperimentalCrossSelectors && ExperimentalHexSelectors);
             _crossRoot.gameObject.SetActive(ExperimentalCrossSelectors && !CrossPresentationHidden);
         }
         private void BuildCrossUi(ReadAccess read)
@@ -95,12 +95,12 @@ namespace Tylevo.FieldAttachments.Runtime
         }
         private float CrossWidth=>UseStudioCrossLayout ? StudioCrossLayout.Width : CrossSelectorLayout.Width;
         private float CrossHeight=>UseStudioCrossLayout ? StudioCrossLayout.Height : CrossSelectorLayout.Height;
-        private SelectorRect CrossCellRect(AttachmentGroup group,int index)=>UseStudioCrossLayout ? StudioCrossLayout.Cell(index) : CrossSelectorLayout.Cell(group,index);
+        private SelectorRect CrossCellRect(AttachmentGroup group,int index)=>UseStudioCrossLayout ? StudioCrossLayout.Cell(index) : CrossSelectorLayout.Cell(AttachmentLayers.Home(group),index);
         private void SetCrossGeometry()
         {
             for(int g=0;g<4;g++)
             {
-                var panel=_crossGroups[g]; panel.Projection=null; panel.Root.gameObject.SetActive(true);
+                var panel=_crossGroups[g]; panel.Projection=null; panel.Root.gameObject.SetActive(AttachmentLayers.IsMenuGroup(_groups[g].Group));
                 Rect(panel.Root,0,0,CrossWidth,CrossHeight);
                 var heading=UseStudioCrossLayout ? StudioCrossLayout.Header : CrossSelectorLayout.Header((AttachmentGroup)g);
                 Rect(panel.Header.rectTransform,heading.X,heading.Y,heading.Width,heading.Height);
@@ -125,7 +125,8 @@ namespace Tylevo.FieldAttachments.Runtime
             if(!ExperimentalCrossSelectors) return;
             for(int g=0;g<4;g++)
             {
-                var group=(AttachmentGroup)g; var panel=_crossGroups[g]; var vm=state.Current(group);
+                var group=_groups[g].Group; var panel=_crossGroups[g]; var vm=state.Current(group);
+                panel.Root.gameObject.SetActive(AttachmentLayers.IsMenuGroup(group));
                 panel.Visible=vm!=null; panel.Header.gameObject.SetActive(panel.Visible); panel.Caption.gameObject.SetActive(panel.Visible && !UseStudioCrossLayout);
                 panel.HeaderTarget=null;
                 int slots=state.GroupSlots(group).Count;
@@ -196,16 +197,16 @@ namespace Tylevo.FieldAttachments.Runtime
             _lastFollowing=following; _lastProjected=0;
             for(int g=0;g<4;g++)
             {
-                var group=_groups[g]; var r=CrossSelectorLayout.Group(group.Group);
+                var group=_groups[g]; var r=CrossSelectorLayout.Group(group.Home);
                 group.Projection=null;
-                if(_crossProjection!=null) PanelProjection.TryCreate(_crossProjection.Map(r.X/CrossSelectorLayout.Width,r.Y/CrossSelectorLayout.Height),
+                if(AttachmentLayers.IsMenuGroup(group.Group) && _crossProjection!=null) PanelProjection.TryCreate(_crossProjection.Map(r.X/CrossSelectorLayout.Width,r.Y/CrossSelectorLayout.Height),
                     _crossProjection.Map((r.X+r.Width)/CrossSelectorLayout.Width,r.Y/CrossSelectorLayout.Height),
                     _crossProjection.Map(r.X/CrossSelectorLayout.Width,(r.Y+r.Height)/CrossSelectorLayout.Height),out group.Projection);
                 Vector2 end=default;
                 bool valid=_crossProjection!=null && _crossGroups[g].Visible && current && _anchors.Project(PreviewSlot(group.Group,group.Slot),width,height,out end);
                 group.Leader.Show(valid); group.Leader.Second.enabled=false;
                 if(!valid) continue;
-                var cell=CrossSelectorLayout.Cell(group.Group,0);
+                var cell=CrossSelectorLayout.Cell(group.Home,0);
                 var start=_crossProjection!.Map((cell.X+cell.Width/2)/CrossSelectorLayout.Width,(cell.Y+cell.Height/2)/CrossSelectorLayout.Height);
                 Line(group.Leader.First,new Vector2(start.X,start.Y),end); Rect(group.Leader.Dot.rectTransform,end.x-2,end.y-2,4,4); _lastProjected++;
             }
@@ -217,7 +218,7 @@ namespace Tylevo.FieldAttachments.Runtime
             // Reverse paint order; inverse-map the same per-group surface used by every graphic.
             for(int g=3;g>=0;g--)
             {
-                var panel=_crossGroups[g]; if(!panel.Visible) continue; var group=(AttachmentGroup)g;
+                var panel=_crossGroups[g]; if(!panel.Visible) continue; var group=_groups[g].Group;
                 if(panel.Projection==null || !panel.Projection.TryUnmap(x,y,out float u,out float v)) continue;
                 float px=u*CrossWidth,py=v*CrossHeight;
                 if(UseStudioCrossLayout)
@@ -228,7 +229,7 @@ namespace Tylevo.FieldAttachments.Runtime
                 }
                 else
                 {
-                    if(CrossSelectorLayout.Header(group).Contains(px,py)) return panel.HeaderTarget;
+                    if(CrossSelectorLayout.Header(AttachmentLayers.Home(group)).Contains(px,py)) return panel.HeaderTarget;
                     for(int i=0;i<5;i++) if(panel.Cells[i].Root.gameObject.activeSelf && CrossCellRect(group,i).Contains(px,py)) return panel.Cells[i].Target;
                 }
             }
@@ -256,8 +257,6 @@ namespace Tylevo.FieldAttachments.Runtime
         private void ApplyCrossPalette()
         {
             bool cross=ExperimentalCrossSelectors;
-            _weapon.transform.parent.GetComponent<Image>().color=cross ? _crossPalette.Normal : _panel;
-            _weapon.color=cross ? _crossPalette.Selected : _muted; _actionStatus.color=cross ? _crossPalette.Text : _accent;
             _popup.GetComponent<Image>().color=cross ? _crossPalette.Normal : new Color(.035f,.043f,.044f,.98f);
             foreach(var edge in _popupEdges) edge.color=cross ? _crossPalette.Selected : _accent;
             foreach(var row in _pointerRows) row.Detail.color=cross ? _crossPalette.Selected : _muted;
@@ -275,7 +274,7 @@ namespace Tylevo.FieldAttachments.Runtime
             for(int g=0;g<4;g++) for(int i=0;i<5;i++)
             {
                 var cell=_crossGroups[g].Cells[i];
-                report.AppendLine("cross "+(AttachmentGroup)g+"/"+i+" visible="+cell.Root.gameObject.activeInHierarchy+" item="+cell.Item?.Id+" target="+cell.Target?.Key);
+                report.AppendLine("cross "+_groups[g].Group+" home="+_groups[g].Home+"/"+i+" visible="+cell.Root.gameObject.activeInHierarchy+" item="+cell.Item?.Id+" target="+cell.Target?.Key);
                 var projection=_crossGroups[g].Projection;
                 if(projection==null || !cell.Root.gameObject.activeInHierarchy) continue;
                 var r=CrossCellRect((AttachmentGroup)g,i);

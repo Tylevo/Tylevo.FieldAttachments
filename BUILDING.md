@@ -1,6 +1,6 @@
 # Build from source
 
-This repository contains the C# source for the **1.1.0 release**, the build scripts and the animation bundles used by the plugin.
+The main branch contains the current **1.1.1 development build**, its build scripts and animation bundles. For the published 1.1.0 release, use the [v1.1.0 tag](https://github.com/Tylevo/Tylevo.FieldAttachments/tree/v1.1.0).
 
 Requirements:
 
@@ -11,6 +11,8 @@ Requirements:
 Download or clone the complete repository, including `assets/Animation/`. Unity Editor and Blender are not needed to compile the plugin.
 
 The supported weapon packs are optional. You do not need their server mods, DLLs or assets to build or run Field Attachments with standard SPT weapons.
+
+Stance Overhaul and Realism Common Library are also optional. Their assemblies and animation bundles are not needed to compile this project and are not included here. The compatibility adapter uses them only when a supported installation is present.
 
 From the repository folder, replace `<SPT_GAME_FOLDER>` with the folder containing `EscapeFromTarkov.exe` and run:
 
@@ -24,12 +26,6 @@ The build does not install the mod. Close the game before copying `dist/BepInEx`
 
 Game, Unity and UnityToolkit libraries are read from your installation and are not included in this repository. The build checks for the supported client rather than bypassing compatibility checks.
 
-## Matching the published DLL
+## Matching a local build
 
-The published 1.1.0 DLL was built with **.NET SDK 10.0.201** against the supported SPT 4.1.6 installation. Its SHA-256 is:
-
-```text
-F4EC26165E41B023208057D1FE7AD579EB86CBF33E609CF8DF802B063D6E317D
-```
-
-For a byte-for-byte comparison, use the source ZIP without a `.git` folder, the same SDK and matching local reference libraries. Building inside a Git checkout can add revision metadata to the assembly. The release ZIP's `build-manifest.json` records the reference hashes.
+Use the same source, SDK and local reference libraries for a byte-for-byte comparison. The build helper omits Git revision and Source Link metadata so a clean checkout and source ZIP can produce the same DLL. The generated `build-manifest.json` records the DLL hash, SDK and reference hashes.

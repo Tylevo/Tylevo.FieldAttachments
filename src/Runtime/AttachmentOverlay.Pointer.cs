@@ -11,7 +11,7 @@ namespace Tylevo.FieldAttachments.Runtime
         public event Action<AttachmentAction,AttachmentGroup,string,string>? ActionClicked;
         public event Action? RefreshClicked;
         public bool LiveActionsEnabled { get; set; }
-        private enum PointerKind { Slots, Candidates, ChooseSlot, ChooseItem, Uninstall, Previous, Next, Close, Refresh }
+        private enum PointerKind { Slots, Candidates, ChooseSlot, ChooseItem, Uninstall, Previous, Next, Close, Refresh, CycleLayer }
         private sealed class PointerTarget
         {
             public PointerKind Kind;
@@ -102,11 +102,13 @@ namespace Tylevo.FieldAttachments.Runtime
         }
         public void ResetPointer()
         {
+            _pointerFocus=null;
             _pointerActive=false; ClosePopup(); _pointerGesture.Cancel(); HoverHex(null); HoverCross(null);
             if (_pointerVisual != null) _pointerVisual.gameObject.SetActive(false);
         }
         private void ClosePopup()
         {
+            HideComparison(); _popupChoices.Clear();
             _popupKind=null; _popupPage=0; _popupPlaced=false; _continuePopupAfterSlot=false; _positionPreview=null; _pointerGeneration++; _pointerGesture.Cancel();
             if (_popup != null) _popup.gameObject.SetActive(false);
             foreach (var row in _pointerRows) if (row != null) { row.Item=null; row.Target=null; row.Icon.sprite=null; }
@@ -119,16 +121,26 @@ namespace Tylevo.FieldAttachments.Runtime
             _pointerVisual.gameObject.SetActive(true);
             _pointerPosition.x=Mathf.Clamp01(_pointerPosition.x+dx/_layoutWidth);
             _pointerPosition.y=Mathf.Clamp01(_pointerPosition.y-dy/_layoutHeight);
+            // Capture still owns mouse input. A press during the reveal must never carry into the new cards.
+            if (LayerTransitionActive) { _pointerGesture.Cancel(); PlacePointerUi(); return false; }
             if (back) { ClosePopup(); return false; }
-            if (_popupKind != null && scroll != 0) ChangePage(scroll > 0 ? -1 : 1);
+            if (_popupKind != null && scroll != 0 && !InsideComparison(_pointerPosition.x*_layoutWidth,_pointerPosition.y*_layoutHeight) &&
+                !InsideMenuControls(_pointerPosition.x*_layoutWidth,_pointerPosition.y*_layoutHeight))
+                ChangePage(scroll > 0 ? -1 : 1);
             PlacePointerUi();
             PointerTarget? target=HitPointer();
             if(target!=null && (target.Kind==PointerKind.Candidates || target.Kind==PointerKind.ChooseItem || target.Kind==PointerKind.Uninstall)) _pointerFocus=target.Group;
+            UpdateLayerFocus();
+            UpdateMenuControlHint(_layoutWidth,_layoutHeight);
             _positionPreview=target?.Kind==PointerKind.ChooseSlot ? target : null;
-            if (down && target==null && _popupKind!=null && !InsidePopup(_pointerPosition.x*_layoutWidth,_pointerPosition.y*_layoutHeight)) ClosePopup();
+            if (down && target==null && _popupKind!=null && !InsidePopup(_pointerPosition.x*_layoutWidth,_pointerPosition.y*_layoutHeight) &&
+                !InsideComparison(_pointerPosition.x*_layoutWidth,_pointerPosition.y*_layoutHeight) &&
+                !InsideMenuControls(_pointerPosition.x*_layoutWidth,_pointerPosition.y*_layoutHeight)) ClosePopup();
+            UpdateComparisonHover();
+            if(InsideComparison(_pointerPosition.x*_layoutWidth,_pointerPosition.y*_layoutHeight)) target=null;
             foreach (var row in _pointerRows)
             {
-                bool hover=row.Target!=null && row.Target.Key==target?.Key;
+                bool hover=(row.Target!=null && row.Target.Key==target?.Key) || ReferenceEquals(row,_comparisonPointerRow);
                 row.Background.color=ExperimentalCrossSelectors ? (hover ? _crossPalette.Selected : _crossPalette.Disabled) :
                     hover ? new Color(.24f,.26f,.22f,.98f) : new Color(.08f,.09f,.087f,.98f);
             }
@@ -143,6 +155,9 @@ namespace Tylevo.FieldAttachments.Runtime
             if (_pointerState == null) return false;
             switch (target.Kind)
             {
+                case PointerKind.CycleLayer:
+                    if (!LayerCycleEnabled) return false;
+                    ResetPointer(); LayerCycleRequested?.Invoke(); return true;
                 case PointerKind.Slots: case PointerKind.Candidates:
                     if (_popupKind==null || _popupGroup!=target.Group)
                     { if(_popupKind==null || _popupGroup!=target.Group) _popupPlaced=false;
@@ -171,14 +186,16 @@ namespace Tylevo.FieldAttachments.Runtime
         private void FillPopup()
         {
             if (_pointerState == null || _popupKind==null) return;
+            HideComparison();
             _pointerGeneration++; _pointerGesture.Cancel();
             SlotViewModel? current=_pointerState.Current(_popupGroup);
             _popupChoices.Clear();
             if(current!=null) _popupChoices.AddRange(current.Candidates.FindAll(c=>c.Evidence==CandidateEvidence.NativeFilterPass &&
-                AttachmentRequest.ScopeDenial(AttachmentRequest.ChoiceAction(current.Slot),current.Slot,c.Item).Length==0));
+                AttachmentLayers.Denial(_pointerState.Snapshot,current.Slot).Length==0 &&
+                AttachmentRequest.ScopeDenial(AttachmentRequest.ChoiceAction(current.Slot),current.Slot,c.Item,_pointerState.Snapshot.Multitool).Length==0));
             _popupCount=current==null ? 0 : _popupChoices.Count+1;
             _popupPage=QuickSwapMenu.Page(_popupPage,_popupCount);
-            _popupTitle.text=_groups[(int)_popupGroup].Label;
+            _popupTitle.text=AttachmentLayers.Label(_popupGroup);
             _popupPageLabel.text=_popupChoices.Count==0 ? "No carried matches" : (_popupPage+1)+" / "+QuickSwapMenu.Pages(_popupCount);
             int visible=Math.Min(6,Math.Max(0,_popupCount-_popupPage*6));
             _popupFooter=QuickSwapMenu.Footer(visible); _popupHeight=QuickSwapMenu.PopupHeight(visible);
@@ -212,8 +229,11 @@ namespace Tylevo.FieldAttachments.Runtime
         }
         private string ActionDenial(SlotViewModel slot,ItemObservation item,bool uninstall,CandidateEvidence? evidence=null)
         {
+            if(_pointerState==null) return "Attachment view unavailable.";
+            string layerDenial=AttachmentLayers.Denial(_pointerState.Snapshot,slot.Slot);
+            if(layerDenial.Length!=0) return layerDenial;
             if (!LiveActionsEnabled) return "Live actions OFF";
-            string denial=AttachmentRequest.ScopeDenial(uninstall ? AttachmentAction.Uninstall : AttachmentRequest.ChoiceAction(slot.Slot),slot.Slot,item);
+            string denial=AttachmentRequest.ScopeDenial(uninstall ? AttachmentAction.Uninstall : AttachmentRequest.ChoiceAction(slot.Slot),slot.Slot,item,_pointerState.Snapshot.Multitool);
             return denial.Length!=0 ? denial : !uninstall && evidence!=CandidateEvidence.NativeFilterPass ? "Native fit unknown" : "";
         }
         private void PollPointerIcons()
@@ -231,7 +251,8 @@ namespace Tylevo.FieldAttachments.Runtime
             if (!_pointerActive) return;
             if (_popupKind != null)
             {
-                GroupPanel panel=_groups[(int)_popupGroup];
+                GroupPanel? panel=PanelForGroup(_popupGroup);
+                if(panel==null) { ClosePopup(); return; }
                 bool compact=ExperimentalCrossSelectors || ExperimentalHexSelectors;
                 PanelPoint p=panel.Projection?.Map(compact ? .5f : .27f,compact ? .4f : .32f) ?? new PanelPoint(panel.Root.anchoredPosition.x+116,-panel.Root.anchoredPosition.y+61,1);
                 if(!_popupPlaced)
@@ -241,10 +262,14 @@ namespace Tylevo.FieldAttachments.Runtime
                     _popupHome=new Vector2(edge.X+8+PopupWidth>_layoutWidth-12 ? left.X-PopupWidth-8 : edge.X+8,p.Y);
                     _popupPlaced=true;
                 }
+                float bottomClearance=_displayLayer==1 ? 96 : 60;
                 Rect(_popup,Mathf.Clamp(_popupHome.x,24,Mathf.Max(24,_layoutWidth-PopupWidth-24)),
-                    Mathf.Clamp(_popupHome.y,24,Mathf.Max(24,_layoutHeight-_popupHeight-24)),PopupWidth,_popupHeight);
+                    Mathf.Clamp(_popupHome.y,24,Mathf.Max(24,_layoutHeight-_popupHeight-bottomClearance)),PopupWidth,_popupHeight);
                 _popup.SetAsLastSibling();
             }
+            UpdateMenuControlHint(_layoutWidth,_layoutHeight);
+            PlaceComparisonUi(_layoutWidth,_layoutHeight);
+            RaiseMenuControls();
             Rect(_pointerVisual,_pointerPosition.x*_layoutWidth,_pointerPosition.y*_layoutHeight,1,1);
             _pointerVisual.SetAsLastSibling();
         }
@@ -255,7 +280,9 @@ namespace Tylevo.FieldAttachments.Runtime
         }
         public bool CyclePointerPosition()
         {
-            if(!_pointerActive || _pointerState==null || CrossPresentationHidden) return false;
+            if(!_pointerActive || _pointerState==null || CrossPresentationHidden || LayerTransitionActive) return false;
+            if(InsideComparison(_pointerPosition.x*_layoutWidth,_pointerPosition.y*_layoutHeight) ||
+                InsideMenuControls(_pointerPosition.x*_layoutWidth,_pointerPosition.y*_layoutHeight)) return false;
             AttachmentGroup group=_popupKind!=null ? _popupGroup : _pointerFocus ?? _pointerState.Group;
             if(_popupKind==null)
             {
@@ -265,11 +292,12 @@ namespace Tylevo.FieldAttachments.Runtime
                 {
                     var projection=_groups[g].Projection;
                     if(projection!=null && projection.TryUnmap(x,y,out float u,out float v) && u>=0 && u<=1 && v>=0 && v<=1)
-                    { group=(AttachmentGroup)g; break; }
+                    { group=_groups[g].Group; break; }
                 }
             }
             var current=_pointerState.Current(group);
             if(current==null || _pointerState.GroupSlots(group).Count<2) return false;
+            HideComparison();
             _pointerState.Highlight(group,current.Slot.Path); _pointerState.NextSlot(1); _pointerFocus=group;
             _pointerGesture.Cancel(); _pointerGeneration++; _positionPreview=null;
             _popupPage=0; _continuePopupAfterSlot=_popupKind!=null;
@@ -278,8 +306,12 @@ namespace Tylevo.FieldAttachments.Runtime
         }
         private PointerTarget? HitPointer()
         {
-            if (_pointerState==null) return null;
+            if (_pointerState==null || LayerTransitionActive) return null;
             float x=_pointerPosition.x*_layoutWidth,y=_pointerPosition.y*_layoutHeight;
+            if(InsideComparison(x,y)) return null;
+            if(InsideComparisonRect(_layerControl,x,y)) return LayerCycleEnabled ?
+                new PointerTarget { Kind=PointerKind.CycleLayer,Surface="layer"+_displayLayer } : null;
+            if(InsideMenuControls(x,y)) return null;
             if (_popupKind != null)
             {
                 float px=x-_popup.anchoredPosition.x,py=y+_popup.anchoredPosition.y;
@@ -296,6 +328,7 @@ namespace Tylevo.FieldAttachments.Runtime
             if (ExperimentalHexSelectors) return HitHex(x,y);
             foreach (GroupPanel panel in _groups)
             {
+                if (!AttachmentLayers.IsMenuGroup(panel.Group)) continue;
                 float u,v;
                 if (panel.Projection != null) { if (!panel.Projection.TryUnmap(x,y,out u,out v)) continue; }
                 else { u=(x-panel.Root.anchoredPosition.x)/OverlayLayout.PanelWidth; v=(y+panel.Root.anchoredPosition.y)/OverlayLayout.PanelHeight; }

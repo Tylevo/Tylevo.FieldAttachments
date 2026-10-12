@@ -14,6 +14,9 @@ namespace Tylevo.FieldAttachments.Runtime
         private float _standaloneNativeSpeed;
         private string _standaloneFault = "", _standaloneOutcome = "not opened";
         public bool Interrupted { get; private set; }
+        public bool FasterMenuClose { get => _standaloneClock.FasterReturn; set => _standaloneClock.FasterReturn = value; }
+        public StanceOverhaulCompatibility? StanceCompatibility { get; set; }
+        public bool StanceCompatibilityEnabled { get; set; }
 
         // Both ordinary and Shift-modified attachment opens take this route.
         // No native inspection, clip/controller swap, speed lease or IK hook.
@@ -22,6 +25,7 @@ namespace Tylevo.FieldAttachments.Runtime
             if (Active) return;
             Interrupted = false;
             string requestedTemplate = "", requestedController = "";
+            bool stancePrepared = false;
             try
             {
                 requestedTemplate = ReadAccess.Text(_read.Get(snapshot.Weapon, "TemplateId"));
@@ -51,7 +55,12 @@ namespace Tylevo.FieldAttachments.Runtime
                 if (clip == null) throw new InvalidOperationException(_customStmAsset.Status);
                 _standalonePlayback.Prepare(animator, clip, template);
                 PrepareSupportPresentation(snapshot, animator);
-                _standaloneClock.Start(Time.unscaledTime);
+                // All normal admission and rig preparation finish before the optional
+                // adapter yields its stance. Its profile drives only our private sampler.
+                stancePrepared = StanceCompatibilityEnabled && StanceCompatibility?.Begin(snapshot) == true;
+                if (stancePrepared)
+                    _standaloneClock.StartSynchronized(Time.unscaledTime, StanceCompatibility!.EntrySeconds, StanceCompatibility.ReturnSeconds);
+                else _standaloneClock.Start(Time.unscaledTime);
                 if (!_standaloneClock.Active) throw new InvalidOperationException(_standaloneClock.Fault);
                 _standaloneOutcome = "playing " + clip.name;
                 Status = "POSE: standalone attachment animation; aim or fire to cancel.";
@@ -66,6 +75,7 @@ namespace Tylevo.FieldAttachments.Runtime
             {
                 _standaloneClock.Abort();
                 FinishStandalone();
+                if (stancePrepared) StanceCompatibility?.End();
                 Interrupted = true;
                 Status = "POSE unavailable: " + e.GetBaseException().Message;
                 Event(Status + "; template=" + requestedTemplate + " controller=" + requestedController + "; no native fallback");
@@ -95,8 +105,8 @@ namespace Tylevo.FieldAttachments.Runtime
                 if (!_standaloneClock.Active) { FinishStandalone(); return; }
                 string denial = interrupt ? "gameplay/menu input" : StandaloneDenial();
                 if (denial.Length != 0) { Release(denial); return; }
-                if (!requested && !_standaloneClock.Returning) { Release("attachment key released", true); return; }
-                _standaloneClock.Tick(Time.unscaledTime);
+                if (!requested && !_standaloneClock.Returning) { Release("attachment key released", true, true); return; }
+                AdvanceStandaloneClock();
                 if (_standaloneClock.Fault.Length != 0)
                 { Interrupted = true; _standaloneOutcome = _standaloneClock.Fault; }
                 if (!_standaloneClock.Active) FinishStandalone();
@@ -111,7 +121,7 @@ namespace Tylevo.FieldAttachments.Runtime
             {
                 string denial = StandaloneDenial();
                 if (denial.Length != 0) { Release(denial); return; }
-                _standaloneClock.Tick(Time.unscaledTime);
+                AdvanceStandaloneClock();
                 if (!_standaloneClock.Active) { FinishStandalone(); return; }
                 _standalonePlayback.Apply(_standaloneClock.SampleTime, _standaloneClock.Blend);
                 _supportPresentation.Apply(_standaloneClock.Blend);
@@ -125,6 +135,20 @@ namespace Tylevo.FieldAttachments.Runtime
             bool restored = _standalonePlayback.Restore();
             ObserveStandaloneFault();
             return supportRestored && restored;
+        }
+
+        private void AdvanceStandaloneClock()
+        {
+            bool awaitingStance = _standaloneClock.Synchronized && !_standaloneClock.Held && !_standaloneClock.Returning;
+            bool entryReady = !awaitingStance || StanceCompatibilityEnabled &&
+                StanceCompatibility?.Active == true && StanceCompatibility.EntrySettled;
+            if (awaitingStance && (!StanceCompatibilityEnabled || StanceCompatibility?.Active != true))
+            {
+                _standaloneClock.Abort(); Interrupted = true;
+                _standaloneOutcome = "stance compatibility context ended during entry";
+                return;
+            }
+            _standaloneClock.Tick(Time.unscaledTime, entryReady);
         }
 
         private void ObserveStandaloneFault()
@@ -142,7 +166,7 @@ namespace Tylevo.FieldAttachments.Runtime
             Status = "POSE FAULT: presentation ownership uncertain; see F10 report before retrying.";
         }
 
-        public void Release(string reason, bool normalKeyRelease = false)
+        public void Release(string reason, bool normalKeyRelease = false, bool returnToStance = false)
         {
             if (!Active) return;
             bool normal = normalKeyRelease && _standaloneClock.Active;
@@ -151,7 +175,11 @@ namespace Tylevo.FieldAttachments.Runtime
             RestorePresentationFrame();
             if (normal && !_standaloneBlocked)
             {
-                _standaloneClock.Close(Time.unscaledTime);
+                // Only closing the menu returns to a stance here. Click handoffs
+                // stay suppressed through both native inventory operations.
+                if (returnToStance && _standaloneClock.Synchronized && StanceCompatibility?.BeginReturn() == true)
+                    _standaloneClock.Close(Time.unscaledTime, StanceCompatibility.ReturnSeconds);
+                else _standaloneClock.Close(Time.unscaledTime);
                 _standaloneOutcome = "custom return: " + reason;
                 Status = "POSE: returning from the standalone animation.";
             }
@@ -169,7 +197,8 @@ namespace Tylevo.FieldAttachments.Runtime
             { Interrupted = true; _standaloneOutcome = _standaloneClock.Fault; }
             bool hadRig = _standalonePlayback.Prepared || _supportPresentation.Prepared;
             // Observe the fault before Release clears successfully restored bindings.
-            RestorePresentationFrame();
+            if (!RestorePresentationFrame())
+            { Status = "POSE RESTORE WAIT: presentation frame cleanup pending; inventory blocked."; return; }
             bool supportReleased = _supportPresentation.Release();
             bool playbackReleased = _standalonePlayback.Release();
             if (!supportReleased || !playbackReleased)
@@ -185,6 +214,7 @@ namespace Tylevo.FieldAttachments.Runtime
 
         public string Report() => Status + "\nstandalone=true nativeInspectInvoked=false nativeClipReplaced=false nativeSpeedOwned=false" +
             "\nactive=" + Active + " held=" + Held + " returning=" + PresentationReturning +
+            " stanceSynchronized=" + _standaloneClock.Synchronized +
             " sampleSeconds=" + _standaloneClock.SampleTime.ToString("F4", CultureInfo.InvariantCulture) +
             " blend=" + _standaloneClock.Blend.ToString("F4", CultureInfo.InvariantCulture) +
             " bindings=" + _standalonePlayback.BindingCount + " frameOwned=" + _standalonePlayback.FrameActive +

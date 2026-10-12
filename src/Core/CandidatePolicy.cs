@@ -14,8 +14,14 @@ namespace Tylevo.FieldAttachments.Core
             if (id.StartsWith("mod_muzzle", StringComparison.Ordinal)) { group = AttachmentGroup.Muzzle; return true; }
             if (id.StartsWith("mod_tactical", StringComparison.Ordinal)) { group = AttachmentGroup.Tactical; return true; }
             if (id.StartsWith("mod_foregrip", StringComparison.Ordinal)) { group = AttachmentGroup.Underbarrel; return true; }
+            if (Family(id,"mod_stock")) { group = AttachmentGroup.Stock; return true; }
+            if (Family(id,"mod_handguard")) { group = AttachmentGroup.Handguard; return true; }
+            if (Family(id,"mod_pistol_grip")) { group = AttachmentGroup.PistolGrip; return true; }
+            if (Family(id,"mod_reciever")) { group = AttachmentGroup.Receiver; return true; }
             return false;
         }
+
+        private static bool Family(string slot, string name) => slot==name || slot.StartsWith(name+"_",StringComparison.Ordinal);
 
         public static CandidateEvidence Assess(SlotObservation slot, ItemObservation item)
         {
@@ -36,15 +42,20 @@ namespace Tylevo.FieldAttachments.Core
         }
 
         public static List<CandidateObservation> Build(SlotObservation slot, IEnumerable<ItemObservation> carried,
-            bool includeCategoryHints, bool includeAllUnknown, Func<SlotObservation, ItemObservation, bool?>? nativeFilter = null)
+            bool includeCategoryHints, bool includeAllUnknown, Func<SlotObservation, ItemObservation, bool?>? nativeFilter = null,
+            MultitoolAccess? multitool = null)
         {
             var result = new List<CandidateObservation>();
-            if (slot.Locked != false || slot.Required != false || slot.HiddenInQuickSwap) return result;
+            bool advanced=AttachmentLayers.IsAdvanced(slot.Group);
+            if (slot.Locked != false || !slot.Required.HasValue || (slot.Required==true && !advanced) || slot.HiddenInQuickSwap) return result;
+            if (advanced && multitool==null) return result;
             var seen = new HashSet<string>(StringComparer.Ordinal);
             foreach (ItemObservation item in carried)
             {
                 if (string.IsNullOrEmpty(item.Id) || !seen.Add(item.Id) || item.Id == slot.Installed?.Id) continue;
-                if (item.Examined != true || item.RaidModdable != true || !AttachmentAssembly.Supports(slot.Group,item)) continue;
+                if (item.Examined != true || (advanced ? !item.RaidModdable.HasValue : item.RaidModdable != true) ||
+                    !AttachmentAssembly.Supports(slot.Group,item)) continue;
+                if (slot.Required==true && !AttachmentAssembly.SupportsRequiredPart(slot.Group,item)) continue;
                 bool? native = nativeFilter?.Invoke(slot, item);
                 if (native != true) continue; // Picker shows only actual native fit; old diagnostic switches cannot add guesses.
                 CandidateEvidence evidence = CandidateEvidence.NativeFilterPass;

@@ -15,7 +15,7 @@ namespace Tylevo.FieldAttachments.Runtime
         {
             var parts=new List<AssemblyPart>(); var seen=new HashSet<object>(); var ids=new HashSet<string>();
             try { Walk(root,controller,"",0,parts,seen,ids); return new AttachmentAssembly(true,parts); }
-            catch(Exception e) { _read.Note("Optic assembly withheld: "+e.GetBaseException().Message); return new AttachmentAssembly(false,parts); }
+            catch(Exception e) { _read.Note("Attachment assembly withheld: "+e.GetBaseException().Message); return new AttachmentAssembly(false,parts); }
         }
         private void Walk(object parent,object? controller,string path,int depth,List<AssemblyPart> parts,HashSet<object> seen,HashSet<string> ids)
         {

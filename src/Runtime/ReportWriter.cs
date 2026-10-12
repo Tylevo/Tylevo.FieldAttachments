@@ -65,6 +65,11 @@ namespace Tylevo.FieldAttachments.Runtime
             Field("status", s.Status); Field("weaponId", s.WeaponId); Field("weaponName", s.WeaponName);
             Field("playerType", s.PlayerType); Field("handsType", s.HandsType); Field("inventoryControllerType", s.InventoryControllerType);
             Field("sessionContext", s.SessionContext);
+            Field("attachmentLayer", state.Layer == 0 ? "Quick" : "Multitool");
+            Field("multitoolStatus", s.MultitoolStatus);
+            Field("multitoolItemId", s.Multitool?.ItemId ?? "");
+            Field("multitoolLocation", s.Multitool?.Location ?? "");
+            b.Append("  \"multitoolScanComplete\": ").Append(JsonText.Bool(s.MultitoolScanComplete)).Append(",\n");
             Field("currentHandsOperationType", s.CurrentHandsOperationType);
             b.Append("  \"inventoryOpened\": ").Append(JsonText.Bool(s.InventoryOpened)).Append(",\n");
             b.Append("  \"isAiming\": ").Append(JsonText.Bool(s.IsAiming)).Append(",\n");
