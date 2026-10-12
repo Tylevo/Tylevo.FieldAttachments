@@ -11,6 +11,7 @@ These changes are on `main`. The latest packaged release is still 1.1.0.
 - Tidy the header and bottom controls, with clearer key labels and layer feedback. Keep the original tilted card positions.
 - Make opening the attachment view quicker and add an optional faster close, off by default.
 - Add optional timing support for the checked Stance Overhaul and Realism Common Library 0.0.2 builds. Opening and closing blend with the active stance, while ordinary standing keeps a quicker transition. Neither mod is a required dependency.
+- Show optional Stance Overhaul status on the main menu, with a dismiss button and a link to Fontaine's Forge page when support is missing or unavailable.
 
 ## 1.1.0 — Optional weapon pack support
 

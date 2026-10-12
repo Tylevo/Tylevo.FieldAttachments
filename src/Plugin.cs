@@ -25,6 +25,8 @@ namespace Tylevo.FieldAttachments
         private ConfigEntry<bool> _fasterMenuClose = null!;
         private ConfigEntry<bool> _fluidStances = null!;
         private StanceOverhaulCompatibility? _stanceCompatibility;
+        private ConfigEntry<bool> _showStanceNotice = null!;
+        private MainMenuStanceNotice? _stanceNotice;
         private ConfigEntry<bool> _shortPoseReturn = null!, _mdrMotion = null!, _mcxLateInspection = null!, _globalMcx = null!;
         private ConfigEntry<bool> _stmPresentation = null!;
         private ConfigEntry<float> _stmTilt = null!;
@@ -106,6 +108,8 @@ namespace Tylevo.FieldAttachments
             _attachmentSpeed = new AttachmentAnimationSpeed(_read,Trace);
             _probe.BeforeNativeSubmit += (snapshot,item,slot,removing) => { _attachmentSpeed.Multiplier=_attachmentSpeedMultiplier.Value; _attachmentSpeed.Prepare(snapshot,item,slot,removing); };
             _probe.NativeSubmissionFinished += _attachmentSpeed.End;
+            _showStanceNotice = BindSetting("Compatibility", "ShowStanceStatus", true,
+                "Show Stance Overhaul status on the main menu. The recommendation is optional; Dismiss hides it for this launch. Turning this off hides it permanently until re-enabled.");
             _pose = new InspectionPose(_read, _reader, _probe, root);
             _state.Transition += message => Trace((message.StartsWith("ARM_CLEARED", StringComparison.Ordinal) ? "INVALIDATE " : "STAGE ") + message);
             _skip = Application.isBatchMode;
@@ -114,6 +118,10 @@ namespace Tylevo.FieldAttachments
                 _stanceCompatibility = new StanceOverhaulCompatibility(_read, Trace);
                 _stanceCompatibility.Initialize();
                 _pose.StanceCompatibility = _stanceCompatibility;
+                _stanceNotice = new MainMenuStanceNotice(
+                    () => StanceNoticeContent.Create(_stanceCompatibility.Availability, _fluidStances.Value),
+                    () => isActiveAndEnabled && _enabled.Value && _showStanceNotice.Value, Trace);
+                _stanceNotice.Initialize();
             }
             Logger.LogInfo("Field Attachments 1.1.1 loaded. Targets SPT 4.1.5/4.1.6 with the inspected native client. Attachment changes=" + _liveInstall.Value + "; menu=" + _menuKey.Value + "/" + _menuActivationMode.Value + "; legacy attachment mode=" + _poseKey.Value + "; legacy cursor=" + _mouseModifier.Value + ".");
             if (_skip) Logger.LogInfo("Batch/headless graphics session: UI disabled.");
@@ -123,6 +131,7 @@ namespace Tylevo.FieldAttachments
             if (_skip) return;
             try
             {
+                _stanceNotice?.Tick();
                 _pose.FasterMenuClose = _fasterMenuClose.Value;
                 _pose.StanceCompatibilityEnabled = _fluidStances.Value;
                 MaintainAltInput();
@@ -574,7 +583,7 @@ namespace Tylevo.FieldAttachments
             _pointerPlayer=_pointerWeapon=_pointerHands=null;
             _pointerContext=null;
         }
-        private void OnDisable() { Close(); DetachPointer(); _probe?.RevokeToolScope(); _attachmentSpeed?.End(); _pose?.Shutdown("component disabled"); _stanceCompatibility?.End(); }
-        private void OnDestroy() { Close(); DetachPointer(); _probe?.RevokeToolScope(); _attachmentSpeed?.End(); _pose?.Shutdown("component destroyed"); _stanceCompatibility?.Dispose(); _overlay?.Dispose(); _overlay = null; }
+        private void OnDisable() { Close(); DetachPointer(); _probe?.RevokeToolScope(); _attachmentSpeed?.End(); _pose?.Shutdown("component disabled"); _stanceCompatibility?.End(); _stanceNotice?.Tick(); }
+        private void OnDestroy() { Close(); DetachPointer(); _probe?.RevokeToolScope(); _attachmentSpeed?.End(); _pose?.Shutdown("component destroyed"); _stanceCompatibility?.Dispose(); _stanceNotice?.Dispose(); _stanceNotice = null; _overlay?.Dispose(); _overlay = null; }
     }
 }

@@ -72,6 +72,9 @@ namespace Tylevo.FieldAttachments.Runtime
                     Show(tag, "Display", "Follow weapon movement", 20);
                     help = "Let the attachment cards follow the weapon's movement and sway.";
                     break;
+                case "Compatibility/ShowStanceStatus":
+                    Show(tag, "Compatibility", "Main menu stance notice", 20);
+                    break;
                 case "Compatibility/FluidStanceTransitions":
                     Show(tag, "Compatibility", "Fluid stance transitions", 10);
                     break;

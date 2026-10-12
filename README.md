@@ -101,7 +101,11 @@ Opening the attachment view is quicker in 1.1.1. **Controls → Faster menu clos
 
 ### Optional stance support
 
-1.1.1 includes support for the checked **0.0.2** builds of [Stance Overhaul](https://github.com/space-commits/spt-stance-overhaul) and [Realism Common Library](https://github.com/space-commits/spt-realism-common-lib). Neither is required to use Field Attachments.
+**[Fontaine's Stance Overhaul](https://sp-mod.com/mod/3136/spt-stance-overhaul) is highly recommended for smoother weapon transitions, but it remains optional.** Install the requirements listed on its Forge page if you choose to use it.
+
+1.1.1 supports the checked **0.0.2** builds of Stance Overhaul and [Realism Common Library](https://sp-mod.com/mod/3135/spt-realism-common-lib).
+
+A main-menu notice shows whether Stance Overhaul is detected and its animation support is ready. If it's missing, **View on Forge** opens Fontaine's page when you click it. You can dismiss the notice for the current launch or turn off **F12 > Compatibility > Main menu stance notice**. Installed but unsupported versions and disabled animation support are shown separately.
 
 **F12 → Compatibility → Fluid stance transitions** is on by default. It matches the attachment view's timing to your stance and waits for the weapon to settle before you can select a part. Closing blends back into your stance; the stance stays inactive while you fit parts. Ordinary standing keeps a quicker transition.
 

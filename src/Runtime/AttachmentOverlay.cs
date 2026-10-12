@@ -99,7 +99,7 @@ namespace Tylevo.FieldAttachments.Runtime
             Rect(_header, 24, 24, 500, bottom + 12);
             Rect(_headerAccent, 0, 0, 3, bottom + 12);
         }
-        private static Font GetFont(out bool owns)
+        internal static Font GetFont(out bool owns)
         {
             owns = false;
             foreach (string name in new[] { "Arial.ttf", "LegacyRuntime.ttf" })

@@ -17,6 +17,7 @@ Press **F12** and open the Field Attachments settings.
 | Show attachment thumbnails | Shows item pictures in the menu. |
 | Follow weapon movement | Makes the cards follow the weapon. |
 | Fluid stance transitions | On by default. Uses the supported Stance Overhaul build's transition timing when that optional integration is available. Has no effect without it and does not change stance settings or FOV. |
+| Main menu stance notice | On by default. Shows whether optional stance support is ready. Dismiss hides it for this launch; turn this setting off to keep it hidden. The Forge page opens only when you click its button. |
 
 In Toggle mode, using Alt+R or clicking while holding Alt keeps the menu open. If you change the menu key to Right Alt, the mounting shortcut remains Left Alt+R unless you change it too.
 

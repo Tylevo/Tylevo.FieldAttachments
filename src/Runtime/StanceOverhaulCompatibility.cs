@@ -38,6 +38,16 @@ namespace Tylevo.FieldAttachments.Runtime
         private bool _initialized, _ready, _active, _suppress, _disposed, _failureLogged;
         private int _settledFrame = -1, _settledSamples;
 
+        public StanceAvailability Availability
+        {
+            get
+            {
+                if (!Chainloader.PluginInfos.ContainsKey(StanceGuid)) return StanceAvailability.NotDetected;
+                if (!Chainloader.PluginInfos.TryGetValue(CommonGuid, out var common) || common.Instance == null)
+                    return StanceAvailability.MissingCommonLibrary;
+                return _ready && !_disposed ? StanceAvailability.Ready : StanceAvailability.Unavailable;
+            }
+        }
         public bool Active => _active;
         public float EntrySeconds { get; private set; } = .48f;
         public float ReturnSeconds { get; private set; } = .766666f;
