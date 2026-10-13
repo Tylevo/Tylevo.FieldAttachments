@@ -1,11 +1,18 @@
 # Changelog
 
-## 1.2.0
+## 1.2.0: Stance Overhaul support
+
+With [Fontaine's Stance Overhaul](https://sp-mod.com/mod/3136/spt-stance-overhaul) installed, opening and closing the attachment menu follows your current stance, matching its movement and timing.
+
+**Fully optional, but recommended for smoother animations. All Field Attachments features work without it.**
+
+Supports **Stance Overhaul 0.0.2** with **[Realism Common Library 0.0.2](https://sp-mod.com/mod/3135/spt-realism-common-lib)**. A dismissible notice on the main menu shows whether stance support is ready.
+
+### Also in this update
 
 - Preview ergonomics, vertical and horizontal recoil, and weight before fitting a part. The full comparison appears at the top right, with smaller ergonomics and recoil bars beside the list.
 - Add a Multitool layer for stocks, handguards and pistol grips. Carry a Leatherman Multitool to change these parts. Required parts need a compatible replacement and cannot be removed on their own.
 - Use the same in-game fitting and removal animations for basic and advanced parts, with quicker entry into the attachment view and an optional faster close.
-- Add optional transition support for Stance Overhaul and Realism Common Library 0.0.2. All Field Attachments features remain available without them. A dismissible main-menu notice shows their status and links to Fontaine's Forge page.
 - Open the parts list by clicking its card's thumbnail. Remove the duplicate LIST button and give REMOVE the full width beneath the thumbnail.
 - Add an Unavailable list explaining why a carried part cannot be used at the selected mounting point.
 - Keep Left Alt with Hold as the menu default, set middle mouse to switch Basic / Multitool layers, and use the wheel to browse the open list. Scrolling never installs a part. Menu shortcuts support keyboard keys and mouse buttons with optional modifiers; updates preserve saved bindings.
