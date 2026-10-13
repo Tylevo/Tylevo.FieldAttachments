@@ -48,7 +48,8 @@ namespace Tylevo.FieldAttachments.Core
             _synchronizedReturnSeconds = returnSeconds;
         }
 
-        public void Tick(float now) => Tick(now, true);
+        // A clock sample alone cannot certify that a foreign stance has settled.
+        public void Tick(float now) => Tick(now, false);
 
         public void Tick(float now, bool entryReady)
         {
@@ -111,9 +112,7 @@ namespace Tylevo.FieldAttachments.Core
 
         private void Close(float now, float? returnSeconds)
         {
-            // A close cannot certify that the foreign stance settled. Only an earlier
-            // real readiness sample may promote a synchronized entry to held.
-            Tick(now, !_synchronized || _phase != Phase.Entering);
+            Tick(now);
             if (!Active || Returning) return;
             if (_synchronized && returnSeconds.HasValue)
             {

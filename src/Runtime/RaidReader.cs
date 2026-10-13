@@ -99,6 +99,7 @@ namespace Tylevo.FieldAttachments.Runtime
                 snapshot.MultitoolStatus = multitool.Reason;
                 snapshot.ScanRoots.AddRange(storage.Roots); snapshot.Warnings.AddRange(storage.Warnings);
                 snapshot.TraversedItems=storage.Entries;
+                var observedCarried = new List<ItemObservation>();
                 foreach(var grid in storage.Grids)
                 {
                     var root=grid.Root;
@@ -109,6 +110,7 @@ namespace Tylevo.FieldAttachments.Runtime
                         if (!ReadAccess.IsKind(item,"EFT.InventoryLogic.Mod")) { root.NonMods++; detail.Outcome="not a weapon attachment"; continue; }
                         ItemObservation observed=Observe(item,grid.Location,controller,false);
                         observed.SourceGrid=grid.NativeGrid; observed.SourceAddress=_r.Get(item,"Parent");
+                        observedCarried.Add(observed);
                         if (observed.Examined!=true) { snapshot.ExcludedUnexamined++; root.ExcludedUnexamined++; detail.Outcome="unexamined or examination unknown"; continue; }
                         if (observed.HasChildren && !Enumerable.Range(0, AttachmentLayers.GroupCount)
                             .Any(g => AttachmentAssembly.Supports((AttachmentGroup)g, observed)))
@@ -144,13 +146,24 @@ namespace Tylevo.FieldAttachments.Runtime
                         foreach (object id in _r.Items(_r.Get(filter, "Filter"), 2048)) observation.ExplicitFilterIds.Add(ReadAccess.Text(id));
                     }
                     var vm = new SlotViewModel { Slot = observation };
+                    // One filter read per observed instance in this slot. Diagnostic
+                    // rows reuse it without changing which items enter the picker.
+                    var fit = new Dictionary<ItemObservation, bool?>();
+                    bool? Fits(SlotObservation target, ItemObservation item)
+                    {
+                        if (!fit.TryGetValue(item, out bool? accepted))
+                        { accepted = _filter.Accepts(target.NativeSlot, item.NativeItem); fit.Add(item, accepted); }
+                        return accepted;
+                    }
                     vm.Candidates.AddRange(CandidatePolicy.Build(observation, snapshot.Carried, categoryHints, showUnknown,
-                        (s, i) => _filter.Accepts(s.NativeSlot, i.NativeItem), snapshot.Multitool));
+                        Fits, snapshot.Multitool));
+                    vm.Unavailable.AddRange(UnavailableAttachmentPolicy.Build(snapshot, vm, observedCarried, Fits));
                     snapshot.Slots.Add(vm);
                 }
                 // A removable optic unit owns its child slots. Never offer its mounted
                 // scope as a second quick-swap position. Fixed mounts keep usable child slots.
                 AttachmentAssembly.CollapseOpticPositions(snapshot);
+                foreach (var view in snapshot.Slots) if (view.Slot.HiddenInQuickSwap) view.Unavailable.Clear();
                 snapshot.Status = snapshot.Slots.Count == 0 ? "Weapon detected; no supported slots resolved. Export the report." :
                     "Native filter results are not full move authorization. Enter stages only; live install is opt-in.";
                 if (controller == null) snapshot.Warnings.Add("Inventory controller unresolved: examined status cannot be verified, so carried candidates are withheld.");

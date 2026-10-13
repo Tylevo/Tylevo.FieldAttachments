@@ -10,22 +10,23 @@ namespace Tylevo.FieldAttachments.Runtime
     {
         private RectTransform _menuControlPlate = null!;
         private readonly List<ControlPrompt> _controlPrompts = new List<ControlPrompt>();
-        private string _menuControlHint = "";
+        private readonly List<ControlHint> _menuControlHints = new List<ControlHint>();
         private RectTransform _layerControl = null!, _layerStatusPlate = null!;
         private Text _layerControlLabel = null!, _layerStatusLabel = null!;
         public event Action? LayerCycleRequested;
         public bool LayerCycleEnabled { get; set; } = true;
 
-        // Display text only; the input owner supplies the currently configured controls.
-        public string MenuControlHint
+        public void SetMenuControlHints(IReadOnlyList<ControlHint> hints)
         {
-            get => _menuControlHint;
-            set
+            if (hints == null) throw new ArgumentNullException(nameof(hints));
+            bool same = hints.Count == _menuControlHints.Count;
+            for (int i = 0; same && i < hints.Count; i++)
+                same = hints[i].Key == _menuControlHints[i].Key && hints[i].Caption == _menuControlHints[i].Caption;
+            if (same) return;
+            _menuControlHints.Clear();
+            for (int i = 0; i < hints.Count; i++) _menuControlHints.Add(hints[i]);
+            if (_menuControlPlate != null)
             {
-                string text = value ?? "";
-                if (_menuControlHint == text) return;
-                _menuControlHint = text;
-                if (_menuControlPlate == null) return;
                 BuildControlPrompts();
                 UpdateMenuControlHint(_layoutWidth, _layoutHeight);
             }
@@ -79,18 +80,9 @@ namespace Tylevo.FieldAttachments.Runtime
             foreach (var prompt in _controlPrompts)
             { prompt.Root.gameObject.SetActive(false); UnityEngine.Object.Destroy(prompt.Root.gameObject); }
             _controlPrompts.Clear();
-            foreach (string part in _menuControlHint.Split('|'))
+            foreach (var hint in _menuControlHints)
             {
-                string source = part.Trim();
-                if (source.Length == 0) continue;
-                string key = "", caption = source;
-                foreach (var pair in new[] { (" HOLD MENU", "Hold for menu"), (" TOGGLE MENU", "Toggle menu"),
-                    (" SELECT", "Select"), (" CLOSE LIST", "Close list"), (" MOUNT", "Mounting point"), (" LAYER", "Switch layer") })
-                {
-                    if (!source.EndsWith(pair.Item1, StringComparison.Ordinal)) continue;
-                    key = source.Substring(0, source.Length - pair.Item1.Length).Trim(); caption = pair.Item2; break;
-                }
-                if (key == "MENU DISABLED") { key = ""; caption = "Menu key disabled"; }
+                string key = hint.Key, caption = hint.Caption;
                 RectTransform holder = (RectTransform)Box(_menuControlPlate, "Prompt", 0, 0, 200, 26, Color.clear).transform;
                 RectTransform keycap = (RectTransform)Box(holder, "Keycap", 0, 0, 64, 26, new Color(1, 1, 1, .045f)).transform;
                 Image[] edges = Outline(keycap, 64, 26, new Color(_headerMode.color.r, _headerMode.color.g, _headerMode.color.b, .45f));
@@ -142,13 +134,13 @@ namespace Tylevo.FieldAttachments.Runtime
             if (_menuControlPlate == null) return;
             bool visible = _root.activeInHierarchy && _pointerState != null && !CrossPresentationHidden &&
                 width > 480 && height > 200;
-            _menuControlPlate.gameObject.SetActive(visible && _menuControlHint.Length != 0);
+            _menuControlPlate.gameObject.SetActive(visible && _menuControlHints.Count != 0);
             _layerControl.gameObject.SetActive(visible);
             _layerStatusPlate.gameObject.SetActive(visible && _displayLayer == 1);
             if (!visible) return;
             float layerWidth = 230;
             bool stacked = width - 48 - layerWidth - 12 < 420;
-            Vector2 plate = _menuControlHint.Length == 0 ? Vector2.zero : LayoutControlPrompts(width - 48 - (stacked ? 0 : layerWidth + 12));
+            Vector2 plate = _menuControlHints.Count == 0 ? Vector2.zero : LayoutControlPrompts(width - 48 - (stacked ? 0 : layerWidth + 12));
             float totalWidth = stacked ? Mathf.Max(plate.x, layerWidth) : plate.x + (plate.x > 0 ? 12 : 0) + layerWidth;
             float left = (width - totalWidth) / 2;
             float bottom = height - 20;
@@ -183,21 +175,27 @@ namespace Tylevo.FieldAttachments.Runtime
                 "Multitool ready. Choose a carried part.";
         }
 
-        private void UpdateLayerFocus()
+        private void UpdateLayerFocus(SurfaceHit hit)
         {
             if (_displayLayer != 1 || _popupKind != null) return;
-            float x = _pointerPosition.x * _layoutWidth, y = _pointerPosition.y * _layoutHeight;
-            if (InsideComparison(x, y) || InsideMenuControls(x, y)) return;
-            for (int i = _groups.Length - 1; i >= 0; i--)
-            {
-                var plane = _groups[i].Projection;
-                if (plane != null && plane.TryUnmap(x, y, out _, out _))
-                { _pointerFocus = _groups[i].Group; return; }
-            }
+            if (hit.Group.HasValue) _pointerFocus = hit.Group.Value;
         }
 
         private bool InsideMenuControls(float x, float y) => InsideComparisonRect(_menuControlPlate, x, y) ||
             InsideComparisonRect(_layerControl, x, y) || InsideComparisonRect(_layerStatusPlate, x, y);
+
+        private float MenuControlsTop(float left, float width)
+        {
+            float top = _layoutHeight - 16;
+            foreach (var panel in new[] { _menuControlPlate, _layerControl, _layerStatusPlate })
+            {
+                if (panel == null || !panel.gameObject.activeInHierarchy) continue;
+                var bounds = ComparisonRect(panel);
+                if (left < bounds.X + bounds.Width && left + width > bounds.X)
+                    top = Mathf.Min(top, bounds.Y);
+            }
+            return top;
+        }
 
         private void RaiseMenuControls()
         {

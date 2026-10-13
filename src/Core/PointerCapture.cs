@@ -53,11 +53,14 @@ namespace Tylevo.FieldAttachments.Core
         };
         public static bool Block(string command, bool capture, bool suppressMouse) => capture ? !Pass.Contains(command) :
             suppressMouse && (command == "ToggleShooting" || command == "ToggleAlternativeShooting");
-        public static void FilterAxes(float[] axes, bool capture)
+        public static void FilterAxes(float[] axes, bool capture, bool suppressLookTail = false)
         {
-            if (!capture || axes == null) return;
+            if (axes == null) return;
             // Local 4.1.5 EAxis: MoveX/Y=0/1; TurnX/Y, LookX/Y, LeanX=2..6.
-            for (int i = 2; i <= 6 && i < axes.Length; i++) axes[i] = 0;
+            if (capture)
+                for (int i = 2; i <= 6 && i < axes.Length; i++) axes[i] = 0;
+            else if (suppressLookTail)
+                for (int i = 4; i <= 5 && i < axes.Length; i++) axes[i] = 0;
         }
     }
 }

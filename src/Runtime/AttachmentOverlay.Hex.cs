@@ -138,19 +138,6 @@ namespace Tylevo.FieldAttachments.Runtime
             Rect(group.Leader.Dot.rectTransform,end.x-2,end.y-2,4,4);
             return true;
         }
-        private PointerTarget? HitHex(float x,float y)
-        {
-            for(int g=0;g<4;g++)
-            {
-                var panel=_hexPanels[g]; if(!panel.Root.gameObject.activeSelf) continue; var projection=_groups[g].Projection;
-                float u,v;
-                if (projection!=null) { if(!projection.TryUnmap(x,y,out u,out v)) continue; }
-                else { u=(x-panel.Root.anchoredPosition.x)/HexSelectorLayout.Width; v=(y+panel.Root.anchoredPosition.y)/HexSelectorLayout.Height; }
-                for(int i=0;i<7;i++)
-                    if(panel.Cells[i].Shape.gameObject.activeSelf && HexSelectorLayout.Contains(i,u*HexSelectorLayout.Width,v*HexSelectorLayout.Height)) return panel.Cells[i].Target;
-            }
-            return null;
-        }
         private void HoverHex(PointerTarget? target)
         {
             if (!ExperimentalHexSelectors || ExperimentalCrossSelectors) return;

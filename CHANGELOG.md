@@ -1,17 +1,18 @@
 # Changelog
 
-## 1.1.1 — Unreleased
+## 1.2.0
 
-These changes are on `main`. The latest packaged release is still 1.1.0.
-
-- Preview ergonomics, vertical and horizontal recoil, and weight in a comparison panel at the top right. Smaller ergonomics and recoil bars sit beside the attachment list.
-- Add a Multitool layer with Stock, Handguard and Pistol Grip cards. Carry a Leatherman Multitool to change these parts, including supported replacements for required parts. Required parts cannot be removed on their own.
-- Use the same in-game fitting and removal animations for basic and advanced parts.
-- Add a layer button, an optional keyboard shortcut and a short fade when switching layers. The shortcut is unbound by default.
-- Tidy the header and bottom controls, with clearer key labels and layer feedback. Keep the original tilted card positions.
-- Make opening the attachment view quicker and add an optional faster close, off by default.
-- Add optional timing support for the checked Stance Overhaul and Realism Common Library 0.0.2 builds. Opening and closing blend with the active stance, while ordinary standing keeps a quicker transition. Neither mod is a required dependency.
-- Show optional Stance Overhaul status on the main menu, with a dismiss button and a link to Fontaine's Forge page when support is missing or unavailable.
+- Preview ergonomics, vertical and horizontal recoil, and weight before fitting a part. The full comparison appears at the top right, with smaller ergonomics and recoil bars beside the list.
+- Add a Multitool layer for stocks, handguards and pistol grips. Carry a Leatherman Multitool to change these parts. Required parts need a compatible replacement and cannot be removed on their own.
+- Use the same in-game fitting and removal animations for basic and advanced parts, with quicker entry into the attachment view and an optional faster close.
+- Add optional transition support for Stance Overhaul and Realism Common Library 0.0.2. All Field Attachments features remain available without them. A dismissible main-menu notice shows their status and links to Fontaine's Forge page.
+- Open the parts list by clicking its card's thumbnail. Remove the duplicate LIST button and give REMOVE the full width beneath the thumbnail.
+- Add an Unavailable list explaining why a carried part cannot be used at the selected mounting point.
+- Keep Left Alt with Hold as the menu default, set middle mouse to switch Basic / Multitool layers, and use the wheel to browse the open list. Scrolling never installs a part. Menu shortcuts support keyboard keys and mouse buttons with optional modifiers; updates preserve saved bindings.
+- Add adjustable idle breathing movement that settles while choosing a part and pauses during clicks.
+- Refresh the header, bottom control hints and layer switch feedback while preserving the tilted cards.
+- Fix overlapping cards so the part you preview is the one your click selects. Disabled controls no longer let clicks through to another card. Improve how the weapon returns when you close or interrupt the menu.
+- Keep the existing 996-weapon coverage and optional weapon packs.
 
 ## 1.1.0 — Optional weapon pack support
 

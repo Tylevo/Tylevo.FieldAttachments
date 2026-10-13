@@ -6,7 +6,7 @@ namespace Tylevo.FieldAttachments.Core
     {
         public float X,Y,Width,Height;
         public SelectorRect(float x,float y,float width,float height) { X=x; Y=y; Width=width; Height=height; }
-        public bool Contains(float x,float y) => x>=X && x<=X+Width && y>=Y && y<=Y+Height;
+        public bool Contains(float x,float y) => Width>0 && Height>0 && x>=X && x<=X+Width && y>=Y && y<=Y+Height;
     }
     public static class CrossSelectorLayout
     {
@@ -16,14 +16,16 @@ namespace Tylevo.FieldAttachments.Core
             group==AttachmentGroup.Muzzle ? new SelectorRect(32,386,456,228) : new SelectorRect(776,386,456,228);
         public static SelectorRect Header(AttachmentGroup group)
         { var r=Group(group); return new SelectorRect(r.X,r.Y+(group==AttachmentGroup.Optic ? 240 : 0),r.Width,32); }
-        // Installed item, two carried choices, uninstall, full list. Transparent gaps never accept clicks.
+        // Installed item opens the picker; two legacy inline choices, then uninstall.
+        // Index 4 is reserved and has no surface. Transparent gaps never accept clicks.
         public static SelectorRect Cell(AttachmentGroup group,int index)
         {
             if(index<0 || index>4) throw new ArgumentOutOfRangeException(nameof(index));
             var r=Group(group); bool vertical=group==AttachmentGroup.Optic || group==AttachmentGroup.Underbarrel;
-            // Keep actions beside the installed item even when the two outward choices are absent.
-            if(index>=3) return new SelectorRect(r.X+(group==AttachmentGroup.Muzzle ? 240 : 0)+(index-3)*112,
-                r.Y+(group==AttachmentGroup.Optic ? 396 : 156),104,36);
+            if(index==4) return new SelectorRect(0,0,0,0);
+            // Keep REMOVE aligned with the thumbnail even without outward choices.
+            if(index==3) return new SelectorRect(Cell(group,0).X,
+                r.Y+(group==AttachmentGroup.Optic ? 396 : 156),TileWidth,36);
             float x=vertical ? 36 : (group==AttachmentGroup.Muzzle ? 2-index : index)*156;
             float y=group==AttachmentGroup.Optic ? (index==0 ? 276 : index==1 ? 120 : 0) :
                 group==AttachmentGroup.Underbarrel ? (index==0 ? 36 : index==1 ? 236 : 356) : 36;

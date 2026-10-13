@@ -131,7 +131,7 @@ namespace Tylevo.FieldAttachments.Runtime
         {
             if (!_stmTrial || _learning || _stmFrame == null ||
                 (_state.Phase != PosePhase.Playing && _state.Phase != PosePhase.Held && !PresentationReturning) || _stmBypass.Length != 0) return;
-            if (_stmFrame.Fault.Length != 0) { Release("STM frame restoration fault; see STM_FAULT"); return; }
+            if (_stmFrame.Fault.Length != 0) { Release(PoseReleaseIntent.Abort, "STM frame restoration fault; see STM_FAULT"); return; }
             try
             {
                 // Native start/transition is expected before its stable inspection. Wait
@@ -176,7 +176,7 @@ namespace Tylevo.FieldAttachments.Runtime
             catch (Exception e)
             {
                 _motion.LatchFault("STM presentation failed: " + e.GetBaseException().Message);
-                Release("STM visual error; no retry");
+                Release(PoseReleaseIntent.Abort, "STM visual error; no retry");
             }
         }
         private bool StmEntryReady() => _targetMarker != null && StartEventFired() && StmClipDenial().Length == 0;

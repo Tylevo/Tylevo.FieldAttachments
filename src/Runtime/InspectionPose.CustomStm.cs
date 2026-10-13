@@ -59,12 +59,12 @@ namespace Tylevo.FieldAttachments.Runtime
             string denial = !CustomStmInspection.EarlyEnough(_animator.GetCurrentAnimatorStateInfo(1).normalizedTime) ? "early clip window missed; no seek" :
                 ReadInspectionEvents(out var events, false, maximumEvents) ? CustomStmInspection.EventDenial(_template, nativeClip, events) : "native inspection events unreadable: " + _inspectionEventsStatus;
             if (denial.Length != 0)
-            { _customStmStatus = "rejected clip=" + nativeClip + ": " + denial; Event("CUSTOM_STM " + _customStmStatus); Release(denial); return false; }
+            { _customStmStatus = "rejected clip=" + nativeClip + ": " + denial; Event("CUSTOM_STM " + _customStmStatus); Release(PoseReleaseIntent.Abort, denial); return false; }
             Event("CUSTOM_STM native events verified clip=" + nativeClip + " " + _inspectionEventsStatus);
             bool applied = _motion.TryApply(_animator, _template, _read.Get(_read.Get(_hands, "FirearmsAnimator"), "Animator")!, _customStmClip!);
             _controller = _animator.runtimeAnimatorController;
             _motionOutcome = _customStmStatus = _motion.Status; Event("CUSTOM_STM " + _customStmStatus);
-            if (!applied) { Release("custom STM clip rejected or uncertain"); return false; }
+            if (!applied) { Release(PoseReleaseIntent.Abort, "custom STM clip rejected or uncertain"); return false; }
             _customStmAwaiting = true; _customStmAppliedFrame = Time.frameCount;
             _targetMarker = new PoseMarker { WeaponTemplate = _template, Controller = _controllerKey, Layer = 1, State = _animator.GetCurrentAnimatorStateInfo(1).fullPathHash, Time = CustomStmInspection.Hold };
             _timingSource = "custom STM authored hold";
@@ -96,7 +96,7 @@ namespace Tylevo.FieldAttachments.Runtime
         private void CustomStmFault(string reason)
         {
             _customStmAwaiting = false; _customStmReturn.Cancel(); _customStmStatus = "fault: " + reason;
-            Event("CUSTOM_STM " + _customStmStatus); _motion.LatchFault(reason); Release(reason); RestoreMotion();
+            Event("CUSTOM_STM " + _customStmStatus); _motion.LatchFault(reason); Release(PoseReleaseIntent.Abort, reason); RestoreMotion();
         }
         private string CustomStmReport => "customStm=" + _customStm + " pending=" + _customStmAwaiting + " exit=" + _customStmReturn.Pending +
             " status=" + _customStmStatus + " asset=" + _customStmAsset.Status + " events=" + _inspectionEventsStatus;

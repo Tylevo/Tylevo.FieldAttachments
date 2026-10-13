@@ -66,7 +66,20 @@ namespace Tylevo.FieldAttachments.Runtime
                     throw new InvalidOperationException("visible authored firing-hand binding unavailable");
                 _supportPresentation.Prepare(_supportRenderers, _supportLeft, _supportRight, authored, authoredRight);
             }
-            else _supportPresentation.Prepare(_supportRenderers, _supportLeft, _supportRight, authored);
+            else
+            {
+                bool idle = PoseMarker.Finite(IdleMovementIntensity) && IdleMovementIntensity > 0;
+                try { _supportPresentation.Prepare(_supportRenderers, _supportLeft, _supportRight, authored, null, idle); }
+                catch (InvalidOperationException) when (idle && !_supportPresentation.Prepared &&
+                    !_supportPresentation.FrameActive && _supportPresentation.Fault.Length == 0)
+                {
+                    // Optional motion must not remove an otherwise supported pose.
+                    // Retry only preparation after verified cleanup; no live frame or
+                    // inventory operation has started. An ownership fault still fails.
+                    _supportPresentation.Prepare(_supportRenderers, _supportLeft, _supportRight, authored);
+                    Event("Idle movement unavailable for this hands rig; keeping the original held pose.");
+                }
+            }
         }
 
         private string SupportPresentationDenial()

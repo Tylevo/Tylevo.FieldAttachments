@@ -66,7 +66,7 @@ namespace Tylevo.FieldAttachments.Runtime
             _motionOutcome=_mcxGlobalStatus=_motion.Status; Event("MCX_GLOBAL "+_mcxGlobalStatus);
             if(!applied)
             {
-                if(_motion.Active || _motion.Fault.Length!=0) { Release("MCX clip restore pending or uncertainty"); return false; }
+                if(_motion.Active || _motion.Fault.Length!=0) { Release(PoseReleaseIntent.Abort, "MCX clip restore pending or uncertainty"); return false; }
                 return true; // Original saved/native marker stays selected after a rejection with no mutation.
             }
             _mcxOverride=_mcxClipAwaiting=true; _mcxAppliedFrame=Time.frameCount;

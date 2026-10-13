@@ -30,7 +30,7 @@ namespace Tylevo.FieldAttachments.Runtime
         private Transform? _leftRoot, _rightRoot, _sourceRoot, _leftParent, _rightParent, _sourceParent, _ancestor;
         private Transform? _rightSourceRoot, _rightSourceParent;
         private GameObject? _proxyRoot, _rightProxyRoot;
-        private bool _prepared, _frameActive, _everBound;
+        private bool _prepared, _frameActive, _everBound, _nativeFiringHand;
         private string _fault = "";
         // Kept as delegates so the isolated Unity fixture can inject setter/read-back failures.
         private Func<SkinnedMeshRenderer, Transform[]> _readBones = renderer => renderer.bones;
@@ -41,6 +41,7 @@ namespace Tylevo.FieldAttachments.Runtime
         public string Fault => _fault;
         public int RendererCount => _bindings.Length;
         public int BoneCount => _bones.Length;
+        public bool CanTranslateHands => _prepared && _rightSourceRoot != null && _rightProxyRoot != null;
 
         public void Prepare(SkinnedMeshRenderer[] renderers, Transform leftRoot, Transform rightRoot, Transform authoredLeftRoot)
             => Prepare(renderers, leftRoot, rightRoot, authoredLeftRoot, null);
@@ -48,6 +49,10 @@ namespace Tylevo.FieldAttachments.Runtime
         // The caller selects this route for audited weapons that need an authored firing grip.
         // Both arms share a single bones-array assignment and restoration boundary.
         public void Prepare(SkinnedMeshRenderer[] renderers, Transform leftRoot, Transform rightRoot, Transform authoredLeftRoot, Transform? authoredRightRoot)
+            => Prepare(renderers, leftRoot, rightRoot, authoredLeftRoot, authoredRightRoot, false);
+
+        public void Prepare(SkinnedMeshRenderer[] renderers, Transform leftRoot, Transform rightRoot, Transform authoredLeftRoot,
+            Transform? authoredRightRoot, bool includeNativeFiringHand)
         {
             if (_prepared || _proxyRoot != null || _rightProxyRoot != null || _frameActive) throw new InvalidOperationException("Support presentation is already prepared or still restoring");
             if (_fault.Length != 0) throw new InvalidOperationException("Support presentation fault remains: " + _fault);
@@ -64,6 +69,8 @@ namespace Tylevo.FieldAttachments.Runtime
                 throw new InvalidOperationException("Authored firing and support arm roots are unavailable, overlapping or mismatched");
             Transform? ancestor = CommonAncestor(leftRoot, rightRoot);
             if (ancestor == null) throw new InvalidOperationException("Support and firing arm do not share a body ancestor");
+            bool nativeFiringHand = includeNativeFiringHand && authoredRightRoot == null;
+            Transform? firingSource = nativeFiringHand ? rightRoot : authoredRightRoot;
 
             var bindings = new List<Binding>();
             var mapped = new Dictionary<Transform, Bone>();
@@ -81,9 +88,10 @@ namespace Tylevo.FieldAttachments.Runtime
                     Transform body = original[i];
                     if (body == null) throw new InvalidOperationException("Support skin has a missing bone");
                     bool support = body == leftRoot || body.IsChildOf(leftRoot);
-                    if (!support && (authoredRightRoot == null || (body != rightRoot && !body.IsChildOf(rightRoot)))) continue;
+                    if (!support && (firingSource == null || (body != rightRoot && !body.IsChildOf(rightRoot)))) continue;
                     Transform bodyRoot = support ? leftRoot : rightRoot;
-                    Transform sourceRoot = support ? authoredLeftRoot : authoredRightRoot!;
+                    Transform sourceRoot = support ? authoredLeftRoot : firingSource!;
+                    bool nativeSource = !support && nativeFiringHand;
                     Transform cursor = body;
                     while (true)
                     {
@@ -92,7 +100,8 @@ namespace Tylevo.FieldAttachments.Runtime
                             string path = RelativePath(bodyRoot, cursor);
                             Transform source = FindUnique(sourceRoot, path);
                             if (FindUnique(bodyRoot, path) != cursor || cursor.parent == null || source.parent == null ||
-                                source == cursor || source == leftRoot || source.IsChildOf(leftRoot) || source == rightRoot || source.IsChildOf(rightRoot))
+                                (nativeSource ? source != cursor : source == cursor || source == leftRoot || source.IsChildOf(leftRoot) ||
+                                    source == rightRoot || source.IsChildOf(rightRoot)))
                                 throw new InvalidOperationException("Support bone identity is ambiguous: " + path);
                             ValidatePose(cursor); ValidatePose(source);
                             mapped.Add(cursor, new Bone { Body = cursor, Source = source, BodyParent = cursor.parent, SourceParent = source.parent,
@@ -108,7 +117,7 @@ namespace Tylevo.FieldAttachments.Runtime
                     Slots = slots.ToArray(), Bones = selected.ToArray() });
             }
             if (bindings.Count == 0) throw new InvalidOperationException("No skin bones belong to the verified support arm");
-            if (!mapped.ContainsKey(leftRoot) || (authoredRightRoot != null && !mapped.ContainsKey(rightRoot)))
+            if (!mapped.ContainsKey(leftRoot) || (firingSource != null && !mapped.ContainsKey(rightRoot)))
                 throw new InvalidOperationException("A requested arm has no verified skin bindings");
             var ordered = new List<Bone>(mapped.Values);
             ordered.Sort((a, b) => { int depth = Depth(a.Path).CompareTo(Depth(b.Path)); return depth != 0 ? depth : string.CompareOrdinal(a.Path, b.Path); });
@@ -117,7 +126,8 @@ namespace Tylevo.FieldAttachments.Runtime
             {
                 _leftRoot = leftRoot; _rightRoot = rightRoot; _sourceRoot = authoredLeftRoot;
                 _leftParent = leftRoot.parent; _rightParent = rightRoot.parent; _sourceParent = authoredLeftRoot.parent; _ancestor = ancestor;
-                _rightSourceRoot = authoredRightRoot; _rightSourceParent = authoredRightRoot != null ? authoredRightRoot.parent : null;
+                _rightSourceRoot = firingSource; _rightSourceParent = firingSource != null ? firingSource.parent : null;
+                _nativeFiringHand = nativeFiringHand;
                 _bindings = bindings.ToArray(); _bones = ordered.ToArray();
                 foreach (Bone bone in _bones)
                 {
@@ -137,21 +147,28 @@ namespace Tylevo.FieldAttachments.Runtime
             catch { Release(); throw; } // No renderer has been written during preparation.
         }
 
-        public void Apply(float blend)
+        public void Apply(float blend) => Apply(blend, Vector3.zero);
+
+        public void Apply(float blend, Vector3 worldOffset)
         {
             try
             {
                 if (!_prepared || _frameActive || _fault.Length != 0 || !RootsMatch())
                     throw new InvalidOperationException("Support presentation is not ready or its roots changed");
                 if (!Finite(blend) || blend < 0 || blend > 1) throw new InvalidOperationException("Support presentation blend is invalid");
+                bool translated = !worldOffset.Equals(Vector3.zero);
+                if (!Finite(worldOffset) || (translated && (blend == 0 || !CanTranslateHands)))
+                    throw new InvalidOperationException("Support presentation offset requires both visible hands");
                 if (blend == 0) return;
                 // Complete all identity/pose checks before the first live renderer write.
                 foreach (Bone bone in _bones)
                 {
+                    bool nativeSource = _nativeFiringHand && bone.BodyRoot == _rightRoot;
                     if (bone.Body == null || bone.Source == null || bone.Proxy == null || bone.Body.parent != bone.BodyParent ||
                         bone.Source.parent != bone.SourceParent || bone.Proxy.parent != bone.ProxyParent ||
                         (bone.Body != bone.BodyRoot && !bone.Body.IsChildOf(bone.BodyRoot)) ||
-                        (bone.Source != bone.SourceRoot && !bone.Source.IsChildOf(bone.SourceRoot)))
+                        (bone.Source != bone.SourceRoot && !bone.Source.IsChildOf(bone.SourceRoot)) ||
+                        (nativeSource && bone.Source != bone.Body))
                         throw new InvalidOperationException("Support presentation bone changed: " + bone.Path);
                     ValidatePose(bone.Body); ValidatePose(bone.Source);
                 }
@@ -162,9 +179,15 @@ namespace Tylevo.FieldAttachments.Runtime
                 }
                 foreach (Bone bone in _bones)
                 {
+                    bool nativeSource = _nativeFiringHand && bone.BodyRoot == _rightRoot;
                     bone.Proxy.localScale = bone.Body.localScale;
-                    bone.Proxy.SetPositionAndRotation(Vector3.Lerp(bone.Body.position, bone.Source.position, blend),
-                        Quaternion.Slerp(bone.Body.rotation, bone.Source.rotation, blend));
+                    // Authored sources already include the weapon-rig offset; the
+                    // remaining weight completes its translation at partial blend.
+                    // Native firing-hand sources are read only, preserving their pose.
+                    Vector3 position = nativeSource ? bone.Body.position : Vector3.Lerp(bone.Body.position, bone.Source.position, blend);
+                    if (translated) position += nativeSource ? worldOffset : worldOffset * (1 - blend);
+                    Quaternion rotation = nativeSource ? bone.Body.rotation : Quaternion.Slerp(bone.Body.rotation, bone.Source.rotation, blend);
+                    bone.Proxy.SetPositionAndRotation(position, rotation);
                     ValidatePose(bone.Proxy);
                 }
                 _frameActive = true;
@@ -264,7 +287,7 @@ namespace Tylevo.FieldAttachments.Runtime
                 }
             }
             catch (Exception e) { Latch("private support arm cleanup failed: " + e.GetBaseException().Message); return false; }
-            _prepared = _frameActive = _everBound = false; _proxyRoot = _rightProxyRoot = null;
+            _prepared = _frameActive = _everBound = _nativeFiringHand = false; _proxyRoot = _rightProxyRoot = null;
             _bindings = Array.Empty<Binding>(); _bones = Array.Empty<Bone>();
             _leftRoot = _rightRoot = _sourceRoot = _leftParent = _rightParent = _sourceParent = _ancestor = null;
             _rightSourceRoot = _rightSourceParent = null;
@@ -275,6 +298,7 @@ namespace Tylevo.FieldAttachments.Runtime
             _leftRoot.parent == _leftParent && _rightRoot.parent == _rightParent && _sourceRoot.parent == _sourceParent &&
             _ancestor != null && _leftRoot.IsChildOf(_ancestor) && _rightRoot.IsChildOf(_ancestor) &&
             _proxyRoot.transform.parent == _leftParent &&
+            (!_nativeFiringHand || _rightSourceRoot == _rightRoot) &&
             (_rightSourceRoot == null ? _rightProxyRoot == null : _rightProxyRoot != null &&
                 _rightSourceRoot.parent == _rightSourceParent && _rightProxyRoot.transform.parent == _rightParent);
         private static bool RendererMatches(Binding binding) => binding.Renderer != null && binding.Renderer.sharedMesh == binding.Mesh &&

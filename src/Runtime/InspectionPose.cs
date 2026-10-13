@@ -143,7 +143,7 @@ namespace Tylevo.FieldAttachments.Runtime
             catch (Exception e)
             {
                 ClearSupportHand();
-                Release("start rejected");
+                Release(PoseReleaseIntent.Abort, "start rejected");
                 if (!Active) { _context = null; _hands = _operation = null; _animator = null; _controller = null; ClearStmBindings(); }
                 Status = "POSE unavailable: " + e.GetBaseException().Message; Event(Status);
             }
@@ -158,9 +158,13 @@ namespace Tylevo.FieldAttachments.Runtime
                     TickStmReturn(enabled && StmPresentationEnabled && Application.isFocused && !interrupt);
                     FinishReturn(enabled && Application.isFocused && !interrupt); return;
                 }
+                PoseReleaseIntent intent = PoseReleaseIntent.Abort;
                 string reason = !enabled ? "plugin disabled" : _customStm && !CustomStmAnimationEnabled ? "custom STM disabled" : _stmTrial && !StmPresentationEnabled ? "STM trial disabled" : _mcxOverride && !GlobalMcxInspectionEnabled ? "global MCX disabled" :
                     !_customStm && !_mcxOverride && !MdrMotionEnabled && _motion.Active ? "MDR trial disabled" : !Application.isFocused ? "focus lost" :
-                    interrupt ? "gameplay/menu input" : !requested ? "F5 released" : _state.Deadline(Time.unscaledTime);
+                    interrupt ? "gameplay/menu input" : "";
+                if (reason.Length == 0 && !requested)
+                { reason = "F5 released"; intent = PoseReleaseIntent.MenuClose; }
+                if (reason.Length == 0) reason = _state.Deadline(Time.unscaledTime);
                 if (reason.Length == 0 && (_context == null || !_probe.ReadContext(_context).Allowed)) reason = "local raid/range/player context changed";
                 if (reason.Length == 0 && NativeSprint() != false)
                     reason = NativeSprint() == true ? "native sprint" : "native sprint state unavailable";
@@ -174,7 +178,7 @@ namespace Tylevo.FieldAttachments.Runtime
                 }
                 if (reason.Length == 0 && _state.Phase == PosePhase.Held &&
                     (_animator!.speed != 0 || !StartEventFired())) reason = "external animator/inspection change";
-                if (reason.Length != 0) { Release(reason, reason == "F5 released"); return; }
+                if (reason.Length != 0) { Release(intent, reason); return; }
                 if (!TickCustomStm() || !TickGlobalMcx() || !TickMcxEntry()) return;
                 if (!MdrMotionEnabled) _motionAttempted = true;
                 if (!_motionAttempted && _state.Phase == PosePhase.Playing && _animator!.layerCount > 1 &&
@@ -185,7 +189,7 @@ namespace Tylevo.FieldAttachments.Runtime
                     bool applied = _motion.TryApply(_animator, _template, _read.Get(_read.Get(_hands, "FirearmsAnimator"), "Animator")!);
                     _controller = _animator.runtimeAnimatorController;
                     _motionOutcome = _motion.Status; Event("MOTION " + _motionOutcome);
-                    if ((_motion.Active || _motion.Fault.Length != 0) && !applied) { Release("MDR clip restore pending or trial fault"); return; }
+                    if ((_motion.Active || _motion.Fault.Length != 0) && !applied) { Release(PoseReleaseIntent.Abort, "MDR clip restore pending or trial fault"); return; }
                     if (applied)
                     {
                         // A native MCX/RD marker belongs to a different clip. Never overwrite it.
@@ -208,7 +212,7 @@ namespace Tylevo.FieldAttachments.Runtime
             {
                 if (_customStmAwaiting || _customStmReturn.Pending) CustomStmFault("custom observation uncertain: " + e.GetBaseException().Message);
                 else if (_mcxClipAwaiting || _mcxEntry.Pending) McxEntryFault("MCX observation uncertain: " + e.GetBaseException().Message);
-                else Release("pose observation error: " + e.GetBaseException().Message);
+                else Release(PoseReleaseIntent.Abort, "pose observation error: " + e.GetBaseException().Message);
             }
         }
         private void MarkLegacy()
@@ -238,7 +242,7 @@ namespace Tylevo.FieldAttachments.Runtime
                 Status = "POSE: no stable inspection timeline yet. Release F5, try again and mark after the turn starts.";
                 Event("MARK rejected: no stable changed non-looping state | " + Layers());
             }
-            catch (Exception e) { Release("mark error: " + e.GetBaseException().Message); }
+            catch (Exception e) { Release(PoseReleaseIntent.Abort, "mark error: " + e.GetBaseException().Message); }
         }
         private void Hold(PoseMarker marker, bool save)
         {
@@ -246,7 +250,7 @@ namespace Tylevo.FieldAttachments.Runtime
             if (_motion.Active && !_motion.IsPlaying(owned))
             {
                 Event("MOTION hold rejected: donor clip playback not confirmed");
-                Release("MDR clip playback not confirmed"); return;
+                Release(PoseReleaseIntent.Abort, "MDR clip playback not confirmed"); return;
             }
             _speed.Acquire(() => owned.speed, value => owned.speed = value);
             _state.Held(Time.unscaledTime);
@@ -333,7 +337,7 @@ namespace Tylevo.FieldAttachments.Runtime
         private void FinishReturn(bool mayCancel = false)
         {
             if (!RestorePresentationFrame()) return;
-            if (_speed.Active) { Release("restore retry"); return; }
+            if (_speed.Active) { Release(PoseReleaseIntent.Abort, "restore retry"); return; }
             if (WaitCustomStmReturn(mayCancel)) return;
             bool sameLiveContext = _context != null && _animator != null &&
                 _probe.ReadContext(_context).Allowed;
@@ -431,7 +435,7 @@ namespace Tylevo.FieldAttachments.Runtime
         }
         public void Shutdown(string reason)
         {
-            Release(reason); // Synchronous: there may be no later Update.
+            Release(PoseReleaseIntent.Abort, reason); // Synchronous: there may be no later Update.
         }
         private string Layers()
         {

@@ -1,44 +1,31 @@
 using BepInEx.Configuration;
+using System.Collections.Generic;
 using Tylevo.FieldAttachments.Core;
 using Tylevo.FieldAttachments.Runtime;
 using UnityEngine;
 
 namespace Tylevo.FieldAttachments
 {
-    public enum AttachmentMenuKey
-    {
-        LeftAlt = (int)KeyCode.LeftAlt,
-        RightAlt = (int)KeyCode.RightAlt,
-        None = (int)KeyCode.None
-    }
-
     public sealed partial class Plugin
     {
-        private ConfigEntry<AttachmentMenuKey> _menuKey = null!;
+        private ConfigEntry<KeyboardShortcut> _menuKey = null!;
         private ConfigEntry<MenuActivationMode> _menuActivationMode = null!;
-        private readonly AltMenuActivation _altMenu = new AltMenuActivation();
+        private readonly MenuShortcutInput _altMenu = new MenuShortcutInput();
         private readonly PoseActivation _legacyPoseActivation = new PoseActivation();
-        private AttachmentMenuKey? _lastMenuKey;
         private bool _altPoseRequested;
-        private KeyCode MenuKeyCode => _menuKey.Value == AttachmentMenuKey.LeftAlt ? KeyCode.LeftAlt :
-            _menuKey.Value == AttachmentMenuKey.RightAlt ? KeyCode.RightAlt : KeyCode.None;
+        private KeyCode MenuKeyCode => _menuKey.Value.MainKey;
 
         private void BindAltMenu()
         {
-            _menuKey = BindSetting("Controls", "MenuKey", AttachmentMenuKey.LeftAlt,
-                "Open the attachment presentation and cursor together with Left Alt (default) or Right Alt. None disables this shortcut.");
+            _menuKey = MenuShortcutSetting.Bind(Config);
             _menuActivationMode = BindSetting("Controls", "MenuActivation", MenuActivationMode.Hold,
-                "Hold keeps the menu open while Alt is held. Toggle opens on Alt-down; a later plain Alt tap closes on release. Alt+R or a pointer click while Alt is held keeps Toggle open. Right mouse closes LIST only. Closing cancels waiting requests, not submitted native operations.");
+                "Hold keeps the menu open while the shortcut is held. Toggle opens on one press and closes on the next. When using a modifier key on its own, tap it without another control to close.");
         }
 
         // Called before native input translation. This only updates input intent;
         // inventory capture and standalone pose entry remain in Plugin.Update.
         private bool AltCaptureRequested(bool own)
         {
-            if (_lastMenuKey.HasValue && _lastMenuKey.Value != _menuKey.Value) _altMenu.Cancel();
-            _lastMenuKey = _menuKey.Value;
-            bool held = MenuKeyCode != KeyCode.None && Input.GetKey(MenuKeyCode);
-            bool down = MenuKeyCode != KeyCode.None && Input.GetKeyDown(MenuKeyCode);
             bool identity = ReferenceEquals(_reader.HeldWeapon(_pointerPlayer), _pointerWeapon) &&
                 ReferenceEquals(_read.Get(_pointerPlayer, "HandsController"), _pointerHands);
             bool allowed = _enabled.Value && own && identity && MenuKeyCode != KeyCode.None && !_probe.Session.Blocked &&
@@ -48,7 +35,13 @@ namespace Tylevo.FieldAttachments
             if (_legacyPoseActivation.Open && !_altPoseRequested) allowed = false;
             bool close = Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.F12);
             bool chordUsed = Held(_cyclePosition.Value) || Held(_cycleLayer.Value) || Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1);
-            return _altMenu.Sample(held, down, _menuActivationMode.Value, allowed, Application.isFocused, close, chordUsed, Time.frameCount);
+            bool wasOpen = _altMenu.Open;
+            bool requested=_altMenu.Sample(_menuKey.Value,_menuActivationMode.Value,allowed,Application.isFocused,
+                close,chordUsed,Time.frameCount,Input.GetKey,Input.GetKeyDown);
+            _altMenu.OwnMouseShortcut(_cycleLayer.Value, allowed && (requested || wasOpen), Application.isFocused,
+                Input.GetKey, Input.GetKeyDown);
+            if(_altMenu.BindingChanged) { _pointer?.Capture.Cancel(); _overlay?.ResetPointer(); }
+            return requested;
         }
 
         private void MaintainAltInput()
@@ -65,26 +58,35 @@ namespace Tylevo.FieldAttachments
                 if (_pointer?.Capture.SuppressMouse != true) DetachPointer();
                 return;
             }
-            // Keep a local input observer registered before the opening Alt frame.
+            // Keep a local input observer registered before the opening shortcut frame.
             EnsurePointer(context);
         }
 
         private void ApplyMenuControlHint()
         {
             if (_overlay == null) return;
-            string key = _menuKey.Value == AttachmentMenuKey.LeftAlt ? "LEFT ALT" :
-                _menuKey.Value == AttachmentMenuKey.RightAlt ? "RIGHT ALT" : "MENU DISABLED";
-            _overlay.MenuControlHint = key + (_menuActivationMode.Value == MenuActivationMode.Hold ? " HOLD MENU" : " TOGGLE MENU") +
-                " | LMB SELECT | RMB CLOSE LIST | ALT+R MOUNT" +
-                (_cycleLayer.Value.MainKey == KeyCode.None ? "" : " | " + _cycleLayer.Value.ToString().ToUpperInvariant() + " LAYER");
+            string key = MenuShortcutSetting.Format(_menuKey.Value);
+            var hints = new List<ControlHint> {
+                new ControlHint(key, key.Length == 0 ? "Menu key disabled" :
+                    _menuActivationMode.Value == MenuActivationMode.Hold ? "Hold for menu" : "Toggle menu"),
+                new ControlHint("LMB", "Select"),
+                new ControlHint("RMB", "Close list"),
+                new ControlHint("WHEEL", "Browse parts")
+            };
+            if (_cyclePosition.Value.MainKey != KeyCode.None)
+                hints.Add(new ControlHint(MenuShortcutSetting.Format(_cyclePosition.Value), "Mounting point"));
+            if (_cycleLayer.Value.MainKey != KeyCode.None)
+                hints.Add(new ControlHint(MenuShortcutSetting.Format(_cycleLayer.Value), "Switch layer"));
+            _overlay.SetMenuControlHints(hints);
         }
 
-        private string AltCloseReason()
+        private void CloseAltMenu()
         {
-            if (!_enabled.Value || !Application.isFocused) return "plugin disabled or focus lost";
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.F12)) return "native menu opened";
-            if (!PointerLocalOwnership()) return "menu ownership changed";
-            return "Alt menu closed";
+            if (!_enabled.Value || !Application.isFocused) Close(PoseReleaseIntent.Abort, "plugin disabled or focus lost");
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.F12))
+                Close(PoseReleaseIntent.Abort, "native menu opened");
+            else if (!PointerLocalOwnership()) Close(PoseReleaseIntent.Abort, "menu ownership changed");
+            else Close(PoseReleaseIntent.MenuClose, "attachment menu closed");
         }
     }
 }

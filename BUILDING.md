@@ -1,6 +1,6 @@
 # Build from source
 
-The main branch contains the current **1.1.1 development build**, its build scripts and animation bundles. For the published 1.1.0 release, use the [v1.1.0 tag](https://github.com/Tylevo/Tylevo.FieldAttachments/tree/v1.1.0).
+The repository contains the **1.2.0 source**, its build scripts and animation bundles. Use the [v1.2.0 tag](https://github.com/Tylevo/Tylevo.FieldAttachments/tree/v1.2.0) for the source that matches the release.
 
 Requirements:
 

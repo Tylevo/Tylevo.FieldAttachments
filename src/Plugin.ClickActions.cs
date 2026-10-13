@@ -34,7 +34,7 @@ namespace Tylevo.FieldAttachments
             Trace("CLICK_CONFIRMED "+request.Identity+"; waiting for native idle, maximum 8 seconds");
             // Same verified return as F5 release. The click, not the return event,
             // is the authorization for the one bound inventory request.
-            _pose.Release("confirmed mouse "+action,true);
+            _pose.Release(PoseReleaseIntent.InventoryHandoff, "confirmed mouse "+action);
             _overlay?.ResetPointer();
         }
         private void PollClickRequest()

@@ -15,9 +15,11 @@ namespace Tylevo.FieldAttachments.Runtime
         private ReadAccess? _read;
         public Func<bool>? Eligible, LocalOwnership;
         public Func<bool, bool>? DesiredCapture;
+        public Func<bool>? OwnedActivationMouseHeld, SuppressActivationLook;
         public Action<string>? BeforeGameplayCommand;
         public KeyCode Modifier = KeyCode.LeftAlt;
         public readonly PointerCapture Capture = new PointerCapture();
+        private bool _lookTail;
         public string Fault { get; private set; } = "";
         public bool Registered => isActiveAndEnabled && _owner != null && _ownerChildren != null &&
             ReferenceEquals(_read?.Get(_owner, "_children"), _ownerChildren) && _ownerChildren.Contains(this);
@@ -40,11 +42,12 @@ namespace Tylevo.FieldAttachments.Runtime
             {
             bool own = LocalOwnership?.Invoke() == true;
             bool automatic = DesiredCapture?.Invoke(own) == true;
+            _lookTail=Registered && own && SuppressActivationLook?.Invoke()==true;
             Capture.Sample(Registered && own && Eligible?.Invoke() == true, automatic || Modifier != KeyCode.None && Input.GetKey(Modifier),
-                Input.GetMouseButton(0) || Input.GetMouseButton(1), Application.isFocused, Time.frameCount, automatic);
+                Input.GetMouseButton(0) || Input.GetMouseButton(1) || OwnedActivationMouseHeld?.Invoke()==true, Application.isFocused, Time.frameCount, automatic);
             return own;
             }
-            catch (Exception e) { Fault=e.GetBaseException().GetType().Name; Capture.Cancel(); return false; }
+            catch (Exception e) { Fault=e.GetBaseException().GetType().Name; _lookTail=false; Capture.Cancel(); return false; }
         }
         public override ETranslateResult TranslateCommand(ECommand command)
         {
@@ -61,11 +64,11 @@ namespace Tylevo.FieldAttachments.Runtime
             return ETranslateResult.Ignore;
         }
         public override void TranslateAxes(ref float[] axes)
-        { Refresh(); PointerInputPolicy.FilterAxes(axes, Capture.Active); }
+        { Refresh(); PointerInputPolicy.FilterAxes(axes, Capture.Active, _lookTail); }
         public override ECursorResult ShouldLockCursor()
         { Refresh(); return Capture.Active ? ECursorResult.LockCursor : ECursorResult.Ignore; }
         public void Detach()
-        { Capture.Cancel(); _ownerChildren?.Remove(this); _ownerChildren = null; _owner = null; }
+        { Capture.Cancel(); _lookTail=false; _ownerChildren?.Remove(this); _ownerChildren = null; _owner = null; }
         private void OnDisable() => Detach();
         private void OnDestroy() => Detach();
     }

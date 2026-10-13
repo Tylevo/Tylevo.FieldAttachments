@@ -47,6 +47,7 @@ namespace Tylevo.FieldAttachments.Core
     {
         public SlotObservation Slot = new SlotObservation();
         public readonly List<CandidateObservation> Candidates = new List<CandidateObservation>();
+        public readonly List<UnavailableAttachment> Unavailable = new List<UnavailableAttachment>();
     }
 
     // Only entries in explicitly enabled roots are classified. Non-mod names/IDs are not exported.

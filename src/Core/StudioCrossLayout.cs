@@ -18,8 +18,8 @@ namespace Tylevo.FieldAttachments.Core
         public static SelectorRect Cell(int index)
         {
             if(index==0) return new SelectorRect(36,31,144,112);
-            if(index==3 || index==4) return new SelectorRect((index-3)*112,151,104,36);
-            if(index==1 || index==2) return new SelectorRect(0,0,0,0); // Export has zero inline candidates; use LIST.
+            if(index==3) return new SelectorRect(36,151,144,36);
+            if(index==1 || index==2 || index==4) return new SelectorRect(0,0,0,0); // Open carried choices from the installed/empty thumbnail.
             throw new ArgumentOutOfRangeException(nameof(index));
         }
         public static int Hit(float x,float y)
@@ -27,7 +27,6 @@ namespace Tylevo.FieldAttachments.Core
             if(Header.Contains(x,y)) return 5;
             if(Cell(0).Contains(x,y)) return 0;
             if(Cell(3).Contains(x,y)) return 3;
-            if(Cell(4).Contains(x,y)) return 4;
             return -1;
         }
         public static bool TryProject(AttachmentGroup group,float width,float height,float weaponX,float weaponY,

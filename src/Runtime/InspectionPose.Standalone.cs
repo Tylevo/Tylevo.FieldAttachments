@@ -10,6 +10,7 @@ namespace Tylevo.FieldAttachments.Runtime
     {
         private readonly StandalonePoseTimeline _standaloneClock = new StandalonePoseTimeline();
         private readonly StandalonePosePlayback _standalonePlayback = new StandalonePosePlayback();
+        private readonly AttachmentIdleMotion _idleMovement = new AttachmentIdleMotion();
         private bool _standaloneBlocked, _standaloneEnabled = true;
         private float _standaloneNativeSpeed;
         private string _standaloneFault = "", _standaloneOutcome = "not opened";
@@ -17,12 +18,16 @@ namespace Tylevo.FieldAttachments.Runtime
         public bool FasterMenuClose { get => _standaloneClock.FasterReturn; set => _standaloneClock.FasterReturn = value; }
         public StanceOverhaulCompatibility? StanceCompatibility { get; set; }
         public bool StanceCompatibilityEnabled { get; set; }
+        public float IdleMovementIntensity { get; set; } = AttachmentIdleMotion.DefaultIntensity;
+        public bool IdleMovementSelecting { get; set; }
+        public bool IdleMovementPressed { get; set; }
 
         // Both ordinary and Shift-modified attachment opens take this route.
         // No native inspection, clip/controller swap, speed lease or IK hook.
         public void Start(RaidSnapshot snapshot, bool learn)
         {
             if (Active) return;
+            _idleMovement.Reset();
             Interrupted = false;
             string requestedTemplate = "", requestedController = "";
             bool stancePrepared = false;
@@ -104,14 +109,14 @@ namespace Tylevo.FieldAttachments.Runtime
             {
                 if (!_standaloneClock.Active) { FinishStandalone(); return; }
                 string denial = interrupt ? "gameplay/menu input" : StandaloneDenial();
-                if (denial.Length != 0) { Release(denial); return; }
-                if (!requested && !_standaloneClock.Returning) { Release("attachment key released", true, true); return; }
+                if (denial.Length != 0) { Release(PoseReleaseIntent.Abort, denial); return; }
+                if (!requested && !_standaloneClock.Returning) { Release(PoseReleaseIntent.MenuClose, "attachment key released"); return; }
                 AdvanceStandaloneClock();
                 if (_standaloneClock.Fault.Length != 0)
                 { Interrupted = true; _standaloneOutcome = _standaloneClock.Fault; }
                 if (!_standaloneClock.Active) FinishStandalone();
             }
-            catch (Exception e) { Release("pose observation failed: " + e.GetBaseException().Message); }
+            catch (Exception e) { Release(PoseReleaseIntent.Abort, "pose observation failed: " + e.GetBaseException().Message); }
         }
 
         public void ApplyPresentationFrame()
@@ -120,13 +125,18 @@ namespace Tylevo.FieldAttachments.Runtime
             try
             {
                 string denial = StandaloneDenial();
-                if (denial.Length != 0) { Release(denial); return; }
+                if (denial.Length != 0) { Release(PoseReleaseIntent.Abort, denial); return; }
                 AdvanceStandaloneClock();
                 if (!_standaloneClock.Active) { FinishStandalone(); return; }
-                _standalonePlayback.Apply(_standaloneClock.SampleTime, _standaloneClock.Blend);
-                _supportPresentation.Apply(_standaloneClock.Blend);
+                CardVector idle = _idleMovement.Sample(Time.unscaledTime,
+                    _supportPresentation.CanTranslateHands ? IdleMovementIntensity : 0,
+                    _standaloneClock.Held, IdleMovementSelecting, IdleMovementPressed);
+                Vector3 localOffset = new Vector3(idle.X, idle.Y, idle.Z) * _standaloneClock.Blend;
+                Vector3 worldOffset = _animator!.transform.TransformVector(localOffset);
+                _standalonePlayback.Apply(_standaloneClock.SampleTime, _standaloneClock.Blend, localOffset);
+                _supportPresentation.Apply(_standaloneClock.Blend, worldOffset);
             }
-            catch (Exception e) { Release("presentation failed: " + e.GetBaseException().Message); }
+            catch (Exception e) { Release(PoseReleaseIntent.Abort, "presentation failed: " + e.GetBaseException().Message); }
         }
 
         public bool RestorePresentationFrame()
@@ -166,10 +176,10 @@ namespace Tylevo.FieldAttachments.Runtime
             Status = "POSE FAULT: presentation ownership uncertain; see F10 report before retrying.";
         }
 
-        public void Release(string reason, bool normalKeyRelease = false, bool returnToStance = false)
+        public void Release(PoseReleaseIntent intent, string reason)
         {
             if (!Active) return;
-            bool normal = normalKeyRelease && _standaloneClock.Active;
+            bool normal = (intent == PoseReleaseIntent.MenuClose || intent == PoseReleaseIntent.InventoryHandoff) && _standaloneClock.Active;
             try { normal = normal && StandaloneDenial().Length == 0; }
             catch { normal = false; }
             RestorePresentationFrame();
@@ -177,7 +187,7 @@ namespace Tylevo.FieldAttachments.Runtime
             {
                 // Only closing the menu returns to a stance here. Click handoffs
                 // stay suppressed through both native inventory operations.
-                if (returnToStance && _standaloneClock.Synchronized && StanceCompatibility?.BeginReturn() == true)
+                if (intent == PoseReleaseIntent.MenuClose && _standaloneClock.Synchronized && StanceCompatibility?.BeginReturn() == true)
                     _standaloneClock.Close(Time.unscaledTime, StanceCompatibility.ReturnSeconds);
                 else _standaloneClock.Close(Time.unscaledTime);
                 _standaloneOutcome = "custom return: " + reason;
@@ -204,6 +214,7 @@ namespace Tylevo.FieldAttachments.Runtime
             if (!supportReleased || !playbackReleased)
             { Status = "POSE RESTORE WAIT: presentation cleanup pending; inventory blocked."; return; }
             ClearSupportPresentationBinding();
+            _idleMovement.Reset(); IdleMovementSelecting = IdleMovementPressed = false;
             _context = null; _hands = _operation = null; _animator = null; _controller = null;
             if (hadRig) Event("STANDALONE_END " + _standaloneOutcome + "; nativeInspectInvoked=false frameOwned=false");
             if (!_standaloneBlocked) Status = "POSE released. Native gameplay is available.";

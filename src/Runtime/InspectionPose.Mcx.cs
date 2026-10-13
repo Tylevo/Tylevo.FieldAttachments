@@ -99,10 +99,10 @@ namespace Tylevo.FieldAttachments.Runtime
             if (!McxClipMatches() || !McxEventsMatch())
             {
                 _mcxStatus = "rejected: native MCX clip/event profile changed; no seek";
-                Event("MCX_ENTRY " + _mcxStatus); Release("MCX clip/event validation rejected"); return false;
+                Event("MCX_ENTRY " + _mcxStatus); Release(PoseReleaseIntent.Abort, "MCX clip/event validation rejected"); return false;
             }
             if (!_mcxEntry.TryIssue(state.normalizedTime, _targetMarker!.Time, Time.frameCount, Time.unscaledTime, out string denial))
-            { _mcxStatus = "rejected: " + denial; Event("MCX_ENTRY " + _mcxStatus); Release(denial); return false; }
+            { _mcxStatus = "rejected: " + denial; Event("MCX_ENTRY " + _mcxStatus); Release(PoseReleaseIntent.Abort, denial); return false; }
             _mcxStatus = "forward seek requested; awaiting next-frame confirmation";
             Event("MCX_ENTRY seek " + state.normalizedTime.ToString("R", CultureInfo.InvariantCulture) + " -> " +
                 _mcxEntry.Entry.ToString("R", CultureInfo.InvariantCulture) + " hold=" + _targetMarker.Time.ToString("R", CultureInfo.InvariantCulture) +
@@ -118,7 +118,7 @@ namespace Tylevo.FieldAttachments.Runtime
             _mcxStatus = "fault: " + reason;
             Event("MCX_ENTRY " + _mcxStatus);
             _motion.LatchFault("MCX segment: " + reason); // Existing session uncertainty latch also blocks inventory.
-            Release("MCX entry fault");
+            Release(PoseReleaseIntent.Abort, "MCX entry fault");
             RestoreMotion();
         }
     }

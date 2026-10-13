@@ -16,6 +16,7 @@ namespace Tylevo.FieldAttachments.Runtime
         private Transform? _root;
         private AnimationClip? _clip;
         private Transform[] _live = Array.Empty<Transform>(), _parents = Array.Empty<Transform>(), _sampled = Array.Empty<Transform>();
+        private bool[] _translationRoots = Array.Empty<bool>();
         private Vector4[] _values = Array.Empty<Vector4>();
         private PoseFrameLease<Vector4>? _frame;
         private string _fault = "";
@@ -56,6 +57,7 @@ namespace Tylevo.FieldAttachments.Runtime
                 _shadow = new GameObject("FieldAttachments private presentation sampler") { hideFlags = HideFlags.HideAndDontSave };
                 var nodes = new Dictionary<string, Transform>(StringComparer.Ordinal) { [""] = _shadow.transform };
                 _live = live.ToArray(); _parents = new Transform[_live.Length]; _sampled = new Transform[_live.Length];
+                _translationRoots = new bool[_live.Length];
                 for (int i = 0; i < _live.Length; i++)
                 {
                     string prefix = "";
@@ -71,6 +73,7 @@ namespace Tylevo.FieldAttachments.Runtime
                         parent = child;
                     }
                     _parents[i] = _live[i].parent; _sampled[i] = parent;
+                    _translationRoots[i] = paths[i] == "Weapon_root" || paths[i] == "Base HumanLCollarbone" || paths[i] == "Base HumanRCollarbone";
                     parent.localPosition = _live[i].localPosition;
                     parent.localRotation = _live[i].localRotation;
                     parent.localScale = _live[i].localScale; // Private skeleton only; no live scale write.
@@ -102,7 +105,9 @@ namespace Tylevo.FieldAttachments.Runtime
             }
         }
 
-        public void Apply(float seconds, float blend)
+        public void Apply(float seconds, float blend) => Apply(seconds, blend, Vector3.zero);
+
+        public void Apply(float seconds, float blend, Vector3 localOffset)
         {
             try
             {
@@ -112,6 +117,9 @@ namespace Tylevo.FieldAttachments.Runtime
                 if (!PoseMarker.Finite(seconds) || seconds < 0 || seconds > _clip.length ||
                     !PoseMarker.Finite(blend) || blend < 0 || blend > 1)
                     throw new InvalidOperationException("Standalone presentation time or blend is invalid");
+                bool translated = !localOffset.Equals(Vector3.zero);
+                if (!Finite(localOffset) || localOffset.sqrMagnitude > AttachmentIdleMotion.MaximumOffset * AttachmentIdleMotion.MaximumOffset || (blend == 0 && translated))
+                    throw new InvalidOperationException("Standalone presentation offset is invalid");
                 if (blend == 0) return;
                 if (!_hasSample || seconds != _sampleTime)
                 {
@@ -129,6 +137,9 @@ namespace Tylevo.FieldAttachments.Runtime
                     if (!Finite(nativePosition) || !Finite(samplePosition) || !ValidRotation(nativeRotation) || !ValidRotation(sampleRotation))
                         throw new InvalidOperationException("Standalone presentation pose is invalid at " + i);
                     Vector3 position = Vector3.Lerp(nativePosition, samplePosition, blend);
+                    // All three sibling roots receive the same already-weighted
+                    // translation. Never modify the cached clip sample or camera.
+                    if (translated && _translationRoots[i]) position += localOffset;
                     Quaternion rotation = Quaternion.Slerp(nativeRotation, sampleRotation, blend);
                     if (!Finite(position) || !ValidRotation(rotation)) throw new InvalidOperationException("Standalone blended pose is invalid at " + i);
                     _values[i * 2] = Position(position); _values[i * 2 + 1] = Rotation(rotation);
@@ -167,6 +178,7 @@ namespace Tylevo.FieldAttachments.Runtime
             catch (Exception e) { Latch("private sampler cleanup failed: " + e.GetBaseException().Message); return false; }
             _prepared = _hasSample = false; _shadow = null; _shadowAnimator = null; _animator = null; _root = null; _clip = null; _frame = null;
             _live = _parents = _sampled = Array.Empty<Transform>(); _values = Array.Empty<Vector4>();
+            _translationRoots = Array.Empty<bool>();
             return true; // Fault remains visible even after all ownership is released.
         }
 

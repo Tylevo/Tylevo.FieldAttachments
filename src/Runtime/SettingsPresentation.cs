@@ -30,11 +30,11 @@ namespace Tylevo.FieldAttachments.Runtime
                     break;
                 case "Controls/MenuKey":
                     Show(tag, "Controls", "Attachment menu key", 1);
-                    help = "Open the weapon presentation and cursor together. Default: Left Alt. Right Alt is also available; None disables this shortcut.";
+                    help = MenuShortcutSetting.Help;
                     break;
                 case "Controls/MenuActivation":
                     Show(tag, "Controls", "Menu activation (Hold / Toggle)", 2);
-                    help = "Hold: keep Alt held to use the menu; release to close. Toggle: tap Alt to open, then tap again to close. Alt+R or clicking while Alt is held keeps Toggle open. Right mouse closes LIST only. Closing cancels waiting requests but does not undo a submitted native operation.";
+                    help = "Hold: keep the shortcut held to use the menu; release it to close. Toggle: press once to open, then again to close. For a modifier key on its own, such as Alt, use a plain tap to close; using it with another menu control keeps the menu open. Closing cancels waiting changes but does not undo a change already underway.";
                     break;
                 case "Controls/AttachmentPose":
                     Show(tag, "Controls", "Legacy attachment mode key", 10);
@@ -53,7 +53,11 @@ namespace Tylevo.FieldAttachments.Runtime
                     break;
                 case "Controls/CycleAttachmentPosition":
                     Show(tag, "Controls", "Cycle mounting position", 40);
-                    help = "Cycle the open LIST or hovered card's mounting point while the cursor is active. The count and connection line identify the selected point. Default: Left Alt + R.";
+                    help = "Cycle the open list or hovered card's mounting point while the cursor is active. The count and connection line identify the selected point. Default: Left Alt + R.";
+                    break;
+                case "Controls/CycleAttachmentLayer":
+                    Show(tag, "Controls", "Switch attachment layer", 45);
+                    help = "Switch between Basic and Multitool parts while the menu is open. Default: middle mouse. Switching layers does not change attachments.";
                     break;
                 case "Controls/MouseSensitivity":
                     Show(tag, "Controls", "Cursor speed", 50);
@@ -71,6 +75,9 @@ namespace Tylevo.FieldAttachments.Runtime
                 case "Display/WeaponFollowingCards":
                     Show(tag, "Display", "Follow weapon movement", 20);
                     help = "Let the attachment cards follow the weapon's movement and sway.";
+                    break;
+                case "Display/IdleMovement":
+                    Show(tag, "Display", "Idle movement", 30);
                     break;
                 case "Compatibility/ShowStanceStatus":
                     Show(tag, "Compatibility", "Main menu stance notice", 20);

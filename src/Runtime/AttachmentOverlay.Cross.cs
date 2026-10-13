@@ -76,7 +76,9 @@ namespace Tylevo.FieldAttachments.Runtime
                 panel.Caption.alignment=TextAnchor.UpperCenter;
                 for(int i=0;i<5;i++)
                 {
-                    var r=CrossSelectorLayout.Cell(group,i); var cell=new CrossCell(); panel.Cells[i]=cell;
+                    // Keep the retired LIST index inert without creating negative child sizes.
+                    var r=i==4 ? new SelectorRect(0,0,16,36) : CrossSelectorLayout.Cell(group,i);
+                    var cell=new CrossCell(); panel.Cells[i]=cell;
                     cell.Root=(RectTransform)Box(holder.transform,"Choice"+g+"/"+i,r.X,r.Y,r.Width,r.Height,_crossPalette.Normal).transform;
                     cell.Background=cell.Root.GetComponent<Image>(); cell.Edges=Outline(cell.Root,r.Width,r.Height,_crossPalette.Disabled);
                     cell.Icon=Box(cell.Root,"Icon",6,5,r.Width-12,i<3 ? 64 : 1,Color.white).GetComponent<Image>(); cell.Icon.preserveAspect=true;
@@ -108,6 +110,7 @@ namespace Tylevo.FieldAttachments.Runtime
                 panel.Caption.gameObject.SetActive(panel.Visible && !UseStudioCrossLayout);
                 for(int i=0;i<5;i++)
                 {
+                    if(i==4) { panel.Cells[i].Root.gameObject.SetActive(false); continue; }
                     // Hidden preview choices keep their ordinary geometry for restoring the legacy layout.
                     var r=UseStudioCrossLayout && (i==1 || i==2) ? CrossSelectorLayout.Cell((AttachmentGroup)g,i) : CrossCellRect((AttachmentGroup)g,i);
                     var cell=panel.Cells[i]; Rect(cell.Root,r.X,r.Y,r.Width,r.Height);
@@ -147,7 +150,8 @@ namespace Tylevo.FieldAttachments.Runtime
                 var installed=vm?.Slot.Installed;
                 SetCross(panel.Cells[3],null,"REMOVE",installed!=null && ActionDenial(vm!,installed,true).Length==0 ?
                     new PointerTarget {Kind=PointerKind.Uninstall,Group=group,Path=vm!.Slot.Path,Item=installed.Id} : null,false,false);
-                SetCross(panel.Cells[4],null,"LIST",vm==null ? null : new PointerTarget {Kind=PointerKind.Candidates,Group=group},false,false);
+                SetCross(panel.Cells[4],null,"",null,false,false);
+                panel.Cells[4].Root.gameObject.SetActive(false);
                 for(int i=0;i<5;i++)
                 {
                     if(!panel.Visible) panel.Cells[i].Root.gameObject.SetActive(false);
@@ -212,29 +216,6 @@ namespace Tylevo.FieldAttachments.Runtime
             }
             PlacePointerUi();
         }
-        private PointerTarget? HitCross(float x,float y)
-        {
-            if (CrossPresentationHidden) return null;
-            // Reverse paint order; inverse-map the same per-group surface used by every graphic.
-            for(int g=3;g>=0;g--)
-            {
-                var panel=_crossGroups[g]; if(!panel.Visible) continue; var group=_groups[g].Group;
-                if(panel.Projection==null || !panel.Projection.TryUnmap(x,y,out float u,out float v)) continue;
-                float px=u*CrossWidth,py=v*CrossHeight;
-                if(UseStudioCrossLayout)
-                {
-                    int target=StudioCrossLayout.Hit(px,py);
-                    if(target==5) return panel.HeaderTarget;
-                    if(target>=0 && panel.Cells[target].Root.gameObject.activeSelf) return panel.Cells[target].Target;
-                }
-                else
-                {
-                    if(CrossSelectorLayout.Header(AttachmentLayers.Home(group)).Contains(px,py)) return panel.HeaderTarget;
-                    for(int i=0;i<5;i++) if(panel.Cells[i].Root.gameObject.activeSelf && CrossCellRect(group,i).Contains(px,py)) return panel.Cells[i].Target;
-                }
-            }
-            return null;
-        }
         private void HoverCross(PointerTarget? target)
         {
             if(!ExperimentalCrossSelectors) return;
@@ -270,7 +251,7 @@ namespace Tylevo.FieldAttachments.Runtime
             report.AppendLine("Cross visibility: " + (CrossPresentationHidden ? "hidden: " + _crossHiddenReason : "shown") +
                 "; held=" + PoseHeld + "; bound panels=" + Array.FindAll(_crossAttachments,p=>p!=null).Length);
             report.AppendLine("Cross palette: "+_crossPalette.Source+"; normal="+_crossPalette.Normal+" disabled="+_crossPalette.Disabled+" selected="+_crossPalette.Selected+" highlight="+_crossPalette.Highlight);
-            report.AppendLine("Cross geometry: "+(UseStudioCrossLayout ? "Studio export "+StudioCrossLayout.Export+"; per-group 216x187; reference=1902x992; perspective=1400; XYZ=17/-39/30; scale/opacity=1; candidates=LIST; aspect-fit + shared bounded native sway" : "1264x1000 shared plane; optic above, muzzle left, tactical right, foregrip below."));
+            report.AppendLine("Cross geometry: "+(UseStudioCrossLayout ? "Studio export "+StudioCrossLayout.Export+"; per-group 216x187; reference=1902x992; perspective=1400; XYZ=17/-39/30; scale/opacity=1; candidates=thumbnail; aspect-fit + shared bounded native sway" : "1264x1000 shared plane; optic above, muzzle left, tactical right, foregrip below."));
             for(int g=0;g<4;g++) for(int i=0;i<5;i++)
             {
                 var cell=_crossGroups[g].Cells[i];

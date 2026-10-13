@@ -115,7 +115,7 @@ namespace Tylevo.FieldAttachments.Runtime
             if(source==null) return;
             var anchor=_popupKind!=null ? ComparisonRect(_popup) : new SelectorRect(source.Left,source.Top,source.Right-source.Left,source.Bottom-source.Top);
             _comparisonSummaryObstacles.Clear();
-            _comparisonSummaryObstacles.Add(new SelectorRect(20,20,548,92));
+            _comparisonSummaryObstacles.Add(ComparisonRect(_header));
             _comparisonSummaryObstacles.Add(ComparisonRect(_comparisonPanel));
             if(_popupKind!=null) _comparisonSummaryObstacles.Add(ComparisonRect(_popup));
             if(_menuControlPlate!=null && _menuControlPlate.gameObject.activeSelf) _comparisonSummaryObstacles.Add(ComparisonRect(_menuControlPlate));
@@ -138,19 +138,22 @@ namespace Tylevo.FieldAttachments.Runtime
                 panel.rect.width*panel.localScale.x,panel.rect.height*panel.localScale.y);
         }
 
-        private void UpdateComparisonHover()
+        private void UpdateComparisonHover(SurfaceHit hit)
         {
-            float x=_pointerPosition.x*_layoutWidth,y=_pointerPosition.y*_layoutHeight;
             // Keep the readout visible while reading it and consume its surface without a click target.
-            if(InsideComparison(x,y)) { _comparisonLastHover=Time.unscaledTime; return; }
+            if(hit.Kind==SurfaceKind.Comparison) { _comparisonLastHover=Time.unscaledTime; return; }
             var previousRow=_comparisonPointerRow;
             _comparisonPointerRow=null;
-            if(_pointerState==null || InsideMenuControls(x,y) || !TryComparisonHover(x,y,out SlotObservation? slot,out ItemObservation? item))
+            SlotObservation? slot=null; ItemObservation? item=null;
+            if(_pointerState==null || !hit.Group.HasValue ||
+                (hit.Kind!=SurfaceKind.Candidate && hit.Kind!=SurfaceKind.Removal) ||
+                !ResolveComparison(hit.Group.Value,hit.Item,hit.Kind==SurfaceKind.Removal,out slot,out item))
             {
                 if(_comparisonPanel.gameObject.activeSelf && Time.unscaledTime-_comparisonLastHover<=ComparisonHoverGrace)
                 { _comparisonPointerRow=previousRow; return; }
                 HideComparison(); return;
             }
+            _comparisonPointerRow=hit.Row;
             _comparisonLastHover=Time.unscaledTime; _comparisonGroup=slot!.Group;
             var snapshot=_pointerState.Snapshot;
             string identity=slot!.Group+"|"+slot.Path+"|"+(item?.Id ?? "<remove>")+"|"+(slot.Installed?.Id ?? "<empty>");
@@ -206,62 +209,6 @@ namespace Tylevo.FieldAttachments.Runtime
             Rect(row.Delta.rectTransform,trackWidth*bar.DeltaStart,0,trackWidth*bar.DeltaWidth,6);
             Rect(row.Marker.rectTransform,Mathf.Clamp(trackWidth*bar.CurrentFill-1,0,trackWidth-2),-2,2,10);
             row.Marker.enabled=bar.HasCurrent; row.Delta.enabled=benefit!=0;
-        }
-
-        private bool TryComparisonHover(float x,float y,out SlotObservation? slot,out ItemObservation? item)
-        {
-            slot=null; item=null;
-            if(_pointerState==null) return false;
-            if(_popupKind!=null && InsidePopup(x,y))
-            {
-                int index=QuickSwapMenu.Row(x-_popup.anchoredPosition.x,y+_popup.anchoredPosition.y);
-                if(index<0 || !_pointerRows[index].Root.gameObject.activeSelf) return false;
-                var row=_pointerRows[index]; bool remove=_popupPage*6+index==0;
-                bool found=ResolveComparison(_popupGroup,row.Item,remove,out slot,out item);
-                if(found) _comparisonPointerRow=row;
-                return found;
-            }
-            if(ExperimentalCrossSelectors)
-            {
-                for(int g=3;g>=0;g--)
-                {
-                    var panel=_crossGroups[g];
-                    if(!panel.Visible || panel.Projection==null || !panel.Projection.TryUnmap(x,y,out float u,out float v)) continue;
-                    bool header=UseStudioCrossLayout ? StudioCrossLayout.Header.Contains(u*CrossWidth,v*CrossHeight) :
-                        CrossSelectorLayout.Header((AttachmentGroup)g).Contains(u*CrossWidth,v*CrossHeight);
-                    if(header) return false;
-                    for(int i=0;i<5;i++)
-                        if(panel.Cells[i].Root.gameObject.activeSelf && CrossCellRect((AttachmentGroup)g,i).Contains(u*CrossWidth,v*CrossHeight))
-                            return i>=1 && i<=3 && ResolveComparison(_groups[g].Group,panel.Cells[i].Item,i==3,out slot,out item);
-                }
-                return false;
-            }
-            if(ExperimentalHexSelectors)
-            {
-                for(int g=0;g<4;g++)
-                {
-                    var panel=_hexPanels[g]; if(!panel.Root.gameObject.activeSelf) continue;
-                    var projection=_groups[g].Projection; float u,v;
-                    if(projection!=null) { if(!projection.TryUnmap(x,y,out u,out v)) continue; }
-                    else { u=(x-panel.Root.anchoredPosition.x)/HexSelectorLayout.Width; v=(y+panel.Root.anchoredPosition.y)/HexSelectorLayout.Height; }
-                    for(int i=2;i<=5;i++)
-                        if(panel.Cells[i].Shape.gameObject.activeSelf && HexSelectorLayout.Contains(i,u*HexSelectorLayout.Width,v*HexSelectorLayout.Height))
-                            return ResolveComparison(_groups[g].Group,panel.Cells[i].Item,i==5,out slot,out item);
-                }
-                return false;
-            }
-            foreach(var panel in _groups)
-            {
-                float u,v;
-                if(panel.Projection!=null) { if(!panel.Projection.TryUnmap(x,y,out u,out v)) continue; }
-                else { u=(x-panel.Root.anchoredPosition.x)/OverlayLayout.PanelWidth; v=(y+panel.Root.anchoredPosition.y)/OverlayLayout.PanelHeight; }
-                float px=u*OverlayLayout.PanelWidth,py=v*OverlayLayout.PanelHeight;
-                if(py<61 || py>161) continue;
-                for(int i=0;i<3;i++)
-                    if(px>=116+i*104 && px<=212+i*104 && panel.Candidates[i].Background.gameObject.activeSelf)
-                        return ResolveComparison(panel.Group,panel.Candidates[i].Item,false,out slot,out item);
-            }
-            return false;
         }
 
         private bool ResolveComparison(AttachmentGroup group,ItemObservation? displayed,bool remove,out SlotObservation? slot,out ItemObservation? item)
