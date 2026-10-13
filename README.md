@@ -4,7 +4,7 @@ Change attachments without opening your inventory. Hold **Left Alt** to bring up
 
 **Version 1.2.0 · SPT 4.1.5 / 4.1.6**
 
-[Installation](#installation) · [Controls](#controls) · [Compatibility](#compatibility-and-coverage) · [Source code](https://github.com/Tylevo/Tylevo.FieldAttachments)
+[Stance comparison](#stance-transition-comparison) · [Installation](#installation) · [Controls](#controls) · [Compatibility](#compatibility-and-coverage) · [Source code](https://github.com/Tylevo/Tylevo.FieldAttachments)
 
 ![HK416 held in the attachment pose, with angled attachment cards](docs/images/hk416-attachment-menu.png)
 
@@ -16,6 +16,30 @@ Change attachments without opening your inventory. Hold **Left Alt** to bring up
 ![HK416 in the held presentation before the attachment cards appear](docs/images/hk416-inspection.png)
 
 </details>
+
+## Stance transition comparison
+
+With [Fontaine's Stance Overhaul](https://sp-mod.com/mod/3136/spt-stance-overhaul), your weapon moves from its current stance into the attachment view.
+
+**Fully optional, but recommended. All Field Attachments features work without it.**
+
+**Without Stance Overhaul**
+
+The standard Field Attachments animation.
+
+![Opening the attachment view without Stance Overhaul](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-without-stances.gif)
+
+**With Stance Overhaul**
+
+Four examples of moving from a stance into the attachment view.
+
+![Stance Overhaul transition 1](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-1.gif)
+
+![Stance Overhaul transition 2](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-2.gif)
+
+![Stance Overhaul transition 3](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-3.gif)
+
+![Stance Overhaul transition 4](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-4.gif)
 
 ## What it does
 
