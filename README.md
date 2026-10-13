@@ -27,19 +27,19 @@ With [Fontaine's Stance Overhaul](https://sp-mod.com/mod/3136/spt-stance-overhau
 
 The standard Field Attachments animation.
 
-![Opening the attachment view without Stance Overhaul](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-without-stances.gif)
+![Opening the attachment view without Stance Overhaul](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-without-stances.gif?v=2)
 
 **With Stance Overhaul**
 
 Four examples of moving from a stance into the attachment view.
 
-![Stance Overhaul transition 1](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-1.gif)
+![Stance Overhaul transition 1](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-1.gif?v=2)
 
-![Stance Overhaul transition 2](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-2.gif)
+![Stance Overhaul transition 2](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-2.gif?v=2)
 
-![Stance Overhaul transition 3](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-3.gif)
+![Stance Overhaul transition 3](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-3.gif?v=2)
 
-![Stance Overhaul transition 4](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-4.gif)
+![Stance Overhaul transition 4](https://github.com/Tylevo/Tylevo.FieldAttachments/releases/download/v1.2.0/field-attachments-with-stances-4.gif?v=2)
 
 ## What it does
 
